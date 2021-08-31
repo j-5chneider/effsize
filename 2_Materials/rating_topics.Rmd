@@ -1,0 +1,84 @@
+---
+title: "Topic ratings"
+author: "Jürgen Schneider"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: hpstr
+    highlight: github
+    toc: yes
+    toc_depth: 2
+---
+
+```{r setup, echo = F}
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      echo = TRUE)
+```
+
+```{r libraries}
+library(here)
+library(tidyverse) # ohne steh ich nicht auf
+library(psych)
+library(kableExtra)
+```
+
+# Import
+
+Data files are in folder "effsize/data".
+
+```{r import}
+topics <- rio::import(here("data/rating_topics.csv"))
+```
+
+# ICC
+
+* all raters rated all cases
+* raters were not chosen at random
+
+Therefore the line `Single_fixed_raters ICC3` is relevant for us:
+
+```{r ICC}
+topic_icc <- ICC(topics%>%dplyr::select(Kirstin:Kristina))
+topic_icc
+```
+
+Agreement is good with an $ICC = `r round(topic_icc$results$ICC[3], 3)`$ and a $CI_{95}=[`r round(topic_icc$results$'lower bound'[3], 3)`, `r round(topic_icc$results$'upper bound'[3], 3)`]$
+
+
+# Best ranked topics
+
+Topics ranked by mean score over all 4 raters.
+
+```{r}
+topics <- topics %>%
+  rowwise() %>%
+  dplyr::mutate(rating_mean = mean(c(Kirstin, 
+                                     Samuel, 
+                                     Juergen, 
+                                     Kristina)),
+                rating_median = median(c(Kirstin, 
+                                         Samuel, 
+                                         Juergen, 
+                                         Kristina))) %>%
+  arrange(desc(rating_mean))
+
+kbl(topics%>%dplyr::select(-c(Kirstin:Kristina))) %>%
+  kable_styling(bootstrap_options = "striped", 
+                full_width = F, 
+                position = "left")
+```
+
+
+
+# R version
+
+```{r version}
+R.Version()
+```
+
+# Session info
+
+```{r session}
+sessionInfo()
+```
