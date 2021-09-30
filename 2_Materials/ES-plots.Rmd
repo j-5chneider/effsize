@@ -169,7 +169,7 @@ ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
 ## `stat_dotsinterval()` with `quantiles = 100`
 
 ```{r}
-ggplot(p_data, aes(x=x, y = group, group = group, fill = c(group, stat(x>0)), colour = group)) +
+ggplot(p_data, aes(x=x, y = group, group = group, fill = group, colour = group)) +
   stat_dotsinterval(quantiles = 100) +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
@@ -197,6 +197,31 @@ ggplot(aes(x=x, y = group, group = group, fill = stat(x>0), colour = stat(x>0)))
   scale_color_viridis_d() +
   # geom_label(x=-2, y=1.5, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
   # geom_label(x=2.2, y=2.5, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_discrete(expand = c(0,0)) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "#666666"),
+        axis.line.x = element_line(color = "#666666"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold"))
+```
+
+
+# Histograms
+
+## `geom_histogram()`
+
+```{r}
+ggplot(data = p_data%>%dplyr::filter(group == "Without Intervention"), aes(x=x)) +
+  geom_histogram(alpha = .5, fill = "#440154", color = "#440154") +
+  geom_histogram(data = p_data%>%dplyr::filter(group == "With Intervention"), alpha = .5, fill = "#fde725", color = "#fde725") +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=-2, y=35, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=35, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
   scale_y_discrete(expand = c(0,0)) +
   theme_minimal() +
   theme(legend.position = "none",
