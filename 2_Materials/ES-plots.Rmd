@@ -1,0 +1,210 @@
+---
+title: "Effect size plots"
+author:
+  - name: Jürgen Schneider 
+    url: https://uni-tuebingen.de/de/28915
+    affiliation: Universität Tübingen
+    email: juergen.schneider@uni-tuebingen.de
+date: "`r Sys.Date()`"
+output: 
+  html_document:   # used to be "radix::radix_article:", but can't do code_folding
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    code_folding: hide
+    theme: cosmo
+    # highlight: espresso
+# css: www/style.css
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo=T, message=F, warning=F, comment=F}
+knitr::opts_chunk$set(echo = T, message = F, warning = F)
+library(tidyverse)
+library(ggbeeswarm)
+library(ggdist)
+```
+
+# Generating data
+```{r}
+p_data <- data.frame(x = c(rnorm(500, mean = .5, sd = 1), rnorm(500, mean = 0, sd = 1)),
+                     group = factor(rep(c("With Intervention", "Without Intervention"), each = 500), levels = c("Without Intervention", "With Intervention")))
+```
+
+# Normal Curves
+
+## Normal Curve (using `stat_function()`)
+
+Visualization of Cohen's $U_3$ with two normal curves.
+
+```{r }
+ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
+  stat_function(fun = dnorm, n = 101, args = list(mean = 0, sd = 1), 
+                # geom = "area", 
+                # fill = "#d0d4d4", 
+                color = "#d0d4d4",
+                size = 2) + 
+  geom_vline(aes(xintercept = 0), color = "#d0d4d4", linetype = "dotted", size = 2) +
+  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#d0d4d4", fontface = "bold") +
+  stat_function(fun = dnorm, n = 101, args = list(mean = .5, sd = 1),                     # effect size = .5
+                xlim = c(-3, 0),
+                # geom = "area", 
+                # fill = "#ff857a", 
+                color = "#ff857a", 
+                size = 2) +
+  stat_function(fun = dnorm, n = 101, args = list(mean = .5, sd = 1),                     # effect size = .5
+                xlim = c(0, 3),
+                geom = "area", 
+                fill = "#cc6a61", 
+                color = "#cc6a61", 
+                alpha = .5,
+                size = 2) + 
+  geom_vline(aes(xintercept = .5), color = "white", linetype = "dotted", size = 1.5, alpha = .3) +    # effect size = .5
+  geom_label(x=2.2, y=.3, label="with\nintervention", color = 'white', fill = "#ff857a", fontface = "bold") +
+  geom_label(x=1, y=.15, label="69%", color = 'white', fill = "#ff857a", fontface = "bold") +
+  scale_x_continuous(breaks = c(-2:+2), labels = c("- -", "-", "Test Score", "+", "++")) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,0.41)) +
+  theme_minimal() +
+  theme(panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "#666666"),
+        axis.line.x = element_line(color = "#666666"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold"))
+```
+
+## Normal Curve (using the simulated data)
+```{r}
+ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
+  geom_density(alpha = .7) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.3, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "#666666"),
+        axis.line.x = element_line(color = "#666666"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold"))
+```
+
+
+
+# Beeswarm
+
+## `geom_beeswarm()`
+
+Visualization of Cohen's $U_3$ with a beeswarm plot.
+```{r}
+ggplot(p_data, aes(x=group, y = x, group = group, fill = group, colour = group)) +
+  geom_beeswarm(cex = 1.6) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=1.4, y=-2, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.4, y=2, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "#666666"),
+        axis.line.x = element_line(color = "#666666"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold")) +
+  coord_flip()
+```
+
+# Dotplot
+
+## `stat_dots()`
+
+```{r}
+ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
+  stat_dots(alpha = .5) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.3, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "#666666"),
+        axis.line.x = element_line(color = "#666666"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold"))
+```
+
+## `stat_dots()` with `quantiles = 100`
+
+```{r}
+ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
+  stat_dots(quantiles = 100, alpha = .4) +
+    scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.3, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "#666666"),
+        axis.line.x = element_line(color = "#666666"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold"))
+```
+
+## `stat_dotsinterval()` with `quantiles = 100`
+
+```{r}
+ggplot(p_data, aes(x=x, y = group, group = group, fill = c(group, stat(x>0)), colour = group)) +
+  stat_dotsinterval(quantiles = 100) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=-2, y=1.5, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=2.5, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_discrete(expand = c(0,0)) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "#666666"),
+        axis.line.x = element_line(color = "#666666"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold"))
+```
+
+## `stat_dots()` different color
+
+```{r}
+p_data %>%
+ggplot(aes(x=x, y = group, group = group, fill = stat(x>0), colour = stat(x>0))) +
+  stat_dots() +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  # geom_label(x=-2, y=1.5, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+  # geom_label(x=2.2, y=2.5, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_discrete(expand = c(0,0)) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "#666666"),
+        axis.line.x = element_line(color = "#666666"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold"))
+```
