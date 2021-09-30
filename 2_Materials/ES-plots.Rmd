@@ -24,6 +24,8 @@ knitr::opts_chunk$set(echo = T, message = F, warning = F)
 library(tidyverse)
 library(ggbeeswarm)
 library(ggdist)
+library(waffle)
+library(fontawesome)
 ```
 
 # Generating data
@@ -275,4 +277,65 @@ ggplot(data = p_data%>%dplyr::filter(group == "Without Intervention"), aes(x=x))
         axis.title.x = element_blank(),
         axis.text.y = element_blank(),
         axis.text.x = element_text(face = "bold"))
+```
+
+# Pie Charts
+
+## Donut Plots
+
+Percent of participants scoring higher than the control group's average.
+
+```{r}
+p_data %>%
+  mutate(x0 = ifelse(x>0,1,0)) %>%
+  group_by(group) %>%
+  summarize(x0 = mean(x0)) %>%
+  ggplot(aes(y = x0, x = group, group = group, fill = group, colour = group)) +
+    geom_col() +
+    coord_polar(theta = "y") +
+    scale_y_reverse(limits = c(1,0), labels = NULL) +
+    scale_x_discrete(limits = c(" ", "Without Intervention", "With Intervention")) +
+    scale_fill_viridis_d() +
+    scale_color_viridis_d() +
+    geom_label(x=2.2, y=.085, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+    geom_label(x=3.1, y=.05, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+    theme_void() +
+    theme(legend.position = "none",
+          panel.grid = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.line.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text.x = element_text(face = "bold"))
+```
+
+
+# Waffle Charts
+
+Percent of participants scoring higher than the control group's average.
+
+```{r}
+p_data %>%
+  mutate(x0 = ifelse(x>0,1,0)) %>%
+  group_by(group, x0) %>%
+  summarize(vals = n()) %>%
+  ggplot(aes(fill = as.factor(x0), values = vals)) +
+    geom_waffle(n_rows = 20, radius = unit(4, "pt")) +
+    scale_fill_viridis_d() +
+    scale_color_viridis_d() +
+    scale_x_continuous(labels = NULL) +
+    coord_equal() +
+    # geom_label(x=2.2, y=.085, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
+    # geom_label(x=3.1, y=.05, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+    theme_void() +
+    theme(legend.position = "none",
+          panel.grid = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.line.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text.x = element_text(face = "bold")) +
+  facet_wrap(~group)
 ```
