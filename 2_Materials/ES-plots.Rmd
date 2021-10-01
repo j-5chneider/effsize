@@ -25,13 +25,36 @@ library(tidyverse)
 library(ggbeeswarm)
 library(ggdist)
 library(waffle)
-library(fontawesome)
+library(bayestestR)
+library(see)
 ```
 
 # Generating data
 ```{r}
-p_data <- data.frame(x = c(rnorm(500, mean = .5, sd = 1), rnorm(500, mean = 0, sd = 1)),
-                     group = factor(rep(c("With Intervention", "Without Intervention"), each = 500), levels = c("Without Intervention", "With Intervention")))
+# how many participants should be simulated per group?
+sim_n <- 250
+
+# what should the effect size be (in SD)
+sim_es <- .5
+
+# what is the intervention and control?
+label_intervention <- "reading\non tablet"
+label_control      <- "reading\non paper"
+
+# what is measured as dependent variable? Add a label as character
+dv_label <- "Score on text comprehension test"
+
+# what is the scale of the dependent variable? Add 5 labels as character
+dv_scale <- c("10", "20", "30", "40", "50")
+
+# p_data <- data.frame(x = c(rnorm(sim_n, mean = .5, sd = 1), rnorm(sim_n, mean = 0, sd = 1)),
+#                      group = factor(rep(c("With Intervention", "Without Intervention"), each = sim_n), levels = c("Without Intervention", "With Intervention")))
+
+# generate near perfect normally distributed data
+p_data <- data.frame(x = c(distribution_normal(n = sim_n, mean = sim_es, sd = 1), 
+                           distribution_normal(n = sim_n, mean = 0, sd = 1)),
+                     group = factor(rep(c("With Intervention", "Without Intervention"), each = sim_n), 
+                                    levels = c("Without Intervention", "With Intervention")))
 ```
 
 # Normal Curves
@@ -48,31 +71,32 @@ ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
                 color = "#d0d4d4",
                 size = 2) + 
   geom_vline(aes(xintercept = 0), color = "#d0d4d4", linetype = "dotted", size = 2) +
-  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#d0d4d4", fontface = "bold") +
-  stat_function(fun = dnorm, n = 101, args = list(mean = .5, sd = 1),                     # effect size = .5
+  geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#d0d4d4", fontface = "bold") +
+  stat_function(fun = dnorm, n = 101, args = list(mean = sim_es, sd = 1),
                 xlim = c(-3, 0),
                 # geom = "area", 
                 # fill = "#ff857a", 
                 color = "#ff857a", 
                 size = 2) +
-  stat_function(fun = dnorm, n = 101, args = list(mean = .5, sd = 1),                     # effect size = .5
+  stat_function(fun = dnorm, n = 101, args = list(mean = sim_es, sd = 1),
                 xlim = c(0, 3),
                 geom = "area", 
                 fill = "#cc6a61", 
                 color = "#cc6a61", 
                 alpha = .5,
                 size = 2) + 
-  geom_vline(aes(xintercept = .5), color = "white", linetype = "dotted", size = 1.5, alpha = .3) +    # effect size = .5
-  geom_label(x=2.2, y=.3, label="with\nintervention", color = 'white', fill = "#ff857a", fontface = "bold") +
+  geom_vline(aes(xintercept = sim_es), color = "white", linetype = "dotted", size = 1.5, alpha = .3) +
+  geom_label(x=2.2, y=.3, label=label_intervention, color = 'white', fill = "#ff857a", fontface = "bold") +
   geom_label(x=1, y=.15, label="69%", color = 'white', fill = "#ff857a", fontface = "bold") +
-  scale_x_continuous(breaks = c(-2:+2), labels = c("- -", "-", "Test Score", "+", "++")) +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
   scale_y_continuous(expand = c(0,0), limits = c(0,0.41)) +
+  xlab(dv_label) +
   theme_minimal() +
   theme(panel.grid = element_blank(),
         axis.ticks.x = element_line(color = "#666666"),
         axis.line.x = element_line(color = "#666666"),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
         axis.text.x = element_text(face = "bold"))
 ```
@@ -80,44 +104,58 @@ ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
 ## Normal Curve (using the simulated data)
 ```{r}
 ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
-  geom_density(alpha = .7, bw = 1) +
+  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dotted", size = 1.5) +
+  geom_density(alpha = .6, size = 3) +
+  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dotted", size = 1.5) +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=.3, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.3, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  # geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2, colour = "segment")) +
+  # geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2, colour = "segment")) +
   scale_y_continuous(expand = c(0,0)) +
-  theme_minimal() +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  xlab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold"))
+        # axis.text.x = element_text(face = "bold")
+        )
 ```
 
 
 # Violin plot
 
 ```{r}
-ggplot(p_data%>%dplyr::filter(group == "Without Intervention"), aes(x=1, y = x, group = group, fill = group, colour = group)) +
-  geom_violin(alpha = .7, bw = 1) +
-  geom_violin(data = p_data%>%dplyr::filter(group == "With Intervention"), alpha = .7, bw = 1) +
+ggplot(p_data, aes(x=1, y = x, group = group, fill = group, colour = group)) +
+  geom_hline(aes(yintercept = 0), color = "#440154", linetype = "dotted", size = 1.5) +
+  geom_violin(alpha = .7, position = position_dodge(width = 0), size = 3) +
+  geom_hline(aes(yintercept = sim_es), color = "#fde725", linetype = "dotted", size = 1.5) +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=.3, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  scale_y_continuous(expand = c(0,0)) +
-  theme_minimal() +
+  geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.3, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0), breaks = c(-2:+2), labels = dv_scale) +
+  ylab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold")) +
+        # axis.text.x = element_text(face = "bold")
+        ) +
   coord_flip()
 ```
 
@@ -129,41 +167,59 @@ ggplot(p_data%>%dplyr::filter(group == "Without Intervention"), aes(x=1, y = x, 
 Visualization of Cohen's $U_3$ with a beeswarm plot.
 ```{r}
 ggplot(p_data, aes(x=group, y = x, group = group, fill = group, colour = group)) +
+  geom_hline(aes(yintercept = 0), color = "#440154", linetype = "solid", size = .5) +
   geom_beeswarm(cex = 1.6) +
+  geom_hline(aes(yintercept = sim_es), color = "#fde725", linetype = "solid", size = .5) +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  geom_label(x=1.4, y=-2, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.4, y=2, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  scale_y_continuous(expand = c(0,0)) +
-  theme_minimal() +
+  geom_label(x=1.4, y=-2, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.4, y=2, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0), breaks = c(-2:+2), labels = dv_scale) +  
+  ylab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold")) +
+        # axis.text.x = element_text(face = "bold")
+        ) +
   coord_flip()
+```
 
+## `geom_beeswarm()` overlay
 
+```{r}
 ggplot(p_data%>%dplyr::filter(group == "Without Intervention"), aes(x = 1, y = x)) +
-  geom_beeswarm(cex = 1.2, alpha = .5, fill = "#440154", color = "#440154", size = 3) +
-  geom_beeswarm(data = p_data%>%dplyr::filter(group == "With Intervention"), cex = 1.2, alpha = .5, fill = "#fde725", color = "#fde725", size = 3) +
+  geom_beeswarm(alpha = .5, fill = "#440154", color = "#440154", 
+                size = 3, priority = "random") +
+  geom_beeswarm(data = p_data%>%dplyr::filter(group == "With Intervention"), 
+                alpha = .5, fill = "#fde725", color = "#fde725", 
+                size = 3, priority = "random") +
+  geom_hline(aes(yintercept = 0), color = "#440154", linetype = "solid", size = .5) +
+  geom_hline(aes(yintercept = sim_es), color = "#fde725", linetype = "solid", size = .5) +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  geom_label(x=1.4, y=-2, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.4, y=2, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  scale_y_continuous(expand = c(0,0)) +
-  theme_minimal() +
+  geom_label(x=1.4, y=-2, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.4, y=2, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0), breaks = c(-2:+2), labels = dv_scale) +
+  ylab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold")) +
+        # axis.text.x = element_text(face = "bold")
+        ) +
   coord_flip()
 ```
 
@@ -173,42 +229,56 @@ ggplot(p_data%>%dplyr::filter(group == "Without Intervention"), aes(x = 1, y = x
 
 ```{r}
 ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
+  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "solid", size = .75) +
   stat_dots(alpha = .5) +
+  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "solid", size = .75) +
+  geom_label(x=-2, y=.75, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.75, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=.3, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
   scale_y_continuous(expand = c(0,0)) +
-  theme_minimal() +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  xlab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold"))
+        # axis.text.x = element_text(face = "bold")
+        )
 ```
 
 ## `stat_dots()` with `quantiles = 100`
 
 ```{r}
 ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
+  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "solid", size = 1) +
   stat_dots(quantiles = 100, alpha = .4) +
-    scale_fill_viridis_d() +
+  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "solid", size = 1) +
+  scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  geom_label(x=-2, y=.3, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=.3, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.3, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
   scale_y_continuous(expand = c(0,0)) +
-  theme_minimal() +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  xlab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold"))
+        # axis.text.x = element_text(face = "bold")
+        )
 ```
 
 ## `stat_dotsinterval()` with `quantiles = 100`
@@ -218,18 +288,23 @@ ggplot(p_data, aes(x=x, y = group, group = group, fill = group, colour = group))
   stat_dotsinterval(quantiles = 100) +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  geom_label(x=-2, y=1.5, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=2.5, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  geom_label(x=-2, y=1.5, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=2.5, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
   scale_y_discrete(expand = c(0,0)) +
-  theme_minimal() +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  xlab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold"))
+        # axis.text.x = element_text(face = "bold")
+        )
 ```
 
 ## `stat_dots()` different color
@@ -240,18 +315,23 @@ ggplot(aes(x=x, y = group, group = group, fill = stat(x>0), colour = stat(x>0)))
   stat_dots() +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  # geom_label(x=-2, y=1.5, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  # geom_label(x=2.2, y=2.5, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  # geom_label(x=-2, y=1.5, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  # geom_label(x=2.2, y=2.5, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
   scale_y_discrete(expand = c(0,0)) +
-  theme_minimal() +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  xlab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold"))
+        # axis.text.x = element_text(face = "bold")
+        )
 ```
 
 
@@ -261,22 +341,29 @@ ggplot(aes(x=x, y = group, group = group, fill = stat(x>0), colour = stat(x>0)))
 
 ```{r}
 ggplot(data = p_data%>%dplyr::filter(group == "Without Intervention"), aes(x=x)) +
+  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dotted", size = 2) +
   geom_histogram(alpha = .5, fill = "#440154", color = "#440154") +
   geom_histogram(data = p_data%>%dplyr::filter(group == "With Intervention"), alpha = .5, fill = "#fde725", color = "#fde725") +
+  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dotted", size = 2) +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
-  geom_label(x=-2, y=35, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=35, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  geom_label(x=-2, y=sim_n/15, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=sim_n/15, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
   scale_y_discrete(expand = c(0,0)) +
-  theme_minimal() +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  xlab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
   theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.x = element_line(color = "#666666"),
-        axis.line.x = element_line(color = "#666666"),
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
+        # axis.title.x = element_blank(),
         axis.text.y = element_blank(),
-        axis.text.x = element_text(face = "bold"))
+        # axis.text.x = element_text(face = "bold")
+        )
 ```
 
 # Pie Charts
@@ -297,8 +384,8 @@ p_data %>%
     scale_x_discrete(limits = c(" ", "Without Intervention", "With Intervention")) +
     scale_fill_viridis_d() +
     scale_color_viridis_d() +
-    geom_label(x=2.2, y=.085, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-    geom_label(x=3.1, y=.05, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+    geom_label(x=2.2, y=.085, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+    geom_label(x=3.1, y=.05, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
     theme_void() +
     theme(legend.position = "none",
           panel.grid = element_blank(),
@@ -321,13 +408,13 @@ p_data %>%
   group_by(group, x0) %>%
   summarize(vals = n()) %>%
   ggplot(aes(fill = as.factor(x0), values = vals)) +
-    geom_waffle(n_rows = 20, radius = unit(4, "pt")) +
+    geom_waffle(n_rows = 10, radius = unit(4, "pt")) +
     scale_fill_viridis_d() +
     scale_color_viridis_d() +
     scale_x_continuous(labels = NULL) +
     coord_equal() +
-    # geom_label(x=2.2, y=.085, label="without\nintervention", color = 'white', fill = "#440154", fontface = "bold") +
-    # geom_label(x=3.1, y=.05, label="with\nintervention", color = '#090c0e', fill = "#fde725", fontface = "bold") +
+    # geom_label(x=2.2, y=.085, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+    # geom_label(x=3.1, y=.05, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
     theme_void() +
     theme(legend.position = "none",
           panel.grid = element_blank(),
