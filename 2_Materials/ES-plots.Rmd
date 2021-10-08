@@ -27,6 +27,7 @@ library(ggdist)
 library(waffle)
 library(bayestestR)
 library(see)
+library(ggpubr)
 ```
 
 # Generating data
@@ -55,6 +56,32 @@ p_data <- data.frame(x = c(distribution_normal(n = sim_n, mean = sim_es, sd = 1)
                            distribution_normal(n = sim_n, mean = 0, sd = 1)),
                      group = factor(rep(c("With Intervention", "Without Intervention"), each = sim_n), 
                                     levels = c("Without Intervention", "With Intervention")))
+
+# generate plots to label means
+mean_label <-
+  ggplot(data.frame(x=1:2, group = factor(c("With Intervention", "Without Intervention"))), aes(group = group, fill = group)) +
+  geom_segment(aes(x=0, y=0, xend=0, yend=.1), color = "#440154", size = 3) +
+  geom_segment(aes(x=sim_es, y=0, xend=sim_es, yend=.1), color = '#7e7312', size = 3) +
+  geom_label(x=c(0,sim_es), y=0, aes(label=c(paste0("mean:\n", label_control), paste0("mean:\n", label_intervention))), 
+             color = c('white', '#090c0e'),
+             fontface = "italic", lineheight = 0.7) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  # geom_label(x=sim_es, y=0, label=paste0("mean:\n", label_intervention), color = '#090c0e', fill = "#fde725",  
+  #            fontface = "italic", lineheight = 0.7) +
+  scale_y_continuous(limits = c(-.05,.1), expand = c(0,0)) +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale, limits = c(-3,3.5)) +
+  xlab(dv_label) +
+  # theme_minimal() +
+  theme_modern() +
+  theme(legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.line.x = element_blank(),
+        axis.line.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank()
+        )
 ```
 
 # Normal Curves
@@ -101,22 +128,21 @@ ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
         axis.text.x = element_text(face = "bold"))
 ```
 
-## Normal Curve (using the simulated data)
+## Normal Curve (using the simulated data) with "mean leabels"
 ```{r}
+p_nc2 <- 
 ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
-  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dotted", size = 1.5) +
+  # geom_dots() +
+  # geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dotted", size = 1.5) +
   geom_density(alpha = .6, size = 3) +
-  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dotted", size = 1.5) +
+  # geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dotted", size = 1.5) +
   scale_fill_viridis_d() +
   scale_color_viridis_d() +
   geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
   geom_label(x=2.2, y=.3, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  # geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2, colour = "segment")) +
-  # geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2, colour = "segment")) +
   scale_y_continuous(expand = c(0,0)) +
-  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale, limits = c(-3,3.5)) +
   xlab(dv_label) +
-  # theme_minimal() +
   theme_modern() +
   theme(legend.position = "none",
         # panel.grid = element_blank(),
@@ -124,12 +150,45 @@ ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
         # axis.line.x = element_line(color = "#666666"),
         axis.line.y = element_blank(),
         axis.title.y = element_blank(),
-        # axis.title.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        # axis.text.x = element_text(face = "bold")
+        )
+
+ggarrange(p_nc2, mean_label,
+          ncol = 1,
+          nrow = 2,
+          heights = c(5,1.7),
+          align = "v"
+          )
+```
+
+## Normal Curve (using the simulated data) with mean as dotted line
+```{r}
+ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
+  # geom_dots() +
+  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dotted", size = 1.5) +
+  geom_density(alpha = .6, size = 3) +
+  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dotted", size = 1.5) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.3, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale, limits = c(-3,3.5)) +
+  xlab(dv_label) +
+  theme_modern() +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        axis.line.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
         axis.text.y = element_blank(),
         # axis.text.x = element_text(face = "bold")
         )
 ```
-
 
 # Violin plot
 
