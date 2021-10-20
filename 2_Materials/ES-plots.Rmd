@@ -86,6 +86,166 @@ mean_label <-
 
 # Normal Curves
 
+## Normal Curve (using the simulated data) with mean as dashed line
+```{r}
+ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
+  # geom_dots() +
+  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dashed", size = 1.5) +
+  geom_density(alpha = .6, size = 3) +
+  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dashed", size = 1.5) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.3, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale, limits = c(-3,3.5)) +
+  xlab(dv_label) +
+  ylab("count") +
+  theme_modern() +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        # axis.line.y = element_blank(),
+        # axis.title.y = element_blank(),
+        # axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        # axis.text.x = element_text(face = "bold")
+        )
+```
+
+# Violin plot
+
+```{r}
+ggplot(p_data, aes(x=1, y = x, group = group, fill = group, colour = group)) +
+  geom_hline(aes(yintercept = 0), color = "#440154", linetype = "dashed", size = 1.5) +
+  geom_violin(alpha = .7, position = position_dodge(width = 0), size = 3) +
+  geom_hline(aes(yintercept = sim_es), color = "#fde725", linetype = "dashed", size = 1.5) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=1.17, y=-1.5, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=1.17, y=1.5+sim_es, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0), breaks = c(-2:+2), labels = dv_scale) +
+  ylab(dv_label) +
+  xlab("count") +
+  theme_modern() +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        # axis.line.y = element_blank(),
+        # axis.title.y = element_blank(),
+        # axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        # axis.text.x = element_text(face = "bold")
+        ) +
+  coord_flip()
+```
+
+
+# Beeswarm
+
+## `geom_beeswarm()` overlay
+
+```{r}
+ggplot(p_data%>%dplyr::filter(group == "Without Intervention"), aes(x = 1, y = x)) +
+  geom_beeswarm(alpha = .75, fill = "#440154", color = "#440154", 
+                size = 6, priority = "random", cex = 2) +
+  geom_beeswarm(data = p_data%>%dplyr::filter(group == "With Intervention"), 
+                alpha = .8, fill = "#fde725", color = "#edd926", # color was #fde725
+                size = 6, priority = "random", cex = 2) +
+  geom_hline(aes(yintercept = 0), color = "#440154", linetype = "dashed", size = 2, alpha = .7) +
+  geom_hline(aes(yintercept = sim_es+.01), color = "darkgrey", linetype = "dashed", size = 2, alpha = .8) +
+  geom_hline(aes(yintercept = sim_es-.01), color = "darkgrey", linetype = "dashed", size = 2, alpha = .8) +
+  geom_hline(aes(yintercept = sim_es), color = "#fde725", linetype = "dashed", size = 2) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=1.12, y=-1.5, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=1.12, y=1.5+sim_es, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_continuous(expand = c(0,0), breaks = c(-2:+2), labels = dv_scale) +
+  ylab(dv_label) +
+  xlab("count") +
+  theme_modern() +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        # axis.line.y = element_blank(),
+        # axis.title.y = element_blank(),
+        # axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        # axis.text.x = element_text(face = "bold")
+        ) +
+  coord_flip()
+```
+
+# Dotplot
+
+## `stat_dots()`
+
+```{r}
+ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
+  stat_dots(alpha = .75) +
+  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dashed", size = 2, alpha = .7) +
+  geom_vline(aes(xintercept = sim_es+.01), color = "darkgrey", linetype = "dashed", size = 2, alpha = .7) +
+  geom_vline(aes(xintercept = sim_es-.01), color = "darkgrey", linetype = "dashed", size = 2, alpha = .7) +
+  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dashed", size = 2) +  # color was #fde725
+  geom_label(x=-2, y=.75, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=.75, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  xlab(dv_label) +
+  ylab("count") +
+  theme_modern() +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        # axis.line.y = element_blank(),
+        # axis.title.y = element_blank(),
+        # axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        # axis.text.x = element_text(face = "bold")
+        )
+```
+
+
+# Histograms
+
+## `geom_histogram()`
+
+```{r}
+ggplot(data = p_data%>%dplyr::filter(group == "Without Intervention"), aes(x=x)) +
+  geom_histogram(alpha = .8, fill = "#440154", color = "#440154") +
+  geom_histogram(data = p_data%>%dplyr::filter(group == "With Intervention"), alpha = .7, fill = "#fde725", color = "#edd926") +
+  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dashed", size = 2, alpha = .5) +
+  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dashed", size = 2) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_label(x=-2, y=sim_n/15, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
+  geom_label(x=2.2, y=sim_n/15, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
+  scale_y_discrete(expand = c(0,0)) +
+  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
+  xlab(dv_label) +
+  ylab("count") +
+  theme_modern() +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # axis.ticks.x = element_line(color = "#666666"),
+        # axis.line.x = element_line(color = "#666666"),
+        # axis.line.y = element_blank(),
+        # axis.title.y = element_blank(),
+        # axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        # axis.text.x = element_text(face = "bold")
+        )
+```
+
+
+# Archive (old versions)
+
 ## Normal Curve (using `stat_function()`)
 
 Visualization of Cohen's $U_3$ with two normal curves.
@@ -163,64 +323,6 @@ ggarrange(p_nc2, mean_label,
           )
 ```
 
-## Normal Curve (using the simulated data) with mean as dotted line
-```{r}
-ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
-  # geom_dots() +
-  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dotted", size = 1.5) +
-  geom_density(alpha = .6, size = 3) +
-  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dotted", size = 1.5) +
-  scale_fill_viridis_d() +
-  scale_color_viridis_d() +
-  geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=.3, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  scale_y_continuous(expand = c(0,0)) +
-  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale, limits = c(-3,3.5)) +
-  xlab(dv_label) +
-  theme_modern() +
-  theme(legend.position = "none",
-        # panel.grid = element_blank(),
-        # axis.ticks.x = element_line(color = "#666666"),
-        # axis.line.x = element_line(color = "#666666"),
-        axis.line.y = element_blank(),
-        axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
-        axis.text.y = element_blank(),
-        # axis.text.x = element_text(face = "bold")
-        )
-```
-
-# Violin plot
-
-```{r}
-ggplot(p_data, aes(x=1, y = x, group = group, fill = group, colour = group)) +
-  geom_hline(aes(yintercept = 0), color = "#440154", linetype = "dotted", size = 1.5) +
-  geom_violin(alpha = .7, position = position_dodge(width = 0), size = 3) +
-  geom_hline(aes(yintercept = sim_es), color = "#fde725", linetype = "dotted", size = 1.5) +
-  scale_fill_viridis_d() +
-  scale_color_viridis_d() +
-  geom_label(x=-2, y=.3, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=.3, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  scale_y_continuous(expand = c(0,0), breaks = c(-2:+2), labels = dv_scale) +
-  ylab(dv_label) +
-  # theme_minimal() +
-  theme_modern() +
-  theme(legend.position = "none",
-        # panel.grid = element_blank(),
-        # axis.ticks.x = element_line(color = "#666666"),
-        # axis.line.x = element_line(color = "#666666"),
-        axis.line.y = element_blank(),
-        axis.title.y = element_blank(),
-        # axis.title.x = element_blank(),
-        axis.text.y = element_blank(),
-        # axis.text.x = element_text(face = "bold")
-        ) +
-  coord_flip()
-```
-
-
-# Beeswarm
-
 ## `geom_beeswarm()`
 
 Visualization of Cohen's $U_3$ with a beeswarm plot.
@@ -248,68 +350,6 @@ ggplot(p_data, aes(x=group, y = x, group = group, fill = group, colour = group))
         # axis.text.x = element_text(face = "bold")
         ) +
   coord_flip()
-```
-
-## `geom_beeswarm()` overlay
-
-```{r}
-ggplot(p_data%>%dplyr::filter(group == "Without Intervention"), aes(x = 1, y = x)) +
-  geom_beeswarm(alpha = .5, fill = "#440154", color = "#440154", 
-                size = 3, priority = "random") +
-  geom_beeswarm(data = p_data%>%dplyr::filter(group == "With Intervention"), 
-                alpha = .5, fill = "#fde725", color = "#fde725", 
-                size = 3, priority = "random") +
-  geom_hline(aes(yintercept = 0), color = "#440154", linetype = "solid", size = .5) +
-  geom_hline(aes(yintercept = sim_es), color = "#fde725", linetype = "solid", size = .5) +
-  scale_fill_viridis_d() +
-  scale_color_viridis_d() +
-  geom_label(x=1.4, y=-2, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.4, y=2, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  scale_y_continuous(expand = c(0,0), breaks = c(-2:+2), labels = dv_scale) +
-  ylab(dv_label) +
-  # theme_minimal() +
-  theme_modern() +
-  theme(legend.position = "none",
-        # panel.grid = element_blank(),
-        # axis.ticks.x = element_line(color = "#666666"),
-        # axis.line.x = element_line(color = "#666666"),
-        axis.line.y = element_blank(),
-        axis.title.y = element_blank(),
-        # axis.title.x = element_blank(),
-        axis.text.y = element_blank(),
-        # axis.text.x = element_text(face = "bold")
-        ) +
-  coord_flip()
-```
-
-# Dotplot
-
-## `stat_dots()`
-
-```{r}
-ggplot(p_data, aes(x=x, group = group, fill = group, colour = group)) +
-  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "solid", size = .75) +
-  stat_dots(alpha = .5) +
-  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "solid", size = .75) +
-  geom_label(x=-2, y=.75, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=.75, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  scale_fill_viridis_d() +
-  scale_color_viridis_d() +
-  scale_y_continuous(expand = c(0,0)) +
-  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
-  xlab(dv_label) +
-  # theme_minimal() +
-  theme_modern() +
-  theme(legend.position = "none",
-        # panel.grid = element_blank(),
-        # axis.ticks.x = element_line(color = "#666666"),
-        # axis.line.x = element_line(color = "#666666"),
-        axis.line.y = element_blank(),
-        axis.title.y = element_blank(),
-        # axis.title.x = element_blank(),
-        axis.text.y = element_blank(),
-        # axis.text.x = element_text(face = "bold")
-        )
 ```
 
 ## `stat_dots()` with `quantiles = 100`
@@ -394,40 +434,9 @@ ggplot(aes(x=x, y = group, group = group, fill = stat(x>0), colour = stat(x>0)))
 ```
 
 
-# Histograms
+## Pie Charts
 
-## `geom_histogram()`
-
-```{r}
-ggplot(data = p_data%>%dplyr::filter(group == "Without Intervention"), aes(x=x)) +
-  geom_vline(aes(xintercept = 0), color = "#440154", linetype = "dotted", size = 2) +
-  geom_histogram(alpha = .5, fill = "#440154", color = "#440154") +
-  geom_histogram(data = p_data%>%dplyr::filter(group == "With Intervention"), alpha = .5, fill = "#fde725", color = "#fde725") +
-  geom_vline(aes(xintercept = sim_es), color = "#fde725", linetype = "dotted", size = 2) +
-  scale_fill_viridis_d() +
-  scale_color_viridis_d() +
-  geom_label(x=-2, y=sim_n/15, label=label_control, color = 'white', fill = "#440154", fontface = "bold") +
-  geom_label(x=2.2, y=sim_n/15, label=label_intervention, color = '#090c0e', fill = "#fde725", fontface = "bold") +
-  scale_y_discrete(expand = c(0,0)) +
-  scale_x_continuous(breaks = c(-2:+2), labels = dv_scale) +
-  xlab(dv_label) +
-  # theme_minimal() +
-  theme_modern() +
-  theme(legend.position = "none",
-        # panel.grid = element_blank(),
-        # axis.ticks.x = element_line(color = "#666666"),
-        # axis.line.x = element_line(color = "#666666"),
-        axis.line.y = element_blank(),
-        axis.title.y = element_blank(),
-        # axis.title.x = element_blank(),
-        axis.text.y = element_blank(),
-        # axis.text.x = element_text(face = "bold")
-        )
-```
-
-# Pie Charts
-
-## Donut Plots
+### Donut Plots
 
 Percent of participants scoring higher than the control group's average.
 
@@ -457,7 +466,7 @@ p_data %>%
 ```
 
 
-# Waffle Charts
+## Waffle Charts
 
 Percent of participants scoring higher than the control group's average.
 
