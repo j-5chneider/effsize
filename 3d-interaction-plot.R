@@ -60,7 +60,7 @@ plot_ly(
               y = ~ anticipatedES, 
               z = ~ sensitivity, 
               color = ~ anticipatedES, 
-              line = list(width = 6)) 
+              line = list(width = 6))
 
 
 
