@@ -3,7 +3,7 @@ slides > slide:not(.nobackground):after {
 }
 
 .title-slide {
-  background-image: url("title.jpg");
+  background-image: url("title-bg.jpg");
   background-size: cover;
 }
 
@@ -15,6 +15,10 @@ slides > slide.title-slide hgroup h1 {
 
 slides > slide.title-slide hgroup p {
   color: white;
+}
+
+.title-slide hgroup h2 {
+  color: white !important;
 }
 
 
