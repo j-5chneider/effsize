@@ -126,7 +126,7 @@ __supporting the process__: __enrichment options__
 * This so-called signaling effect can increase understanding and reduce cognitive load
 </div>
 
-## Background & Focus | Perpection, Understanding, Practical Implications
+## Background & Focus | Perception, Understanding, Practical Implications
 
 <img src="../www/uv-av0.jpg" style="width:80%" />
 
@@ -136,7 +136,7 @@ __supporting the process__: __enrichment options__
 * We are looking at __three aspects__ that we found to be relevant for processing visualizations...
 </div>
 
-## Background & Focus | Perpection, Understanding, Practical Implications
+## Background & Focus | Perception, Understanding, Practical Implications
 
 <img src="../www/uv-av1.jpg" style="width:80%" />
 
@@ -152,7 +152,7 @@ Drawing on current research from __ES communication__ and __visualization__, we 
 
 </div>
 
-## Background & Focus | Perpection, Understanding, Practical Implications
+## Background & Focus | Perception, Understanding, Practical Implications
 
 <img src="../www/uv-av2.jpg" style="width:80%" />
 
