@@ -368,8 +368,9 @@ Demo: [es-vis-demo.formr.org](https://es-vis-demo.formr.org)
 <div class="box60l">
 <br /><br />
 
-* __Pilot study__ completed<br /><br /><br /><br />
-* __Piloting__ of self-generated __measures__<br /><br /><br /><br />
+* __Pilot study__ completed<br /><br /><br />
+* __Piloting__ of self-generated __measures__<br /><br /><br />
+* writing stage 1 Registered Report<br /><br /><br />
 * planned: conceptual replication with __student teachers__
 
 </div>
