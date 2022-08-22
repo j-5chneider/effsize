@@ -16,6 +16,13 @@ editor_options:
   chunk_output_type: console
 ---
 
+<div class="notes">
+
+* university of education Karlsruhe
+* get a first shot at the question: ...
+
+</div>
+
 <style>
 slides > slide:not(.nobackground):after {
   content: '';
@@ -43,31 +50,7 @@ library(kableExtra)
 
 
 
-## Background & Focus | Why designing science communication?
 
-<div class="box-bg-r">
- <span style="font-size: 3em; line-height: .9em;">
- <br /><br />
- evidence  
- informed  
- practice
- </span>
-</div>
-
-<div class="box60l">
-
-* Teachers: encouraged to consider __evidence__ from research [@slavin.2020]<br /><br /><br /><br />
-* in their daily practice, they __rarely__ draw on research evidence  [e.g., @thommetal.2021]<br /><br /><br /><br />
-* current approaches: toward __intuitive__ science communication<br /> [@hedges.2018; @farley-rippleetal.2020]
-
-</div>
-
-<div class="notes">
-* Teachers are encouraged to consider evidence in their professional practice
-* teachers rarely draw on research evidence in their daily practice
-* different strategies exist to increase / foster teachers’ engagement with evidence
-* current approaches: toward a more intuitive science communication
-</div>
 
 ## Background & Focus | Why looking at effect sizes?
 
@@ -84,9 +67,13 @@ library(kableExtra)
 
 </div>
 
+<div style="position: absolute; bottom: 2%; left: 5%; background-color:#d4d4d4; font-size: .7em; padding: 5px">
+__Slides__: [bit.ly/sig67-v (view)](https://bit.ly/sig67-v) | [bit.ly/sig67-d (download)](https://bit.ly/sig67-d)
+</div>
+
 <div class="notes">
 * "__clearing house__" approaches<br />`r fa(name = "arrow-right")` “best available [...] evidence from systematic research”
-* particularly evaluated according to the extent to which it allows to assess __treatment effectiveness__, i.e. the investigation of whether a treatment works
+* particularly evaluated according to the extent to which it allows to assess __treatment effectiveness__, i.e. the investigation of whether a treatment works<br />`r fa(name = "arrow-right")` so in our study we look at group differences
 * Meta-analyses = highest level of evidence<br />`r fa(name = "arrow-right")` ES = key information to be communicated
 </div>
 
@@ -101,22 +88,66 @@ library(kableExtra)
 <div class="box60l">
 
 * scientists & clearing houses typically use standardized __textual__ representations [@cohen.1988]<br /><br /><br />
-* textual representations of ES are __challenging__ for teachers' perception and understanding [@haneletal.2019; @lortie-forguesetal.2021]<br /><br /><br />
+* these are __challenging__ for teachers' sense-making [@haneletal.2019; @lortie-forguesetal.2021]<br /><br /><br />
 * __Translations__ of ES (e.g. months of learning) often carry __undesired characteristics__ [@bairdetal.2019]<br /><br /><br />
 * Alternative: visualizations [@franconerietal.2021]
 
 </div>
 
 <div class="notes">
+* How do we normally communicate ES? As scientists & some clearing houses  use __standardized__ and __textual__ representations
+* there is __compelling evidence__ that __textual__ representations of __standardized__ ES are __challenging__ for teachers' perception and understanding
+* Some clearing houses use __Translations__ of ES (e.g. months of learning) often carry __undesired characteristics__
+* Alternative: visualizations
+</div>
+
+## Background & Focus | What we know about visualizing data (for lay people)
+
+__accurately__ estimating statistical information: __plot type__ plays a role
+
+* box plots: `r fa(name = "thumbs-up")` spread; `r fa(name = "thumbs-down")` distribution
+* bar/line plot: `r fa(name = "thumbs-up")` mean
+* modified stock chart: `r fa(name = "thumbs-up")` maxima, minima; `r fa(name = "thumbs-down")` spread [@albersetal.2014; @pierceetal.2013]
+
+<div class="notes">
+
+* there is __first evidence__ that the __type of__ visualization we choose 
+* plays a role as to how __accurately__ lay people estimate statistical information
+
+</div>
+
+
+## Background & Focus | What we know about visualizing data (for lay people)
+
+__accurately__ estimating statistical information: __plot type__ plays a role
+
+* box plots: `r fa(name = "thumbs-up")` spread; `r fa(name = "thumbs-down")` distribution
+* bar/line plot: `r fa(name = "thumbs-up")` mean
+* modified stock chart: `r fa(name = "thumbs-up")` maxima, minima; `r fa(name = "thumbs-down")` spread [@albersetal.2014; @pierceetal.2013]
+
+\
+\
+
+__supporting the process__: __enrichment options__
+
+* benchmarks (anchoring) [@cohen.1988; ]
+* cues [@schneideretal.2018]
+
+<div class="notes">
+* Enrichment options for these visualizations may further support the complex processes of sense-making
+* A common approach is to provide __standardized benchmarks__ against which also researchers typically anchor their interpretations
+* research on multimedia learning suggests that the use of __cues__ (e.g. arrows, labels) can direct observers' attention.
+* This so-called signaling effect can increase understanding and reduce cognitive load
 </div>
 
 ## Background & Focus | Design, perception & use of visualizing ES
 
 <img src="../www/uv-av0.jpg" style="width:80%" />
 
-[@brownetal.2017]
 
 <div class="notes">
+* I was talking a lot about "sense-making" so far, but what do we mean by that?  
+* We are looking at __three aspects__ that we found to be relevant for processing visualizations...
 </div>
 
 ## Background & Focus | Design, perception & use of visualizing ES
@@ -126,6 +157,13 @@ library(kableExtra)
 [@korbachetal.2017; @mcphetresetal.2020]
 
 <div class="notes">
+Drawing on current research from __ES communication__ and __visualization__, we address:
+
+* ... which is a cognitive load measure
+* ... which reflects at what point the effect size between two groups in a plot are perceived as __difference__
+* ... is the estimate of the size of the effect correct?
+* ... how quickly are they able to do it?
+
 </div>
 
 ## Background & Focus | Design, perception & use of visualizing ES
@@ -135,37 +173,18 @@ library(kableExtra)
 [@lortie-forguesetal.2021]
 
 <div class="notes">
+
+concerning practical implications we look at
+
+* how informative and valuable the visualized information is for teaching practice
+* how high are the chances are participants will use the information in their practice
+
 </div>
 
-## Background & Focus | What we know about visualizing data (in general)
 
-<div class="franconeri"></div>
+## Objectives & Research Questions | &nbsp;
 
-<div class="notes">
-</div>
-
-## Background & Focus | What we know about visualizing data (for lay people)
-
-accurately estimating statistical information: __plot type__ plays a role
-
-* box plots: `r fa(name = "thumbs-up")` spread; `r fa(name = "thumbs-down")` distribution
-* bar/line plot: `r fa(name = "thumbs-up")` mean
-* modified stock chart: `r fa(name = "thumbs-up")` maxima, minima; `r fa(name = "thumbs-down")` spread
-
-[@albersetal.2014; @pierceetal.2013]
-
-<div class="notes">
-</div>
-
-## Background & Focus | What we know about visualizing data (for lay people)
-
-accurate estimation of statistical information needed for the evaluation of ES: Plot type plays a role
-
-* box plots: `r fa(name = "thumbs-up")` spread; `r fa(name = "thumbs-down")` distribution
-* bar/line plot: `r fa(name = "thumbs-up")` mean
-* modified stock chart: `r fa(name = "thumbs-up")` maxima, minima; `r fa(name = "thumbs-down")` spread
-
-[@albersetal.2014; @pierceetal.2013]
+<img src="../www/uv-av2.jpg" style="width:80%" />
 
 \
 \
@@ -179,30 +198,10 @@ accurate estimation of statistical information needed for the evaluation of ES: 
 
 
 <div class="notes">
+So in our project we want to contribute __first evidence__ toward the questions:
+
 </div>
 
-## Objectives & Research Questions | Exploratory & descriptive: plot types
-
-<img src="../www/uv-av2.jpg" style="width:80%" />
-
-1. <span style="background-color:#f5f5f5;">Does __plot type__ affect the outcomes in assessing ES?</span>  
-2. <span style="background-color:#f5f5f5;">Which plot types produce the __highest scores__ in the outcomes?</span> 
-
-
-<div class="notes">
-</div>
-
-
-## Objectives & Research Questions | Confirmatory: Enrichment options
-
-<img src="../www/uv-av2.jpg" style="width:80%" />
-
-
-
-1. <span style="background-color:#f5f5f5;">Does __plot type__ affect the outcomes in assessing ES?</span>  
-2. <span style="background-color:#f5f5f5;">Which plot types produce the __highest scores__ in the outcomes?</span>
-3. <span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
-4. <span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues and a control group?</span>
 
 
 # Methods
@@ -217,6 +216,12 @@ accurate estimation of statistical information needed for the evaluation of ES: 
 
 ![](../www/eff1.jpg){width=70%}  
 
+<div class="notes">
+* now if we want to find out what are __promising plot types__ to communicate ES<br />`r fa(name = "arrow-right")`we face the challenge that there is a universe of potential plot types to investigate
+* so in a __pilot study__ we consulted experts in Data Visualization and Science Communication to help us collect and rank
+* "plot types that they gauge suitable for depicting effect sizes to teachers"
+* synthesizing these lists, resulted in 16 suitable plot types
+</div>
 
 
 ## Pilot Study
@@ -229,8 +234,12 @@ accurate estimation of statistical information needed for the evaluation of ES: 
 
 
 _"How accurately might teachers assess the ES depicted in the plot above?"_  
-(7-stufige Likert Skala; totally random - totally accurate)
+(7-point Likert Skala; totally random - totally accurate)
 
+<div class="notes">
+* for each plot type we created a plot distinguishing the groups on the y-axis; x-axis and by color
+* we then asked them to rate and rank these plots as to ...
+</div>
 
 ## Pilot Study
 
@@ -242,7 +251,7 @@ _"How accurately might teachers assess the ES depicted in the plot above?"_
 
 
 _"How accurately might teachers assess the ES depicted in the plot above?"_  
-(7-stufige Likert Skala; totally random - totally accurate)
+(7-point Likert Skala; totally random - totally accurate)
 \
 \
 
@@ -250,17 +259,34 @@ __Results: Top ranked types__
 
 ![](../www/best_ranked.jpg){width=75%}  
 
+<div class="notes">
+* the top 4 ranked plots are...
+* the rankings of both expert groups are __surprisingly similar__: top 4 plots in both groups
+* and with these 4 plots we will investigate the RQ mentioned before
+</div>
+
 
 ## Study 1 | plot types: Design
+
+<span style="background-color:#f5f5f5;">Does __plot type__ affect the outcomes in assessing ES?</span>  
+  
+<span style="background-color:#f5f5f5;">Which plot types produce the __most desirable scores__ in the outcomes?</span>
+
+\
 
 * in-service __teachers__ (N = Bayesian updating)<br /><br />
 * __4 x 6__ within-design
   - 4 plot types
-  - 6 ES (d= -.8 to .8)<br /><br />
+  - 6 ES (_d_= -.8 to .8)<br /><br />
 * __randomizations__
   - order of conditions
   - vignettes (1 of 4 randomized between)
 
+<div class="notes">
+* as a reminder the first part of the RQ were: ...
+* we will try to answer these questions with __in-service__ teachers
+* who will evaluate all 4 plots depicting 6 different effect sizes from ...
+</div>
 
 
 ## Study 1 | plot types: Measures
@@ -308,76 +334,57 @@ measures %>%
 
 Demo: [es-vis-demo.formr.org](https://es-vis-demo.formr.org)
 
-
+<div class="notes">
+* I can't go into too much detail with the operationalizations of the 7 constructs
+* but I can give you a glimpse of the survey structure
+</div>
 
 ## Study 2 | Enrichment options: Design
+
+<span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
+  
+<span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
+
+\
 
 * in-service __teachers__ (N = Bayesian updating)<br /><br />
 * __2 RCTs__
   - Factor: visual benchmarking (yes vs. no)
   - Factor: cues (difference, overlap, no cue)
   
-## Study 2 | Enrichment options: Design
-
-* in-service __teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: cues (difference, overlap, no cue)
-
-<div style="position:absolute; top: 3%; right:7%; height: 70%; width:30%"><img src="../www/benchmarking.jpg" style="width:100%" /> 
+<div class="notes">
+* In study 2 we investigate the enrichment options: ...
+* we will investigate these questions in 2 RCTs
+* comparing visual benchmarking to no benchmarking
+* and cues about difference, to cues about overlap, to no cues
 </div>
-
-## Study 2 | Enrichment options: Design
-
-* in-service __teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: cues (difference, overlap, no cue)<br /><img src="../www/signalling1.png" style="width:37%" />
-
-
-
-<div style="position:absolute; top: 3%; right:7%; height: 70%; width:30%"><img src="../www/benchmarking.jpg" style="width:100%" /> 
-</div>
-
-## Study 2 | Enrichment options: Design
-
-* in-service __teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: cues (difference, overlap, no cue)<br /><br />
-* __randomizations__
-  - size of effect (d= -.8 to .8)
-  - order of conditions
-  - vignettes (1 of 4 randomized between)
-
-## Study 2 | plot types: Measures
-
-same as Study 1
-
-```{r}
-measures %>%
-  kbl() %>%
-  kable_styling(font_size = 24) %>%
-  row_spec(1, background = "#efefef") %>%
-  row_spec(5:7, background = "#efefef")
-```
+  
 
 
 # Current progress
 
-## Current progress
+## Current progress | and further plans
 
 <div class="box60l">
 <br /><br />
 
 * __Pilot study__ completed<br /><br /><br /><br />
 * __Piloting__ of self-generated __measures__<br /><br /><br /><br />
-* Writing stage 1 __Registered Report__
+* planned: conceptual replication with __student teachers__
 
 </div>
 
 <div class="box-bg-r" style="padding-top:230px;">
  `r fa(name = "forward", fill="white", width = "230px")`
+</div>
+
+<div class="notes">
+so how far did we get?
+
+* we completed the pilot study with the experts
+* currently we are piloting the self-generated measures on sensitivity, accuracy, and practical implications
+* writing stage 1 Registered Report
+* future plans are a conceptual replication of this study with student teachers
 </div>
 
 
@@ -388,6 +395,12 @@ measures %>%
 
 __Jürgen Schneider__  
 juergen.schneider@uni-tuebingen.de  
+  
+\
+
+<div style="position: absolute; bottom: 2%; left: 10%;">
+__Slides__: [bit.ly/sig67-v (view)](https://bit.ly/sig67-v) | [bit.ly/sig67-d (download)](https://bit.ly/sig67-d)
+</div>
 
 
 # {-}
@@ -405,6 +418,75 @@ Icons by Font Awesome CC BY 4.0
 Title slide photo by <a href="https://unsplash.com/@rorymck94?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Rory McKeever</a> on <a href="https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
   
 </span>
+
+## Background & Focus | Why designing science communication?
+
+<div class="box-bg-r">
+ <span style="font-size: 3em; line-height: .9em;">
+ <br /><br />
+ evidence  
+ informed  
+ practice
+ </span>
+</div>
+
+<div class="box60l">
+
+* Teachers: encouraged to consider __evidence__ from research [@slavin.2020]<br /><br /><br /><br />
+* in their daily practice, they __rarely__ draw on research evidence  [e.g., @thommetal.2021]<br /><br /><br /><br />
+* current approaches: toward __intuitive__ science communication<br /> [@hedges.2018; @farley-rippleetal.2020]
+
+</div>
+
+<div class="notes">
+* Teachers are encouraged to consider evidence in their professional practice
+* teachers rarely draw on research evidence in their daily practice
+* different strategies exist to increase / foster teachers’ engagement with evidence
+* current approaches: toward a more intuitive science communication
+</div>
+
+
+
+## Background & Focus | What we know about visualizing data (in general)
+
+<div class="franconeri"></div>
+
+<div class="notes">
+
+* there is quite some basic research on visualizing information
+* for example using position (dot plot) it is easier estimating the mean than using areas
+* these results give us first ideas of what to expect
+* however, when plotting ES, several of these phenomena come together: most plots use position AND length AND area
+
+</div>
+
+
+
+## Objectives & Research Questions | Exploratory & descriptive: plot types
+
+<img src="../www/uv-av2.jpg" style="width:80%" />
+
+1. <span style="background-color:#f5f5f5;">Does __plot type__ affect the outcomes in assessing ES?</span>  
+2. <span style="background-color:#f5f5f5;">Which plot types produce the __most desirable scores__ in the outcomes?</span> 
+
+
+<div class="notes">
+</div>
+
+
+
+## Objectives & Research Questions | Confirmatory: Enrichment options
+
+<img src="../www/uv-av2.jpg" style="width:80%" />
+
+
+
+1. <span style="background-color:#f5f5f5;">Does __plot type__ affect the outcomes in assessing ES?</span>  
+2. <span style="background-color:#f5f5f5;">Which plot types produce the __most desirable scores__ in the outcomes?</span>
+3. <span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
+4. <span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
+
+
 
 ## Cumulative Link Model
 
@@ -453,3 +535,84 @@ p + stat_function(fun = mydnorm, n = 100, geom = "area", alpha = .5, fill = "dar
             theme_minimal()
 ```
 
+
+## Study 2 | Enrichment options: Design
+
+<span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
+  
+<span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
+
+\
+
+* in-service __teachers__ (N = Bayesian updating)<br /><br />
+* __2 RCTs__
+  - Factor: visual benchmarking (yes vs. no)
+  - Factor: cues (difference, overlap, no cue)
+
+<div style="position:absolute; top: 3%; right:7%; height: 70%; width:30%"><img src="../www/benchmarking.jpg" style="width:100%" /> 
+</div>
+
+<div class="notes">
+* visual benchmarking CAN look like this (first draft of the condition)
+* on the top we provide a benchmark of a certain effect size
+* on the bottom we provide the ES to be evaluated
+* so participants are able to draw comparisons to the benchmark
+</div>
+
+## Study 2 | Enrichment options: Design
+
+<span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
+  
+<span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
+
+\
+
+* in-service __teachers__ (N = Bayesian updating)<br /><br />
+* __2 RCTs__
+  - Factor: visual benchmarking (yes vs. no)
+  - Factor: cues (difference, overlap, no cue)
+
+<div style="position:absolute; top: 40%; right:7%; width:37%"><img src="../www/signalling1.png" style="width:100%" />
+</div>
+
+<div class="notes">
+* this is a first draft of a cue on difference
+* labeling a mean and an area, describing the effect size Cohens U3
+</div>
+
+## Study 2 | Enrichment options: Design
+
+<span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
+  
+<span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
+
+\
+
+* in-service __teachers__ (N = Bayesian updating)<br /><br />
+* __2 RCTs__
+  - Factor: visual benchmarking (yes vs. no)
+  - Factor: cues (difference, overlap, no cue)<br /><br />
+* __randomizations__
+  - size of effect (d= -.8 to .8)
+  - order of conditions
+  - vignettes (1 of 4 randomized between)
+  
+<div class="notes">
+* we again randomize the same variables
+</div>
+
+## Study 2 | plot types: Measures
+
+same as Study 1
+
+```{r}
+measures %>%
+  kbl() %>%
+  kable_styling(font_size = 24) %>%
+  row_spec(1, background = "#efefef") %>%
+  row_spec(5:7, background = "#efefef")
+```
+
+<div class="notes">
+* and observe the same measures
+</div>
