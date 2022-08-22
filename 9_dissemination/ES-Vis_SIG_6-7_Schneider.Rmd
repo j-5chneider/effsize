@@ -52,32 +52,9 @@ library(kableExtra)
 
 
 
-## Background & Focus | Why looking at effect sizes?
 
 
-<div class="box-bg-r">
-![](../www/forest_plot.jpg){width=95%}
-</div>
-
-<div class="box60l">
-
-* "__clearing house__" approaches<br />`r fa(name = "arrow-right")` “best available [...] evidence from systematic research” [@sackettetal.1996, p. 71]<br /><br /><br /><br />
-* evaluated according to the extent to which it allows to assess __treatment effectiveness__ [@apa.2002]<br /><br /><br /><br />
-* Meta-analyses = highest level of evidence<br />`r fa(name = "arrow-right")` ES = __key information__ to be communicated [@burnsetal.2011]
-
-</div>
-
-<div style="position: absolute; bottom: 2%; left: 5%; background-color:#d4d4d4; font-size: .7em; padding: 5px">
-__Slides__: [bit.ly/sig67-v (view)](https://bit.ly/sig67-v) | [bit.ly/sig67-d (download)](https://bit.ly/sig67-d)
-</div>
-
-<div class="notes">
-* "__clearing house__" approaches<br />`r fa(name = "arrow-right")` “best available [...] evidence from systematic research”
-* particularly evaluated according to the extent to which it allows to assess __treatment effectiveness__, i.e. the investigation of whether a treatment works<br />`r fa(name = "arrow-right")` so in our study we look at group differences
-* Meta-analyses = highest level of evidence<br />`r fa(name = "arrow-right")` ES = key information to be communicated
-</div>
-
-## Background & Focus | Why looking at visualizations?
+## Background & Focus | Why looking at ES visualizations?
 
 <div class="box-bg-r">
  <img src="../www/eef_es1.jpg" style="border: 1px solid #000; width: 95%; margin: 5px;" />  
@@ -87,19 +64,27 @@ __Slides__: [bit.ly/sig67-v (view)](https://bit.ly/sig67-v) | [bit.ly/sig67-d (d
 
 <div class="box60l">
 
-* scientists & clearing houses typically use standardized __textual__ representations [@cohen.1988]<br /><br /><br />
+* evidence-informed practice: knowing __"what works"__ is a key information[@sackettetal.1996; @apa.2002]<br /><br /><br />
+* scientists & "clearing houses" typically use standardized __textual__ representations [@cohen.1988]<br /><br /><br />
 * these are __challenging__ for teachers' sense-making [@haneletal.2019; @lortie-forguesetal.2021]<br /><br /><br />
 * __Translations__ of ES (e.g. months of learning) often carry __undesired characteristics__ [@bairdetal.2019]<br /><br /><br />
 * Alternative: visualizations [@franconerietal.2021]
 
 </div>
 
+<div style="position: absolute; top: 0%; right: 0%; background-color:#d4d4d4; font-size: .7em; padding: 5px">
+__Slides__: [bit.ly/sig67-v (view)](https://bit.ly/sig67-v) | [bit.ly/sig67-d (download)](https://bit.ly/sig67-d)
+</div>
+
 <div class="notes">
+* from an evidence-informed practice approach, treatment effectiveness is a key information
 * How do we normally communicate ES? As scientists & some clearing houses  use __standardized__ and __textual__ representations
 * there is __compelling evidence__ that __textual__ representations of __standardized__ ES are __challenging__ for teachers' perception and understanding
 * Some clearing houses use __Translations__ of ES (e.g. months of learning) often carry __undesired characteristics__
 * Alternative: visualizations
 </div>
+
+
 
 ## Background & Focus | What we know about visualizing data (for lay people)
 
@@ -110,7 +95,8 @@ __accurately__ estimating statistical information: __plot type__ plays a role
 * modified stock chart: `r fa(name = "thumbs-up")` maxima, minima; `r fa(name = "thumbs-down")` spread [@albersetal.2014; @pierceetal.2013]
 
 <div class="notes">
-
+* there is a lot of basic research on visualizing statistical information
+* however, when plotting ES a lot of these phenomena we know about on a __small scale__ come together and interact
 * there is __first evidence__ that the __type of__ visualization we choose 
 * plays a role as to how __accurately__ lay people estimate statistical information
 
@@ -140,7 +126,7 @@ __supporting the process__: __enrichment options__
 * This so-called signaling effect can increase understanding and reduce cognitive load
 </div>
 
-## Background & Focus | Design, perception & use of visualizing ES
+## Background & Focus | Perpection, Understanding, Practical Implications
 
 <img src="../www/uv-av0.jpg" style="width:80%" />
 
@@ -150,7 +136,7 @@ __supporting the process__: __enrichment options__
 * We are looking at __three aspects__ that we found to be relevant for processing visualizations...
 </div>
 
-## Background & Focus | Design, perception & use of visualizing ES
+## Background & Focus | Perpection, Understanding, Practical Implications
 
 <img src="../www/uv-av1.jpg" style="width:80%" />
 
@@ -161,12 +147,12 @@ Drawing on current research from __ES communication__ and __visualization__, we 
 
 * ... which is a cognitive load measure
 * ... which reflects at what point the effect size between two groups in a plot are perceived as __difference__
-* ... is the estimate of the size of the effect correct?
+* ... are participants accurately estimating the size of the effect?
 * ... how quickly are they able to do it?
 
 </div>
 
-## Background & Focus | Design, perception & use of visualizing ES
+## Background & Focus | Perpection, Understanding, Practical Implications
 
 <img src="../www/uv-av2.jpg" style="width:80%" />
 
@@ -420,6 +406,30 @@ Title slide photo by <a href="https://unsplash.com/@rorymck94?utm_source=unsplas
   
 </span>
 
+## Background & Focus | Why looking at effect sizes?
+
+
+<div class="box-bg-r">
+![](../www/forest_plot.jpg){width=95%}
+</div>
+
+<div class="box60l">
+
+* "__clearing house__" approaches<br />`r fa(name = "arrow-right")` “best available [...] evidence from systematic research” [@sackettetal.1996, p. 71]<br /><br /><br /><br />
+* evaluated according to the extent to which it allows to assess __treatment effectiveness__ [@apa.2002]<br /><br /><br /><br />
+* Meta-analyses demonstrate highest level of evidence<br />`r fa(name = "arrow-right")` ES = __key information__ to be communicated [@burnsetal.2011]
+
+</div>
+
+
+<div class="notes">
+* from an evidence-informed practice perspective
+* so called "__clearing house__" approaches<br />`r fa(name = "arrow-right")` try to make the “best available [...] evidence from systematic research” __accessible__ to ...
+* particularly evaluated according to the extent to which it allows to assess __treatment effectiveness__, i.e. the investigation of whether a treatment works<br />`r fa(name = "arrow-right")` so in our study we look at group differences
+* Meta-analyses = highest level of evidence<br />`r fa(name = "arrow-right")` ES = key information to be communicated
+</div>
+
+
 ## Background & Focus | Why designing science communication?
 
 <div class="box-bg-r">
@@ -617,3 +627,32 @@ measures %>%
 <div class="notes">
 * and observe the same measures
 </div>
+
+## Study 2 | Statistical Analyses
+
+* approximate adjusted fractional Bayes factors [@hoijtinketal.2019a]
+
+__Benchmarking__  
+  
+H3.1: $\mu(sens)_{noBench} < \mu(sens)_{Bench}$  
+  
+H3.2: $\mu(acc)_{noBench} < \mu(acc)_{Bench}$  
+  
+H3.3: $\mu(inf)_{noBench} < \mu(inf)_{Bench}$  
+  
+H3.4: $\mu(diff)_{noBench} > \mu(diff)_{Bench}$
+
+
+## Study 2 | Statistical Analyses
+
+* approximate adjusted fractional Bayes factors [@hoijtinketal.2019a]
+
+__Textual Cues__  
+  
+H4.1: $(\mu(sens)_{VisOnly} , \mu(sens)_{TextOnly}) < \mu(sens)_{Vis+Text}$  
+  
+H4.2: $(\mu(acc)_{VisOnly} , \mu(acc)_{TextOnly}) < \mu(acc)_{Vis+Text}$  
+  
+H4.3: $(\mu(inf)_{VisOnly} , \mu(inf)_{TextOnly}) < \mu(inf)_{Vis+Text}$  
+  
+H4.4: $(\mu(diff)_{VisOnly} , \mu(diff)_{TextOnly}) > \mu(diff)_{Vis+Text}$
