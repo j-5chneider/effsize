@@ -402,7 +402,6 @@ __Icons:__
 
 <span style="font-size:.7em;">
 Icons by Font Awesome CC BY 4.0
-Title slide photo by <a href="https://unsplash.com/@rorymck94?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Rory McKeever</a> on <a href="https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
   
 </span>
 
