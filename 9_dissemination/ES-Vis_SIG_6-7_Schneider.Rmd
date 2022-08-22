@@ -130,8 +130,8 @@ __accurately__ estimating statistical information: __plot type__ plays a role
 
 __supporting the process__: __enrichment options__
 
-* benchmarks (anchoring) [@cohen.1988; ]
-* cues [@schneideretal.2018]
+* benchmarks (anchoring) [@cohen.1988; @jacowitzetal.1995]
+* cues (signaling) [@schneideretal.2018]
 
 <div class="notes">
 * Enrichment options for these visualizations may further support the complex processes of sense-making
