@@ -1,0 +1,102 @@
+---
+title: "Delphi step 2b"
+date: "`r Sys.Date()`"
+output: 
+  rmdformats::downcute:
+    code_folding: show
+    self_contained: true
+    thumbnails: false
+    lightbox: true
+    downcute_theme: "chaos"
+editor_options: 
+  chunk_output_type: console
+---
+
+# Importing Data
+```{r, warning=F, message=F}
+library(tidyverse)
+library(kableExtra)
+
+delphi_bothGroups <- rio::import("../data/data_delphi_step2b_allexperts.csv")
+```
+
+# Both expert groups
+
+In this analysis we report ratings for ratings from both expert groups (experts from data visualization, $n = 4$, experts from science communication via clearing houses, $n = 4$). Each participant was weighted the same.  
+  
+We report the median rank, as ratings were made by ranking the plots against each other. Lower value means better rating of the plot.
+
+```{r}
+# all experts together
+delphi_bothGroups_together <- delphi_bothGroups %>%
+  summarize(across(TB04_01:TB04_10, .fns = median)) %>%  # compute median across all participants
+  pivot_longer(1:10, names_to = "plot", values_to = "median") %>% # make long data set
+  mutate(plot = case_when(                                   # name the plots
+    plot == "TB04_01" ~ "Halfeye Plot Groups on x-axis",
+    plot == "TB04_02" ~ "Gardner Altman Plot Groups on x-axis",
+    plot == "TB04_03" ~ "Gradientinterval Plot Groups on x-axis",
+    plot == "TB04_04" ~ "Gradientinterval Plot Groups on y-axis",
+    plot == "TB04_05" ~ "Halfeye Plot Groups on y-axis",
+    plot == "TB04_06" ~ "Dot Plot Groups on y-axis",
+    plot == "TB04_07" ~ "Quantile Dot Plot Groups on x-axis",
+    plot == "TB04_08" ~ "Raincloud Plot Groups on y-axis",
+    plot == "TB04_09" ~ "Slabintervals Plot Groups on y-axis",
+    plot == "TB04_10" ~ "Violin Plot Groups on x-axis"))
+
+delphi_bothGroups_together %>%
+  arrange(median) %>%
+  kbl()
+
+```
+
+# Groups separate
+
+We now report the results of the groups separate, as major differences would equal low agreement between the groups. This would indicate the need for further investigation.
+
+```{r}
+delphi_bothGroups_separate <- delphi_bothGroups %>%
+  dplyr::group_by(QUESTNNR) %>%                         # group by expert group
+  summarize(across(TB04_01:TB04_10, .fns = median)) %>% # compute median across group participants
+  pivot_longer(2:11, names_to = "plot", values_to = "median") %>% # make long data set
+  mutate(plot = case_when(                                   # name the plots
+                  plot == "TB04_01" ~ "Halfeye Plot Groups on x-axis",
+                  plot == "TB04_02" ~ "Gardner Altman Plot Groups on x-axis",
+                  plot == "TB04_03" ~ "Gradientinterval Plot Groups on x-axis",
+                  plot == "TB04_04" ~ "Gradientinterval Plot Groups on y-axis",
+                  plot == "TB04_05" ~ "Halfeye Plot Groups on y-axis",
+                  plot == "TB04_06" ~ "Dot Plot Groups on y-axis",
+                  plot == "TB04_07" ~ "Quantile Dot Plot Groups on x-axis",
+                  plot == "TB04_08" ~ "Raincloud Plot Groups on y-axis",
+                  plot == "TB04_09" ~ "Slabintervals Plot Groups on y-axis",
+                  plot == "TB04_10" ~ "Violin Plot Groups on x-axis"))
+```
+
+## Data Visualization Experts
+
+```{r}
+# data Viz experts
+delphi_bothGroups_separate %>%
+  dplyr::filter(QUESTNNR == "base") %>% # filter only data viz experts
+  arrange(median) %>%
+  kbl()
+```
+
+## Science Communication Experts
+
+```{r}
+# science Communication experts
+delphi_bothGroups_separate %>%
+  dplyr::filter(QUESTNNR == "d2b") %>% # filter only sci comm experts
+  arrange(median) %>%
+  kbl()
+```
+
+
+# Conclusion
+
+Results reveal very similar rankings between the two groups, which is a good sign for the agreement in the judgments between the groups. We therefore rely on the median ratings from the section "Both expert groups": In our study we will investigate 
+
+* __Raincloud Plot Groups on y-axis__
+* __Gardner Altman Plot Groups on x-axis__
+* __Halfeye Plot Groups on y-axis__
+* __Halfeye Plot Groups on x-axis__.
