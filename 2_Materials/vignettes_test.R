@@ -1,7 +1,8 @@
-tmp <- rio::import("data/features_of_vignettes_wide_en.csv")
-
 library(tidyverse)
 library(ggpubr)
+
+
+tmp <- rio::import("data/features_of_vignettes_wide_en.csv")
 
 glimpse(tmp)
 
