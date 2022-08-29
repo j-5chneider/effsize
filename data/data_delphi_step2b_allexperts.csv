@@ -1,0 +1,9 @@
+CASE;"SERIAL";"REF";"QUESTNNR";"MODE";"STARTED";"TB04_01";"TB04_02";"TB04_03";"TB04_04";"TB04_05";"TB04_06";"TB04_07";"TB04_08";"TB04_09";"TB04_10";"TB05";"TB09_01";"TIME001";"TIME002";"TIME003";"TIME_SUM";"MAILSENT";"LASTDATA";"FINISHED";"Q_VIEWER";"LASTPAGE";"MAXPAGE";"MISSING";"MISSREL";"TIME_RSI";"DEG_TIME"
+115;;;"base";"interview";2022-02-16 13:27:09;4;10;9;8;2;1;5;3;7;6;2;;5;130;;0;;2022-02-16 13:29:24;1;0;2;2;0;0;;100
+116;;;"base";"interview";2022-02-16 16:41:21;3;8;9;5;1;6;7;4;2;10;2;;6;180;;0;;2022-02-16 16:44:27;1;0;2;2;0;0;;100
+117;;;"base";"interview";2022-02-17 03:42:08;4;2;9;10;5;7;8;1;6;3;2;;7;100;;0;;2022-02-17 03:43:55;1;0;2;2;0;0;;100
+118;;;"base";"interview";2022-02-17 09:24:54;1;3;4;5;2;9;8;7;6;10;2;;5;342;;0;;2022-02-17 09:30:41;1;0;2;2;0;0;;100
+151;;;"d2b";"interview";2022-04-28 11:13:50;7;1;2;6;4;9;10;3;5;8;2;"Visualisations that show the spread of uncertainty without overemphasising arbitrary cut-offs at 95% are preferable";4;390;46;0;;2022-04-28 11:21:10;1;0;3;3;0;0;;100
+173;;;"d2b";"interview";2022-04-29 13:30:17;3;4;1;2;9;7;6;5;10;8;2;;4;79;3;0;;2022-04-29 13:31:43;1;0;3;3;8;6;;100
+176;;;"d2b";"interview";2022-05-31 16:36:00;6;8;9;5;3;4;7;1;2;10;2;"thank you for not using Hattie speedometers :D";18;834;174;0;;2022-05-31 16:53:06;1;0;3;3;0;0;;100
+177;;;"d2b";"interview";2022-06-01 07:23:14;6;1;9;10;5;3;8;2;7;4;2;"Die Effektstärke wird m. E. nur in der Gardner-Altman-Abbildung konkret dargestellt inkl. Konfidenzintervall, das finde ich hilfreich.";48;2752;2394;0;;2022-06-01 08:49:48;1;0;3;3;0;0;;100
