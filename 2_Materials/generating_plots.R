@@ -28,8 +28,9 @@ set.seed(823876) # seed for replicability
 
 
 ## HALFEYE PLOT - GROUPS ON Y-AXIS ############################################
-for (i1 in group_names) {
-    for (i2 in es) {
+                         # making a loop over
+for (i1 in group_names) {# all group names (vignettes)
+    for (i2 in es) {     # and all effect sizes
         # for nearly perfectly distributed empirical data
         data <- tibble(group1 = round(distribution_normal(309, 
                                                           # mean = half an es 
@@ -69,8 +70,9 @@ for (i1 in group_names) {
 }
 
 ## HALFEYE PLOT - GROUPS ON X-AXIS ############################################
-for (i1 in group_names) {
-    for (i2 in es) {
+                         # making a loop over
+for (i1 in group_names) {# all group names (vignettes)
+    for (i2 in es) {     # and all effect sizes
         # for nearly perfectly distributed empirical data
         data <- tibble(group1 = round(distribution_normal(309, 
                                                           # mean = half an es 
@@ -113,8 +115,9 @@ for (i1 in group_names) {
 
 
 ## RAINCLOUD PLOT - GROUPS ON Y-AXIS ##########################################
-for (i1 in group_names) {
-    for (i2 in es) {
+                         # making a loop over
+for (i1 in group_names) {# all group names (vignettes)
+    for (i2 in es) {     # and all effect sizes
         # for nearly perfectly distributed empirical data
         data <- tibble(group1 = round(distribution_normal(309, 
                                                           # mean = half an es 
@@ -170,8 +173,9 @@ for (i1 in group_names) {
 
 
 ## GARDNER-ALTMAN PLOT - GROUPS ON Y-AXIS #####################################
-for (i1 in group_names) {
-    for (i2 in es) {
+                         # making a loop over
+for (i1 in group_names) {# all group names (vignettes)
+    for (i2 in es) {     # and all effect sizes
         # for nearly perfectly distributed empirical data
         data <- tibble(group1 = round(distribution_normal(309, 
                                                           # mean = half an es 
