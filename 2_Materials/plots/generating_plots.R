@@ -176,7 +176,13 @@ for (i1 in group_names) {
                                                           50+((15*i2)/2), 
                                                           15), 
                                       0)) %>% 
-            pivot_longer(1:2, names_to = "group", values_to = "testscore")
+            pivot_longer(1:2, names_to = "group", values_to = "testscore") %>%
+            # change group1 and group2 to group names
+            mutate(group = case_when(
+                                group == "group1" ~ i1[1],
+                                group == "group2" ~ i1[2]),
+                   # replace \n with space to align plots later on
+                   group = gsub("\n", " ", group))
         
         # Gardner-Altman Plot - Groups on x-axis
         unpaired_mean_diff <-
@@ -184,15 +190,13 @@ for (i1 in group_names) {
                 data,
                 group,
                 testscore,
-                idx = c("group1", "group2"),
+                idx = c(gsub("\n", " ", i1[1]), gsub("\n", " ", i1[2])),
                 paired = FALSE
             ) %>%
             mean_diff()
         
         
-        plot.new()
         plot(unpaired_mean_diff)
-        axis(1, at = c(1,2), labels = i1)
         
         
         # save this plot
