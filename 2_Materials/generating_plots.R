@@ -9,6 +9,7 @@ library(tidyverse)
 library(hrbrthemes)
 library(ggdist)
 library(dabestr)
+library(ggh4x)
 
 ## basic characteristics of the data ##########################################
 # generate list of group names
@@ -48,7 +49,9 @@ for (i1 in group_names) {
                  xlim(c(0, 100)) + 
                  scale_y_discrete(labels = i1) +
                  theme_ipsum() +
-                 xlab("knowledge test score") 
+                 xlab("knowledge test score")  +
+                 force_panelsizes(rows = unit(4, "in"),
+                                  cols = unit(4, "in"))
         
         # save this plot
         ggsave(
@@ -88,7 +91,9 @@ for (i1 in group_names) {
                 scale_y_discrete(labels = i1) +
                 theme_ipsum() +
                 xlab("knowledge test score") +
-                coord_flip()
+                coord_flip()  +
+                force_panelsizes(rows = unit(4, "in"),
+                                 cols = unit(4, "in"))
         
         # save this plot
         ggsave(
@@ -142,7 +147,9 @@ for (i1 in group_names) {
             scale_x_discrete(labels = i1) +
             theme_ipsum() +
             ylab("knowledge test score") +
-            coord_flip()
+            coord_flip() +
+            force_panelsizes(rows = unit(4, "in"),
+                             cols = unit(4, "in"))
         
         # save this plot
         ggsave(
