@@ -10,13 +10,15 @@ library(hrbrthemes)
 library(ggdist)
 library(dabestr)
 library(ggh4x)
+library(egg)
+library(grid)
 
 ## basic characteristics of the data ##########################################
 # generate list of group names
 group_names <- list(c("reading\non tablet", "reading\non paper"),
                     c("live\nlesson", "video recorded\nlesson"),
-                    c("with\nsubtitles", "no\nsubtitles"),
-                    c("live\nlesson", "video recorded\nlesson"))
+                    c("computer\nsimulation", "real\nlaboratory"),
+                    c("with\nsubtitles", "without\nsubtitles"))
 
 # Effect sizes. Based on thresholds of Cohen's d (Cohen, 1988)
 es <- c(-.8, -.5, -.2, .2, .5, .8)
@@ -202,8 +204,13 @@ for (i1 in group_names) {
             ) %>%
             mean_diff()
         
-        
-        plot(unpaired_mean_diff)
+        # plot results
+        p <- plot(unpaired_mean_diff)
+        p <- set_panel_size(p,
+                            width  = unit(4, "in"),
+                            height = unit(4, "in"))
+        grid.newpage()
+        grid.draw(p1)
         
         
         # save this plot
