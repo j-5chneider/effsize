@@ -172,7 +172,7 @@ for (i1 in group_names) {# all group names (vignettes)
 
 
 
-## GARDNER-ALTMAN PLOT - GROUPS ON Y-AXIS #####################################
+## GARDNER-ALTMAN PLOT - GROUPS ON X-AXIS #####################################
                          # making a loop over
 for (i1 in group_names) {# all group names (vignettes)
     for (i2 in es) {     # and all effect sizes
@@ -219,7 +219,7 @@ for (i1 in group_names) {# all group names (vignettes)
         
         # save this plot
         ggsave(
-            file = paste0("2_Materials/plots/gardneraltman_yaxis_", 
+            file = paste0("2_Materials/plots/gardneraltman_xaxis_", 
                           str_remove(gsub(" ", "", i1[1]), "\n"), 
                           str_remove(gsub(" ", "", i1[2]), "\n"), 
                           "_", i2, ".svg"),
