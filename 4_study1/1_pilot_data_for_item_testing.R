@@ -282,7 +282,9 @@ ggplot(tudibase_item_pilot_w_c, aes(y=implement)) +
 
 ggplot(tudibase_item_pilot_w_c%>%dplyr::filter(!is.na(sensitivity)), 
        aes(x=type, fill = sensitivity)) +
-    geom_bar(position = "dodge")
+    geom_bar(position = "dodge") +
+    scale_fill_viridis_d() +
+    theme_ipsum()
 
 
 
