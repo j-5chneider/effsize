@@ -84,13 +84,13 @@ item_values <- tudibase_item_pilot %>%
     dplyr::mutate(plot = gsub("_", "", str_sub(variables, -2, -1)),
                   plot = paste0("plot", plot),
                   variables = gsub("_", "", str_sub(variables, 1, -3))) %>%
-    pivot_wider(id_cols = c(prolific_pid, plot), names_from = "variables", 
+    pivot_wider(id_cols = c(ID, plot), names_from = "variables", 
                 values_from = "values")
 
 
 
 tudibase_item_pilot_w <- full_join(plot_info, item_values, 
-                                   by = c("prolific_pid", "plot")) %>%
+                                   by = c("ID", "plot")) %>%
     dplyr::select(-values) %>%
     dplyr::mutate(accuracycliff = as.numeric(accuracycliff),
                   accuracyu3a = as.numeric(accuracyu3a),
@@ -110,10 +110,10 @@ tudibase_item_pilot_w <- full_join(plot_info, item_values,
 ### GROUP MEAN CENTERING #######################################################
 # (to consider clustered data https://doi.org/10.1186/2196-0739-1-7)
 group_means <- tudibase_item_pilot_w %>%
-    dplyr::group_by(prolific_pid) %>%
+    dplyr::group_by(ID) %>%
     dplyr::summarise(across(accuracycliff:effsize_betrag, .fns = mean, na.rm = T, 
                             .names = "{.col}_groupmean")) %>%
-    right_join(tudibase_item_pilot_w, by = "prolific_pid")
+    right_join(tudibase_item_pilot_w, by = "ID")
 
 tudibase_item_pilot_w_c <- group_means %>%
     dplyr::mutate(accuracycliff_centered = accuracycliff - accuracycliff_groupmean,
