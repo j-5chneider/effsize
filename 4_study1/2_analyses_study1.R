@@ -139,7 +139,9 @@ for (plottype in unique(study1_w_sensi$type)) { # for every plot type
 # plot results with thresholds
 #### @Samuel: Sind die thresholds überhaupt vergleichbar zwischen den CLMs???
 ggplot(results_clm, aes(x=value, y=type, color = threshold)) +
-    geom_point()
+    geom_point(size = 3) +
+    scale_color_viridis_d() +
+    theme_light()
 
 
 
@@ -175,7 +177,7 @@ study1_w_timestamp <- study1_w_timestamp %>%
     
 
 ggplot(study1_w_timestamp, aes(x=plot_nr_within, y=effic)) +
-    # geom_smooth(method = loess, na.rm=T) +
+    stat_summary(fun.data=median_q1q3) + # show 25 to 75% quartile
     stat_summary(fun = median) + # using median because of outliers
     theme_light() +
     facet_wrap(~type, nrow = 2)
