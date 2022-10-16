@@ -7,21 +7,20 @@ library(car)
 library(MASS)
 library(ordinal)
 
-
-formr_connect(email = "",
-              password = "")
+## connect to formr (not needed if imported from data folder)
+# formr_connect(email = "",
+#               password = "")
 
 
 #### EXPORT AND WRANGLE SURVEY ANSWERS #########################################
-study1 <- formr_results("TueDiBASE_study1a")
+## import data from formr (not needed if imported from data folder)
+# study1 <- formr_results("TueDiBASE_study1a")
+
+# import from data folder
+study1 <- rio::import("data/teachers_study1.Rdata")
 
 # wrangle information on the plot type, ES, ...
 plot_info <- study1 %>%
-    dplyr::filter((is.na(attention_check) | attention_check == "") & # passed attention check
-                  !is.na(ended) &                          # completed the survey
-                  prpid != "56fd94d5291bb50008ea5805") %>% # statistician (messaged us via prolific)
-    dplyr::select(-c(created:prpid, attention_check, conse, # delete variables not needed
-                     mcstu:value)) %>%                      # -> anonymize data set
     pivot_longer(2:195, names_to = "variables", values_to = "values", 
                  values_transform = as.character) %>%
     dplyr::filter(str_detect(variables, "plot")) %>% # we only need the rows with info on plots
@@ -33,11 +32,7 @@ plot_info <- study1 %>%
 
 # wrangle answers to items on each page
 item_values <- study1 %>%
-    dplyr::filter((is.na(attention_check) | attention_check == "") & # passed attention check
-                      !is.na(ended) &               # completed the survey
-                      prpid != "56fd94d5291bb50008ea5805") %>% # statistician (messaged us via prolific)
-    dplyr::select(-c(created:prpid, attention_check, conse, # we don't need these var
-                     mcstu:value, topic:itemo)) %>%
+    dplyr::select(-c(topic:itemo)) %>%
     pivot_longer(2:169, names_to = "variables", values_to = "values", 
                  values_transform = as.character) %>%
     dplyr::mutate(variables = case_when(      # recode variable names that have
@@ -111,11 +106,18 @@ study1_w_sensi <- study1_w %>%
                                             "sensitivity_tablet_livelesson_simulation_videowithsub_inferior")))
 
 
-ggplot(study1_w_sensi, 
+ggplot(study1_w_sensi%>%dplyr::filter(!is.na(sensi)), 
        aes(x=type, fill = sensi)) +
     geom_bar(position = "dodge") +
     scale_fill_viridis_d() +
     theme_light()
+
+ggplot(study1_w_sensi%>%dplyr::filter(!is.na(sensi)), 
+       aes(x=effsize, fill = sensi)) +
+    geom_density(adjust = 2, alpha = .5) +
+    scale_fill_viridis_d() +
+    theme_light() +
+    facet_wrap(~ type)
     
 ## make loop over all plot types: compute CLM
 # create data frame to save results
@@ -148,6 +150,7 @@ ggplot(results_clm, aes(x=value, y=type, color = threshold)) +
 ######### TIMESTAMP DATA ######################################################
 # import data
 study1_timestamp <- rio::import("data/teachers_study1_detailed.csv")
+
 
 # wrangle data
 study1_timestamp <- study1_timestamp %>%
