@@ -1,0 +1,172 @@
+---
+title: "Analysis RQ1 Regression Decay of Efficiency"
+date: "`r Sys.Date()`"
+output: 
+  rmdformats::downcute:
+    code_folding: show
+    self_contained: true
+    thumbnails: false
+    lightbox: true
+    downcute_theme: "chaos"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r packages, warning=F, message=F}
+library(tidyverse)
+```
+
+
+# Import and wrangle data
+```{r message=FALSE, warning=FALSE}
+# import from data folder
+load("data/teachers_study1.RData")
+
+# wrangle information on the plot type, ES, ...
+plot_info <- study1 %>%
+    pivot_longer(2:195, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::filter(str_detect(variables, "plot")) %>% # we only need the rows with info on plots
+    tidyr::separate(col = values, into = c("type", "axis", "effsize"), # separate the info into three columns
+                    sep = "_", remove = F) %>%
+    dplyr::mutate(plot = variables,       # rename variables for later join
+                  type = paste(type, axis, sep = "_")) %>%
+    dplyr::select(-variables, -axis)
+
+# wrangle answers to items on each page
+item_values <- study1 %>%
+    dplyr::select(-c(topic:itemo)) %>%
+    pivot_longer(2:169, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::mutate(variables = case_when(      # recode variable names that have
+        variables == "sensi_6" ~ "sensi_06",  # accidentally been labeled
+        variables == "acccl_6" ~ "acccl_06",  # without zero
+        variables == "accu3_6" ~ "accu3_06",
+        variables == "accov_6" ~ "accov_06",
+        variables == "diffi_6" ~ "diffi_06",
+        variables == "infor_6" ~ "infor_06",
+        variables == "value_6" ~ "value_06",
+        TRUE ~ variables 
+    )) %>%
+    dplyr::mutate(plot = paste0("plotx_", str_sub(variables, -2, -1)), # create variable for later join
+                  variables = str_sub(variables, 1, -4)) %>%    # rename variable names to get a data set 
+                                                                # with one line per participant per page
+    pivot_wider(id_cols = c(session, plot), names_from = "variables", 
+                values_from = "values")
+
+
+# join the two data sets
+study1_w <- full_join(plot_info, item_values, 
+                               by = c("session", "plot")) %>% # by participant and page (plot)
+    dplyr::select(-values) %>%
+    dplyr::mutate(acccl = as.numeric(acccl), # some var need to be defined as
+                  accu3 = as.numeric(accu3), # numeric again
+                  accov = as.numeric(accov),
+                  diffi = as.numeric(diffi),
+                  infor = as.numeric(infor),
+                  value = as.numeric(value),
+                  effsize = as.numeric(effsize),
+                  effsize_cl = case_when( # there is no negative Cliff's Delta, so we have to compute two transformations
+                      effsize > 0 ~   (((2*pnorm(effsize/2))-1)/pnorm(effsize/2)), # transform the actual effect size Cohen's d to Cliff's Delta
+                      effsize < 0 ~ (- (((2*pnorm(abs(effsize)/2))-1)/pnorm(abs(effsize)/2))) # transform the actual effect size Cohen's d to Cliff's Delta and make it negative as in the item
+                  ),
+                  effsize_u3 = pnorm(effsize), # transform the actual effect size Cohen's d to Cohen's U3
+                  effsize_ov = 2 * pnorm(-abs(effsize) / 2), # transform the actual effect size Cohen's d to overlap
+                  acccl_eff = (acccl - effsize_cl)/2, # actual accuracy of rating relative to depicted effectsize on plot
+                  accu3_eff = (accu3/100) - effsize_u3, # actual accuracy of rating relative to depicted effectsize on plot
+                  accov_eff = (accov/100) - effsize_ov, # actual accuracy of rating relative to depicted effectsize on plot
+                  diffi_normed = ((diffi - 1)  / 3) - 1, # transform item to -1 to 1
+                  infor_normed = ((infor - 1)  / 3) - 1, # transform item to -1 to 1
+                  value_normed = ((value - 1)  / 3) - 1) # transform item to -1 to 1
+
+
+
+######### TIMESTAMP DATA ######################################################
+# import data
+study1_timestamp <- rio::import("data/teachers_study1_detailed.csv")
+
+
+# wrangle data
+study1_timestamp <- study1_timestamp %>%
+    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1))) %>%  # create var with plot number
+    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>% # we only need vars sensitivity or accuracy
+    mutate(item_name = str_sub(item_name, 1, 5)) %>%  # delete the page number in item name
+    dplyr::select(session, item_name, answer, answered_relative, plot) %>% 
+    pivot_wider(id_cols = c(session, plot), names_from = item_name, # make structure similar to existing data set
+                values_from = answered_relative) %>%
+    mutate(plot = ifelse(plot == "plotx__6", "plotx_06", plot))%>% # recode wrong item labelling
+    rowwise() %>%
+    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>% # what was the the time of the first item to be clicked?
+    dplyr::select(session, plot, effic)
+
+
+# join data and time stamps
+study1_w_timestamp <- left_join(study1_w, study1_timestamp, by=c("session", "plot"))
+
+
+
+### generate data set so that the six plots from the same type are ordered
+### one after the other (and not 1-24)
+study1_w_timestamp <- study1_w_timestamp %>%
+    group_by(session, type) %>%
+    mutate(plot_nr_within = 1:6) %>%
+    ungroup()
+
+```
+
+# Limited Regression Decay
+
+
+
+```{r}
+
+# Generating Dummy Variables
+study1_w_timestamp <- study1_w_timestamp %>%
+    dplyr::mutate(I_gardner_x = ifelse(type == "gardneraltman_xaxis", 1, 0),
+                  I_halfeye_x = ifelse(type == "halfeye_xaxis", 1, 0),
+                  I_halfeye_y = ifelse(type == "halfeye_yaxis", 1, 0),
+                  I_rainclo_y = ifelse(type == "raincloud_yaxis", 1, 0))
+
+
+
+library(nlme)
+fit_limDecReg <- nlme(effic ~ Asym + 
+                                   AsymshiftGardnerX*I_gardner_x + 
+                                   AsymshiftHalfeyeX*I_halfeye_x + 
+                                   AsymshiftHalfeyeY*I_halfeye_y + 
+                                   AsymshiftRaincloY*I_rainclo_y + 
+                                   (R0-(Asym + 
+                                        AsymshiftGardnerX*I_gardner_x + 
+                                        AsymshiftHalfeyeX*I_halfeye_x + 
+                                        AsymshiftHalfeyeY*I_halfeye_y + 
+                                        AsymshiftRaincloY*I_rainclo_y))*
+                        exp((k + 
+                               kshiftGardnerX*I_gardner_x +
+                               kshiftHalfeyeX*I_halfeye_x +
+                               kshiftHalfeyeY*I_halfeye_y +
+                               kshiftRaincloY*I_rainclo_y )*plot_nr_within),
+                      data = study1_w_timestamp,
+                      fixed = AsymshiftGardnerX + 
+                              AsymshiftHalfeyeX + 
+                              AsymshiftHalfeyeY + 
+                              AsymshiftRaincloY + 
+                              Asym + R0 + k + 
+                              kshiftGardnerX + 
+                              kshiftHalfeyeX + 
+                              kshiftHalfeyeY + 
+                              kshiftRaincloY ~ 1,
+                      random = Asym ~ 1,
+                      groups = ~ session,
+                      start = c(Asym = 10000,
+                                AsymshiftGardnerX = 1000, 
+                                AsymshiftHalfeyeX = 1000, 
+                                AsymshiftHalfeyeY = 1000, 
+                                AsymshiftRaincloY = 1000, 
+                                R0 = 50000, k = -.7,
+                                kshiftGardnerX = -1000, 
+                                kshiftHalfeyeX = -1000, 
+                                kshiftHalfeyeY = -1000, 
+                                kshiftRaincloY = -1000))
+
+summary(fit_limDecReg)
+```
