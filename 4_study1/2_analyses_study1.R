@@ -17,7 +17,7 @@ library(ordinal)
 # study1 <- formr_results("TueDiBASE_study1a")
 
 # import from data folder
-study1 <- rio::import("data/teachers_study1.Rdata")
+load("data/teachers_study1.Rdata")
 
 # wrangle information on the plot type, ES, ...
 plot_info <- study1 %>%
