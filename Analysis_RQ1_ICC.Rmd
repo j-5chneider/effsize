@@ -3,29 +3,113 @@ title: "Analysis_RQ1"
 author: "Kirstin Schmidt"
 date: '2022-10-20'
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup}
+library(dplyr)
+library(BFpack)
+library(ggdist)
+library(corrgram)
+library(formr)
+library(tidyverse)
+library(skimr)
+library(car)
+library(MASS)
+library(ordinal)
+library(lme4)
+
+
+study1 <- read_csv("data/teachers_study1a.csv")
+
+
+# wrangle information on the plot type, ES, ...
+plot_info <- study1 %>%
+    pivot_longer(8:195, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::filter(str_detect(variables, "plot")) %>% # we only need the rows with info on plots
+    tidyr::separate(col = values, into = c("type", "axis", "effsize"), # separate the info into three columns
+                    sep = "_", remove = F) %>%
+    dplyr::mutate(plot = variables,       # rename variables for later join
+                  type = paste(type, axis, sep = "_")) %>%
+    dplyr::select(-variables, -axis)
+
+# wrangle answers to items on each page
+item_values <- study1 %>%
+    dplyr::select(-c(topic:itemo)) %>%
+    pivot_longer(2:169, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::mutate(variables = case_when(      # recode variable names that have
+        variables == "sensi_6" ~ "sensi_06",  # accidentally been labeled
+        variables == "acccl_6" ~ "acccl_06",  # without zero
+        variables == "accu3_6" ~ "accu3_06",
+        variables == "accov_6" ~ "accov_06",
+        variables == "diffi_6" ~ "diffi_06",
+        variables == "infor_6" ~ "infor_06",
+        variables == "value_6" ~ "value_06",
+        TRUE ~ variables 
+    )) %>%
+    dplyr::mutate(plot = paste0("plotx_", str_sub(variables, -2, -1)), # create variable for later join
+                  variables = str_sub(variables, 1, -4)) %>%    # rename variable names to get a data set 
+                                                                # with one line per participant per page
+    pivot_wider(id_cols = c(session, plot), names_from = "variables", 
+                values_from = "values")
+
+study1_w <- full_join(plot_info, item_values, 
+                               by = c("session", "plot")) %>% # by participant and page (plot)
+    dplyr::select(-values) %>%
+    dplyr::mutate(acccl = as.numeric(acccl), # some var need to be defined as
+                  accu3 = as.numeric(accu3), # numeric again
+                  accov = as.numeric(accov),
+                  diffi = as.numeric(diffi),
+                  infor = as.numeric(infor),
+                  value = as.numeric(value),
+                  effsize = as.numeric(effsize))
+skim(study1_w)
+
+#### ALternative Way #########################################
+## import data from formr (not needed if imported from data folder)
+# study1 <- formr_results("TueDiBASE_study1a")
+# import from data folder
+# study1 <- rio::import("data/teachers_study1.Rdata")
+
+
+# Perceived Accuracy
+## Accuracy Cliffs Delta
+mod_acccl <- lmer(acccl ~  1 + (1|type),
+              data = study1_w)
+
+BF(mod_acccl)
+
+## Accuracy Overlap
+mod_accov <- lmer(accov ~  1 + (1|type),
+              data = study1_w)
+
+BF(mod_accov)
+
+## Accuracy U3
+mod_accu3 <- lmer(accu3 ~  1 + (1|type),
+              data = study1_w)
+
+BF(mod_accu3)
+
+# Perceived Difficulty 
+mod_diffi <- lmer(diffi ~  1 + (1|type),
+              data = study1_w)
+
+BF(mod_diffi)
+
+# Perceived Informativity 
+mod_infor <- lmer(infor ~  1 + (1|type),
+              data = study1_w)
+
+BF(mod_infor)
+
+# Perceived Value
+mod_value <- lmer(value ~  1 + (1|type),
+              data = study1_w)
+
+BF(mod_value)
 ```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
