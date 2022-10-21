@@ -1039,13 +1039,18 @@ mod_acccl &lt;- lmer(acccl ~  1 + (1|type),
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre class="r"><code>psychometric::ICC1.lme(acccl, type, study1_w)</code></pre>
 <pre><code>## [1] 7.111105e-10</code></pre>
-<pre class="r"><code>BF(mod_acccl) # inconclusive </code></pre>
+<pre class="r"><code>BF_acccl &lt;- BF(mod_acccl, hypothesis = &quot;icc = 0; icc &gt; 0&quot;)</code></pre>
 <pre><code>## First, unconstrained icc analysis...
 ## 
 ## Second, exploratory testing of icc&#39;s...
-## icc;</code></pre>
+## icc; 
+## 
+## Third, confirmatory testing of icc&#39;s...
+## icc=0; 
+## icc&gt;0;</code></pre>
+<pre class="r"><code>summary(BF_acccl)# inconclusive </code></pre>
 <pre><code>## Call:
-## BF.lmerMod(x = mod_acccl)
+## BF.lmerMod(x = mod_acccl, hypothesis = &quot;icc = 0; icc &gt; 0&quot;)
 ## 
 ## Bayesian hypothesis test
 ## Type: exploratory
@@ -1055,18 +1060,53 @@ mod_acccl &lt;- lmer(acccl ~  1 + (1|type),
 ## 
 ## Posterior probabilities:
 ##     icc=0 icc&lt;0 icc&gt;0
-## icc 0.292   0.7 0.007</code></pre>
-<pre class="r"><code>## Accuracy Overlap
+## icc  0.29 0.703 0.007
+## 
+## Bayesian hypothesis test
+## Type: confirmatory
+## Object: lmerMod
+## Parameter: intraclass correlations
+## Method: Bayes factors based on uniform priors
+## 
+## Posterior probabilities:
+##    Pr(hypothesis|data)
+## H1               0.299
+## H2               0.007
+## H3               0.694
+## 
+## Evidence matrix (Bayes factors):
+##       H1     H2    H3
+## H1 1.000 40.628 0.431
+## H2 0.025  1.000 0.011
+## H3 2.322 94.345 1.000
+## 
+## Specification table:
+##    complex= complex&gt; fit=  fit&gt;    BF=    BF&gt;     BF   PHP
+## H1       NA    1.000   NA 1.000 17.669  1.000 17.669 0.299
+## H2       NA    0.986   NA 0.429  1.000  0.435  0.435 0.007
+## H3       NA    0.014   NA 0.571  1.000 41.031 41.031 0.694
+## 
+## Hypotheses:
+## H1: icc=0
+## H2: icc&gt;0
+## H3: complement</code></pre>
+<pre class="r"><code>BF_acccl$BFtu_exploratory</code></pre>
+<pre><code>##        icc=0    icc&lt;0     icc&gt;0
+## icc 17.66913 42.83625 0.4346453</code></pre>
+<pre class="r"><code># BF_acccl$PHP_exploratory
+
+## Accuracy Overlap
 mod_accov &lt;- lmer(accov ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(accov, type, study1_w)</code></pre>
 <pre><code>## [1] 0.01165932</code></pre>
-<pre class="r"><code>BF(mod_accov) # inconclusive</code></pre>
+<pre class="r"><code>BF_accov &lt;- BF(mod_accov) # inconclusive</code></pre>
 <pre><code>## First, unconstrained icc analysis...
 ## 
 ## Second, exploratory testing of icc&#39;s...
 ## icc;</code></pre>
+<pre class="r"><code>summary(BF_accov)</code></pre>
 <pre><code>## Call:
 ## BF.lmerMod(x = mod_accov)
 ## 
@@ -1078,18 +1118,22 @@ psychometric::ICC1.lme(accov, type, study1_w)</code></pre>
 ## 
 ## Posterior probabilities:
 ##     icc=0 icc&lt;0 icc&gt;0
-## icc 0.672 0.232 0.096</code></pre>
+## icc 0.678 0.225 0.097</code></pre>
+<pre class="r"><code>BF_accov$BFtu_exploratory</code></pre>
+<pre><code>##        icc=0  icc&lt;0     icc&gt;0
+## icc 6.886405 2.2875 0.9826014</code></pre>
 <pre class="r"><code>## Accuracy U3
 mod_accu3 &lt;- lmer(accu3 ~  1 + (1|type),
               data = study1_w)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre class="r"><code>psychometric::ICC1.lme(accu3, type, study1_w)</code></pre>
 <pre><code>## [1] 3.962214e-09</code></pre>
-<pre class="r"><code>BF(mod_accu3) # inconclusive</code></pre>
+<pre class="r"><code>BF_accu3 &lt;- BF(mod_accu3) # inconclusive</code></pre>
 <pre><code>## First, unconstrained icc analysis...
 ## 
 ## Second, exploratory testing of icc&#39;s...
 ## icc;</code></pre>
+<pre class="r"><code>summary(BF_accu3)</code></pre>
 <pre><code>## Call:
 ## BF.lmerMod(x = mod_accu3)
 ## 
@@ -1101,7 +1145,10 @@ mod_accu3 &lt;- lmer(accu3 ~  1 + (1|type),
 ## 
 ## Posterior probabilities:
 ##     icc=0 icc&lt;0 icc&gt;0
-## icc 0.531 0.449  0.02</code></pre>
+## icc 0.542 0.437 0.021</code></pre>
+<pre class="r"><code>BF_accu3$BFtu_exploratory</code></pre>
+<pre><code>##        icc=0    icc&lt;0     icc&gt;0
+## icc 20.48532 16.52062 0.7902618</code></pre>
 <pre class="r"><code># Perceived Difficulty 
 mod_diffi &lt;- lmer(diffi ~  1 + (1|type),
               data = study1_w)
@@ -1112,11 +1159,12 @@ psychometric::ICC1.lme(diffi, type, study1_w)</code></pre>
 # multilevel.icc(study1_w$diffi, study1_w$type, type = 1, method = &quot;lme4&quot;, REML = TRUE,
 #               as.na = NULL, check = TRUE)
 
-BF(mod_diffi) # evidence in favor of a ICC &gt;0 </code></pre>
+BF_diffi &lt;- BF(mod_diffi) # evidence in favor of a ICC &gt;0 </code></pre>
 <pre><code>## First, unconstrained icc analysis...
 ## 
 ## Second, exploratory testing of icc&#39;s...
 ## icc;</code></pre>
+<pre class="r"><code>summary(BF_diffi)</code></pre>
 <pre><code>## Call:
 ## BF.lmerMod(x = mod_diffi)
 ## 
@@ -1129,17 +1177,21 @@ BF(mod_diffi) # evidence in favor of a ICC &gt;0 </code></pre>
 ## Posterior probabilities:
 ##     icc=0 icc&lt;0 icc&gt;0
 ## icc 0.001     0 0.999</code></pre>
+<pre class="r"><code>BF_diffi$BFtu_exploratory</code></pre>
+<pre><code>##            icc=0 icc&lt;0    icc&gt;0
+## icc 0.0007177717     0 1.006897</code></pre>
 <pre class="r"><code># Perceived Informativity 
 mod_infor &lt;- lmer(infor ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(infor, type, study1_w)</code></pre>
 <pre><code>## [1] 0.00452426</code></pre>
-<pre class="r"><code>BF(mod_infor)</code></pre>
+<pre class="r"><code>BF_infor &lt;- BF(mod_infor)</code></pre>
 <pre><code>## First, unconstrained icc analysis...
 ## 
 ## Second, exploratory testing of icc&#39;s...
 ## icc;</code></pre>
+<pre class="r"><code>summary(BF_infor)</code></pre>
 <pre><code>## Call:
 ## BF.lmerMod(x = mod_infor)
 ## 
@@ -1151,18 +1203,22 @@ psychometric::ICC1.lme(infor, type, study1_w)</code></pre>
 ## 
 ## Posterior probabilities:
 ##     icc=0 icc&lt;0 icc&gt;0
-## icc  0.71 0.244 0.046</code></pre>
+## icc 0.702 0.253 0.045</code></pre>
+<pre class="r"><code>BF_infor$BFtu_exploratory</code></pre>
+<pre><code>##        icc=0  icc&lt;0     icc&gt;0
+## icc 15.12489 5.4385 0.9693897</code></pre>
 <pre class="r"><code># Perceived Value
 mod_value &lt;- lmer(value ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(value, type, study1_w)</code></pre>
 <pre><code>## [1] 0.01415829</code></pre>
-<pre class="r"><code>BF(mod_value)</code></pre>
+<pre class="r"><code>BF_value &lt;- BF(mod_value)</code></pre>
 <pre><code>## First, unconstrained icc analysis...
 ## 
 ## Second, exploratory testing of icc&#39;s...
 ## icc;</code></pre>
+<pre class="r"><code>summary(BF_value)</code></pre>
 <pre><code>## Call:
 ## BF.lmerMod(x = mod_value)
 ## 
@@ -1174,7 +1230,10 @@ psychometric::ICC1.lme(value, type, study1_w)</code></pre>
 ## 
 ## Posterior probabilities:
 ##     icc=0 icc&lt;0 icc&gt;0
-## icc 0.652 0.114 0.234</code></pre>
+## icc 0.628 0.145 0.226</code></pre>
+<pre class="r"><code>BF_value$BFtu_exploratory</code></pre>
+<pre><code>##        icc=0  icc&lt;0    icc&gt;0
+## icc 2.781569 0.6424 1.002466</code></pre>
 
 
 

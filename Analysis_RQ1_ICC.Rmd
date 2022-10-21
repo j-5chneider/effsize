@@ -82,21 +82,28 @@ mod_acccl <- lmer(acccl ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(acccl, type, study1_w)
-BF(mod_acccl) # inconclusive 
+BF_acccl <- BF(mod_acccl, hypothesis = "icc = 0; icc > 0")
+summary(BF_acccl)# inconclusive 
+BF_acccl$BFtu_exploratory
+# BF_acccl$PHP_exploratory
 
 ## Accuracy Overlap
 mod_accov <- lmer(accov ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(accov, type, study1_w)
-BF(mod_accov) # inconclusive
+BF_accov <- BF(mod_accov) # inconclusive
+summary(BF_accov)
+BF_accov$BFtu_exploratory
 
 ## Accuracy U3
 mod_accu3 <- lmer(accu3 ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(accu3, type, study1_w)
-BF(mod_accu3) # inconclusive
+BF_accu3 <- BF(mod_accu3) # inconclusive
+summary(BF_accu3)
+BF_accu3$BFtu_exploratory
 
 # Perceived Difficulty 
 mod_diffi <- lmer(diffi ~  1 + (1|type),
@@ -108,20 +115,26 @@ psychometric::ICC1.lme(diffi, type, study1_w)
 # multilevel.icc(study1_w$diffi, study1_w$type, type = 1, method = "lme4", REML = TRUE,
 #               as.na = NULL, check = TRUE)
 
-BF(mod_diffi) # evidence in favor of a ICC >0 
+BF_diffi <- BF(mod_diffi) # evidence in favor of a ICC >0 
+summary(BF_diffi)
+BF_diffi$BFtu_exploratory
 
 # Perceived Informativity 
 mod_infor <- lmer(infor ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(infor, type, study1_w)
-BF(mod_infor)
+BF_infor <- BF(mod_infor)
+summary(BF_infor)
+BF_infor$BFtu_exploratory
 
 # Perceived Value
 mod_value <- lmer(value ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(value, type, study1_w)
-BF(mod_value)
+BF_value <- BF(mod_value)
+summary(BF_value)
+BF_value$BFtu_exploratory
 
 ```
