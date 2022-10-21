@@ -120,7 +120,7 @@ study1_w_timestamp <- study1_w_timestamp %>%
 
 ```{r}
 
-# Generating Dummy Variables
+# Generate Dummy Variables
 study1_w_timestamp <- study1_w_timestamp %>%
     dplyr::mutate(I_gardner_x = ifelse(type == "gardneraltman_xaxis", 1, 0),
                   I_halfeye_x = ifelse(type == "halfeye_xaxis", 1, 0),
@@ -131,39 +131,39 @@ study1_w_timestamp <- study1_w_timestamp %>%
 
 library(nlme)
 fit_limDecReg <- nlme(effic ~ Asym + 
-                                   AsymshiftGardnerX*I_gardner_x + 
+                                   # AsymshiftGardnerX*I_gardner_x + # we only need three of the four dummy variables
                                    AsymshiftHalfeyeX*I_halfeye_x + 
                                    AsymshiftHalfeyeY*I_halfeye_y + 
                                    AsymshiftRaincloY*I_rainclo_y + 
                                    (R0-(Asym + 
-                                        AsymshiftGardnerX*I_gardner_x + 
+                                        # AsymshiftGardnerX*I_gardner_x + 
                                         AsymshiftHalfeyeX*I_halfeye_x + 
                                         AsymshiftHalfeyeY*I_halfeye_y + 
                                         AsymshiftRaincloY*I_rainclo_y))*
                         exp((k + 
-                               kshiftGardnerX*I_gardner_x +
+                               # kshiftGardnerX*I_gardner_x +
                                kshiftHalfeyeX*I_halfeye_x +
                                kshiftHalfeyeY*I_halfeye_y +
                                kshiftRaincloY*I_rainclo_y )*plot_nr_within),
                       data = study1_w_timestamp,
-                      fixed = AsymshiftGardnerX + 
+                      fixed = #AsymshiftGardnerX + 
                               AsymshiftHalfeyeX + 
                               AsymshiftHalfeyeY + 
                               AsymshiftRaincloY + 
                               Asym + R0 + k + 
-                              kshiftGardnerX + 
+                              # kshiftGardnerX + 
                               kshiftHalfeyeX + 
                               kshiftHalfeyeY + 
                               kshiftRaincloY ~ 1,
                       random = Asym ~ 1,
                       groups = ~ session,
                       start = c(Asym = 10000,
-                                AsymshiftGardnerX = 1000, 
+                                # AsymshiftGardnerX = 1000, 
                                 AsymshiftHalfeyeX = 1000, 
                                 AsymshiftHalfeyeY = 1000, 
                                 AsymshiftRaincloY = 1000, 
                                 R0 = 50000, k = -.7,
-                                kshiftGardnerX = -1000, 
+                                # kshiftGardnerX = -1000, 
                                 kshiftHalfeyeX = -1000, 
                                 kshiftHalfeyeY = -1000, 
                                 kshiftRaincloY = -1000))
