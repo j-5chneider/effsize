@@ -21,8 +21,8 @@ library(MASS)
 library(ordinal)
 library(lme4)
 
-
-study1 <- read_csv("data/teachers_study1a.csv")
+# import from data folder
+load("data/teachers_study1_N20.RData")
 
 
 # wrangle information on the plot type, ES, ...
@@ -69,6 +69,27 @@ study1_w <- full_join(plot_info, item_values,
                   effsize = as.numeric(effsize))
 skim(study1_w)
 
+######### TIMESTAMP DATA ######################################################
+# import data
+study1_timestamp <- rio::import("data/teachers_study1_detailed.csv")
+
+
+# wrangle data
+study1_timestamp <- study1_timestamp %>%
+    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1))) %>%  # create var with plot number
+    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>% # we only need vars sensitivity or accuracy
+    mutate(item_name = str_sub(item_name, 1, 5)) %>%  # delete the page number in item name
+    dplyr::select(session, item_name, answer, answered_relative, plot) %>% 
+    pivot_wider(id_cols = c(session, plot), names_from = item_name, # make structure similar to existing data set
+                values_from = answered_relative) %>%
+    mutate(plot = ifelse(plot == "plotx__6", "plotx_06", plot))%>% # recode wrong item labelling
+    rowwise() %>%
+    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>% # what was the the time of the first item to be clicked?
+    dplyr::select(session, plot, effic)
+
+
+# join data and time stamps
+study1_w_timestamp <- left_join(study1_w, study1_timestamp, by=c("session", "plot"))
 #### ALternative Way #########################################
 ## import data from formr (not needed if imported from data folder)
 # study1 <- formr_results("TueDiBASE_study1a")
@@ -92,7 +113,7 @@ mod_accov <- lmer(accov ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(accov, type, study1_w)
-BF_accov <- BF(mod_accov) # inconclusive
+BF_accov <- BF(mod_accov, hypothesis = "icc = 0; icc > 0") # inconclusive
 summary(BF_accov)
 BF_accov$BFtu_exploratory
 
@@ -101,7 +122,7 @@ mod_accu3 <- lmer(accu3 ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(accu3, type, study1_w)
-BF_accu3 <- BF(mod_accu3) # inconclusive
+BF_accu3 <- BF(mod_accu3, hypothesis = "icc = 0; icc > 0") # inconclusive
 summary(BF_accu3)
 BF_accu3$BFtu_exploratory
 
@@ -115,7 +136,7 @@ psychometric::ICC1.lme(diffi, type, study1_w)
 # multilevel.icc(study1_w$diffi, study1_w$type, type = 1, method = "lme4", REML = TRUE,
 #               as.na = NULL, check = TRUE)
 
-BF_diffi <- BF(mod_diffi) # evidence in favor of a ICC >0 
+BF_diffi <- BF(mod_diffi, hypothesis = "icc = 0; icc > 0") # evidence in favor of a ICC >0 
 summary(BF_diffi)
 BF_diffi$BFtu_exploratory
 
@@ -124,7 +145,7 @@ mod_infor <- lmer(infor ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(infor, type, study1_w)
-BF_infor <- BF(mod_infor)
+BF_infor <- BF(mod_infor, hypothesis = "icc = 0; icc > 0")
 summary(BF_infor)
 BF_infor$BFtu_exploratory
 
@@ -133,8 +154,23 @@ mod_value <- lmer(value ~  1 + (1|type),
               data = study1_w)
 
 psychometric::ICC1.lme(value, type, study1_w)
-BF_value <- BF(mod_value)
+BF_value <- BF(mod_value, hypothesis = "icc = 0; icc > 0")
 summary(BF_value)
 BF_value$BFtu_exploratory
+
+# Efficiency
+skim(study1_w_timestamp)
+data_effic <- study1_w_timestamp %>%
+    filter(!effic=="Inf")
+
+skim(data_effic)
+
+mod_effic <- lmer(as.numeric(effic) ~  1 + (1|type),
+              data = data_effic)
+
+psychometric::ICC1.lme(effic, type, data_effic)
+BF_effic <- BF(mod_effic, hypothesis = "icc = 0; icc > 0")
+summary(BF_effic)
+BF_effic$BFtu_exploratory
 
 ```
