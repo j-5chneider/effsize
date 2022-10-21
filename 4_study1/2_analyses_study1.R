@@ -1,3 +1,4 @@
+library(ggpubr)
 library(ggdist)
 library(corrgram)
 library(formr)
@@ -17,7 +18,7 @@ library(ordinal)
 # study1 <- formr_results("TueDiBASE_study1a")
 
 # import from data folder
-load("data/teachers_study1.Rdata")
+load("data/teachers_study1.RData")
 
 # wrangle information on the plot type, ES, ...
 plot_info <- study1 %>%
@@ -182,6 +183,8 @@ study1_w_timestamp <- study1_w_timestamp %>%
 ggplot(study1_w_timestamp, aes(x=plot_nr_within, y=effic)) +
     stat_summary(fun.data=median_q1q3) + # show 25 to 75% quartile
     stat_summary(fun = median) + # using median because of outliers
+    stat_summary(fun = median, geom = "path",
+                 mapping = aes(group = -1)) +
     theme_light() +
     facet_wrap(~type, nrow = 2)
 
@@ -238,3 +241,6 @@ tmp <- cbind(study1_w_timestamp%>%dplyr::filter(type=="gardneraltman_xaxis"),
 
 ggplot(tmp, aes(x=plot_nr_within, y=fit_exp_gard_x$fitted.values)) +
     geom_point()
+
+
+
