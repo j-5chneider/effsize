@@ -8,7 +8,7 @@ editor_options:
 ---
 
 
-```{r setup}
+```{r}
 library(dplyr)
 library(BFpack)
 library(ggdist)
@@ -22,7 +22,7 @@ library(ordinal)
 library(lme4)
 
 # import from data folder
-load("data/teachers_study1_N20.RData")
+load("data/teachers_study1_N40.RData")
 
 
 # wrangle information on the plot type, ES, ...
@@ -71,7 +71,7 @@ skim(study1_w)
 
 ######### TIMESTAMP DATA ######################################################
 # import data
-study1_timestamp <- rio::import("data/teachers_study1_detailed.csv")
+study1_timestamp <- rio::import("data/teachers_study1_N40_detailed.csv")
 
 
 # wrangle data
@@ -104,8 +104,8 @@ mod_acccl <- lmer(acccl ~  1 + (1|type),
 
 psychometric::ICC1.lme(acccl, type, study1_w)
 BF_acccl <- BF(mod_acccl, hypothesis = "icc = 0; icc > 0")
-summary(BF_acccl)# inconclusive 
-BF_acccl$BFtu_exploratory
+summary(BF_acccl) # BF12 = 56.55
+# BF_acccl$BFtu_exploratory
 # BF_acccl$PHP_exploratory
 
 ## Accuracy Overlap
@@ -114,8 +114,8 @@ mod_accov <- lmer(accov ~  1 + (1|type),
 
 psychometric::ICC1.lme(accov, type, study1_w)
 BF_accov <- BF(mod_accov, hypothesis = "icc = 0; icc > 0") # inconclusive
-summary(BF_accov)
-BF_accov$BFtu_exploratory
+summary(BF_accov) # BF12= 27.42
+#BF_accov$BFtu_exploratory
 
 ## Accuracy U3
 mod_accu3 <- lmer(accu3 ~  1 + (1|type),
@@ -123,8 +123,8 @@ mod_accu3 <- lmer(accu3 ~  1 + (1|type),
 
 psychometric::ICC1.lme(accu3, type, study1_w)
 BF_accu3 <- BF(mod_accu3, hypothesis = "icc = 0; icc > 0") # inconclusive
-summary(BF_accu3)
-BF_accu3$BFtu_exploratory
+summary(BF_accu3) # BF12 = 41.10
+#BF_accu3$BFtu_exploratory
 
 # Perceived Difficulty 
 mod_diffi <- lmer(diffi ~  1 + (1|type),
@@ -137,8 +137,8 @@ psychometric::ICC1.lme(diffi, type, study1_w)
 #               as.na = NULL, check = TRUE)
 
 BF_diffi <- BF(mod_diffi, hypothesis = "icc = 0; icc > 0") # evidence in favor of a ICC >0 
-summary(BF_diffi)
-BF_diffi$BFtu_exploratory
+summary(BF_diffi) # BF21 = 6297167
+# BF_diffi$BFtu_exploratory
 
 # Perceived Informativity 
 mod_infor <- lmer(infor ~  1 + (1|type),
@@ -146,8 +146,8 @@ mod_infor <- lmer(infor ~  1 + (1|type),
 
 psychometric::ICC1.lme(infor, type, study1_w)
 BF_infor <- BF(mod_infor, hypothesis = "icc = 0; icc > 0")
-summary(BF_infor)
-BF_infor$BFtu_exploratory
+summary(BF_infor) # BF21 = 21.86
+# BF_infor$BFtu_exploratory
 
 # Perceived Value
 mod_value <- lmer(value ~  1 + (1|type),
@@ -155,8 +155,8 @@ mod_value <- lmer(value ~  1 + (1|type),
 
 psychometric::ICC1.lme(value, type, study1_w)
 BF_value <- BF(mod_value, hypothesis = "icc = 0; icc > 0")
-summary(BF_value)
-BF_value$BFtu_exploratory
+summary(BF_value) # BF21 = 321.36
+# BF_value$BFtu_exploratory
 
 # Efficiency
 skim(study1_w_timestamp)
@@ -170,7 +170,7 @@ mod_effic <- lmer(as.numeric(effic) ~  1 + (1|type),
 
 psychometric::ICC1.lme(effic, type, data_effic)
 BF_effic <- BF(mod_effic, hypothesis = "icc = 0; icc > 0")
-summary(BF_effic)
-BF_effic$BFtu_exploratory
+summary(BF_effic) # BF12 = 28.78
+# BF_effic$BFtu_exploratory
 
 ```
