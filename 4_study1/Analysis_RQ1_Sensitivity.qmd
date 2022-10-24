@@ -1,0 +1,94 @@
+---
+title: "Sensitivity_Analysis_N40"
+format: html
+editor: visual
+---
+
+## Data wrangling
+```{r}
+library(tidyverse)
+# import from data folder
+load("../data/teachers_study1_N40.RData")
+
+# wrangle information on the plot type, ES, ...
+plot_info <- study1 %>%
+    pivot_longer(2:195, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::filter(str_detect(variables, "plot")) %>% # we only need the rows with info on plots
+    tidyr::separate(col = values, into = c("type", "axis", "effsize"), # separate the info into three columns
+                    sep = "_", remove = F) %>%
+    dplyr::mutate(plot = variables,       # rename variables for later join
+                  type = paste(type, axis, sep = "_")) %>%
+    dplyr::select(-variables, -axis)
+
+# wrangle answers to items on each page
+item_values <- study1 %>%
+    dplyr::select(-c(topic:itemo)) %>%
+    pivot_longer(2:169, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::mutate(variables = case_when(      # recode variable names that have
+        variables == "sensi_6" ~ "sensi_06",  # accidentally been labeled
+        variables == "acccl_6" ~ "acccl_06",  # without zero
+        variables == "accu3_6" ~ "accu3_06",
+        variables == "accov_6" ~ "accov_06",
+        variables == "diffi_6" ~ "diffi_06",
+        variables == "infor_6" ~ "infor_06",
+        variables == "value_6" ~ "value_06",
+        TRUE ~ variables 
+    )) %>%
+    dplyr::mutate(plot = paste0("plotx_", str_sub(variables, -2, -1)), # create variable for later join
+                  variables = str_sub(variables, 1, -4)) %>%    # rename variable names to get a data set 
+                                                                # with one line per participant per page
+    pivot_wider(id_cols = c(session, plot), names_from = "variables", 
+                values_from = "values")
+
+
+# join the two data sets
+study1_w <- full_join(plot_info, item_values, 
+                               by = c("session", "plot")) %>% # by participant and page (plot)
+    dplyr::select(-values) %>%
+    dplyr::mutate(acccl = as.numeric(acccl), # some var need to be defined as
+                  accu3 = as.numeric(accu3), # numeric again
+                  accov = as.numeric(accov),
+                  diffi = as.numeric(diffi),
+                  infor = as.numeric(infor),
+                  value = as.numeric(value),
+                  effsize = as.numeric(effsize),
+                  effsize_cl = case_when( # there is no negative Cliff's Delta, so we have to compute two transformations
+                      effsize > 0 ~   (((2*pnorm(effsize/2))-1)/pnorm(effsize/2)), # transform the actual effect size Cohen's d to Cliff's Delta
+                      effsize < 0 ~ (- (((2*pnorm(abs(effsize)/2))-1)/pnorm(abs(effsize)/2))) # transform the actual effect size Cohen's d to Cliff's Delta and make it negative as in the item
+                  ),
+                  effsize_u3 = pnorm(effsize), # transform the actual effect size Cohen's d to Cohen's U3
+                  effsize_ov = 2 * pnorm(-abs(effsize) / 2), # transform the actual effect size Cohen's d to overlap
+                  acccl_eff = (acccl - effsize_cl)/2, # actual accuracy of rating relative to depicted effectsize on plot
+                  accu3_eff = (accu3/100) - effsize_u3, # actual accuracy of rating relative to depicted effectsize on plot
+                  accov_eff = (accov/100) - effsize_ov, # actual accuracy of rating relative to depicted effectsize on plot
+                  diffi_normed = ((diffi - 1)  / 3) - 1, # transform item to -1 to 1
+                  infor_normed = ((infor - 1)  / 3) - 1, # transform item to -1 to 1
+                  value_normed = ((value - 1)  / 3) - 1, # transform item to -1 to 1
+                  sensi_binary = ifelse(is.na(sensi), 
+                                        NA,
+                                        as.numeric(grepl("equal", sensi))),
+                  effsize_abs = abs(effsize)) 
+
+```
+
+
+## Multi-level logistic regression
+```{r}
+library(brms)
+library(modelsummary)
+logreg_mod0 <- brm(sensi_binary ~ effsize_abs + (1|session), 
+                   data = study1_w,
+                   save_pars = save_pars(all = TRUE))
+logreg_mod1 <- brm(sensi_binary ~ effsize_abs + type + (1|session), 
+                   data = study1_w,
+                   save_pars = save_pars(all = TRUE))
+    
+bayes_factor(logreg_mod0, logreg_mod1)
+
+sjPlot::tab_model(logreg_mod0, logreg_mod1)
+
+pp_check(logreg_mod1)
+```
+
