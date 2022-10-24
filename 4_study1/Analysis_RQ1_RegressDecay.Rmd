@@ -14,13 +14,14 @@ editor_options:
 
 ```{r packages, warning=F, message=F}
 library(tidyverse)
+library(brms)
 ```
 
 
 # Import and wrangle data
 ```{r message=FALSE, warning=FALSE}
 # import from data folder
-load("data/teachers_study1.RData")
+load("data/teachers_study1_N40.RData")
 
 # wrangle information on the plot type, ES, ...
 plot_info <- study1 %>%
@@ -83,7 +84,7 @@ study1_w <- full_join(plot_info, item_values,
 
 ######### TIMESTAMP DATA ######################################################
 # import data
-study1_timestamp <- rio::import("data/teachers_study1_detailed.csv")
+study1_timestamp <- rio::import("data/teachers_study1_N40_detailed.csv")
 
 
 # wrangle data
@@ -109,7 +110,7 @@ study1_w_timestamp <- left_join(study1_w, study1_timestamp, by=c("session", "plo
 ### one after the other (and not 1-24)
 study1_w_timestamp <- study1_w_timestamp %>%
     group_by(session, type) %>%
-    mutate(plot_nr_within = 1:6) %>%
+    mutate(plotNrWithin = 1:6) %>%
     ungroup()
 
 ```
@@ -122,51 +123,48 @@ study1_w_timestamp <- study1_w_timestamp %>%
 
 # Generate Dummy Variables
 study1_w_timestamp <- study1_w_timestamp %>%
-    dplyr::mutate(I_gardner_x = ifelse(type == "gardneraltman_xaxis", 1, 0),
-                  I_halfeye_x = ifelse(type == "halfeye_xaxis", 1, 0),
-                  I_halfeye_y = ifelse(type == "halfeye_yaxis", 1, 0),
-                  I_rainclo_y = ifelse(type == "raincloud_yaxis", 1, 0))
+    dplyr::mutate(GardnerX = ifelse(type == "gardneraltman_xaxis", 1, 0),
+                  HalfeyeX = ifelse(type == "halfeye_xaxis", 1, 0),
+                  HalfeyeY = ifelse(type == "halfeye_yaxis", 1, 0),
+                  RaincloY = ifelse(type == "raincloud_yaxis", 1, 0))
 
 
 
-library(nlme)
-fit_limDecReg <- nlme(effic ~ Asym + 
-                                   # AsymshiftGardnerX*I_gardner_x + # we only need three of the four dummy variables
-                                   AsymshiftHalfeyeX*I_halfeye_x + 
-                                   AsymshiftHalfeyeY*I_halfeye_y + 
-                                   AsymshiftRaincloY*I_rainclo_y + 
-                                   (R0-(Asym + 
-                                        # AsymshiftGardnerX*I_gardner_x + 
-                                        AsymshiftHalfeyeX*I_halfeye_x + 
-                                        AsymshiftHalfeyeY*I_halfeye_y + 
-                                        AsymshiftRaincloY*I_rainclo_y))*
-                        exp((k + 
-                               # kshiftGardnerX*I_gardner_x +
-                               kshiftHalfeyeX*I_halfeye_x +
-                               kshiftHalfeyeY*I_halfeye_y +
-                               kshiftRaincloY*I_rainclo_y )*plot_nr_within),
-                      data = study1_w_timestamp,
-                      fixed = #AsymshiftGardnerX + 
-                              AsymshiftHalfeyeX + 
-                              AsymshiftHalfeyeY + 
-                              AsymshiftRaincloY + 
-                              Asym + R0 + k + 
-                              # kshiftGardnerX + 
-                              kshiftHalfeyeX + 
-                              kshiftHalfeyeY + 
-                              kshiftRaincloY ~ 1,
-                      random = Asym ~ 1,
-                      groups = ~ session,
-                      start = c(Asym = 10000,
-                                # AsymshiftGardnerX = 1000, 
-                                AsymshiftHalfeyeX = 1000, 
-                                AsymshiftHalfeyeY = 1000, 
-                                AsymshiftRaincloY = 1000, 
-                                R0 = 50000, k = -.7,
-                                # kshiftGardnerX = -1000, 
-                                kshiftHalfeyeX = -1000, 
-                                kshiftHalfeyeY = -1000, 
-                                kshiftRaincloY = -1000))
+fit_limDecReg <- brm(
+    bf(# define model
+       effic ~ Asym + # Overall asymptote
+       # asymptotes for plot type dummies (reference category: GardnerX)
+       AsymshiftHalfeyeX*HalfeyeX +
+       AsymshiftHalfeyeY*HalfeyeY +
+       AsymshiftRaincloY*RaincloY +
+       (R0-(Asym +
+            AsymshiftHalfeyeX*HalfeyeX +
+            AsymshiftHalfeyeY*HalfeyeY +
+            AsymshiftRaincloY*RaincloY))*
+           # curve parameters for plot type dummies  (reference category: GardnerX)
+            exp((k +
+                 kshiftHalfeyeX*HalfeyeX +
+                 kshiftHalfeyeY*HalfeyeY +
+                 kshiftRaincloY*RaincloY )*plotNrWithin),
+       
+       # define non-linear parameters
+       AsymshiftHalfeyeX + AsymshiftHalfeyeY + AsymshiftRaincloY +
+           kshiftHalfeyeX + kshiftHalfeyeY + kshiftRaincloY +
+           Asym + R0 + k ~ 1,  
+       nl = TRUE), # with nl = T a non-linear model is computed
+    data = study1_w_timestamp,
+    prior = c(
+        prior(normal(0,1000), nlpar = "Asym"),
+        prior(normal(0,1000), nlpar = "R0"),
+        prior(normal(0,1), nlpar = "k"),
+        prior(normal(0,1000), nlpar = "AsymshiftHalfeyeX"),
+        prior(normal(0,1000), nlpar = "AsymshiftHalfeyeY"),
+        prior(normal(0,1000), nlpar = "AsymshiftRaincloY"),
+        prior(normal(0,1), nlpar = "kshiftHalfeyeX"),
+        prior(normal(0,1), nlpar = "kshiftHalfeyeY"),
+        prior(normal(0,1), nlpar = "kshiftRaincloY")
+        )
+    )
 
 summary(fit_limDecReg)
 ```
