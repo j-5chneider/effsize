@@ -27,7 +27,7 @@ load("data/teachers_study1_N40.RData")
 
 # wrangle information on the plot type, ES, ...
 plot_info <- study1 %>%
-    pivot_longer(8:195, names_to = "variables", values_to = "values", 
+    pivot_longer(3:195, names_to = "variables", values_to = "values", 
                  values_transform = as.character) %>%
     dplyr::filter(str_detect(variables, "plot")) %>% # we only need the rows with info on plots
     tidyr::separate(col = values, into = c("type", "axis", "effsize"), # separate the info into three columns
@@ -173,4 +173,29 @@ BF_effic <- BF(mod_effic, hypothesis = "icc = 0; icc > 0")
 summary(BF_effic) # BF12 = 28.78
 # BF_effic$BFtu_exploratory
 
+
+study1_plot <-  study1_w %>%
+    dplyr::select(session, plot, type, acccl, accu3, accov, diffi, infor, value) %>%
+    pivot_longer(acccl:value, names_to = "variables", values_to = "values", values_transform = as.character) %>%
+    mutate(var = paste(variables, type, sep = "_"))%>%
+    pivot_wider(id_cols = c(session, plot),names_from = "var", values_from = "values") %>%
+    dplyr::select(-plot) 
+
+skim(study1_plot)
+
+study1_plot_accuracy <- study1_plot %>%
+    dplyr::select(session, acccl_gardneraltman_xaxis, acccl_halfeye_xaxis, acccl_raincloud_yaxis, acccl_halfeye_yaxis)
+
+
+### Multiple Imputation of Planned Missings
+library(mice)
+set.seed(2001)
+M_plot <- 5
+out_plot <- mice(data = study1_plot_accuracy%>%
+                     dplyr::select(-starts_with("session")),
+            m = M_plot,
+            meth=c("pmm","pmm","pmm","pmm"),
+            diagnostics = FALSE,
+            printFlag = F,
+            seed = 83851)
 ```
