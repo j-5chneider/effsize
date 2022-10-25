@@ -18,7 +18,7 @@ library(ordinal)
 # study1 <- formr_results("TueDiBASE_study1a")
 
 # import from data folder
-load("data/teachers_study1.RData")
+load("data/teachers_study1_N40.RData")
 
 # wrangle information on the plot type, ES, ...
 plot_info <- study1 %>%
@@ -150,7 +150,7 @@ ggplot(results_clm, aes(x=value, y=type, color = threshold)) +
 
 ######### TIMESTAMP DATA ######################################################
 # import data
-study1_timestamp <- rio::import("data/teachers_study1_detailed.csv")
+study1_timestamp <- rio::import("data/teachers_study1_N40_detailed.csv")
 
 
 # wrangle data
