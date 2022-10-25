@@ -193,7 +193,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sensi_binary =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(sensi), </span>
 <span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>                                        <span class="cn">NA</span>,</span>
 <span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">as.numeric</span>(<span class="fu">grepl</span>(<span class="st">"equal"</span>, sensi))),</span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>                  <span class="at">effsize_abs =</span> <span class="fu">abs</span>(effsize)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sensi_ordinal =</span> <span class="fu">ordered</span>(<span class="fu">factor</span>(sensi,</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"sensitivity_tablet_livelesson_simulation_videowithsub_inferior"</span>,</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"sensitivity_tablet_livelesson_simulation_videowithsub_equal"</span>,</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"sensitivity_tablet_livelesson_simulation_videowithsub_superior"</span>))),</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>                  <span class="at">effsize_abs =</span> <span class="fu">abs</span>(effsize)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="multi-level-logistic-regression" class="level2">
@@ -260,8 +264,8 @@ make: *** [foo.o] Error 1</code></pre>
 <pre><code>
 SAMPLING FOR MODEL '655600699b538de2140509ff7589b483' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 8e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.8 seconds.
+Chain 1: Gradient evaluation took 0.000103 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.03 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -278,15 +282,15 @@ Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 0.603467 seconds (Warm-up)
-Chain 1:                0.403107 seconds (Sampling)
-Chain 1:                1.00657 seconds (Total)
+Chain 1:  Elapsed Time: 0.590458 seconds (Warm-up)
+Chain 1:                0.391662 seconds (Sampling)
+Chain 1:                0.98212 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL '655600699b538de2140509ff7589b483' NOW (CHAIN 2).
 Chain 2: 
-Chain 2: Gradient evaluation took 5e-05 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.5 seconds.
+Chain 2: Gradient evaluation took 4.3e-05 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.43 seconds.
 Chain 2: Adjust your expectations accordingly!
 Chain 2: 
 Chain 2: 
@@ -303,15 +307,15 @@ Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 2: 
-Chain 2:  Elapsed Time: 0.597805 seconds (Warm-up)
-Chain 2:                0.385184 seconds (Sampling)
-Chain 2:                0.982989 seconds (Total)
+Chain 2:  Elapsed Time: 0.610153 seconds (Warm-up)
+Chain 2:                0.387706 seconds (Sampling)
+Chain 2:                0.997859 seconds (Total)
 Chain 2: 
 
 SAMPLING FOR MODEL '655600699b538de2140509ff7589b483' NOW (CHAIN 3).
 Chain 3: 
-Chain 3: Gradient evaluation took 3.4e-05 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.34 seconds.
+Chain 3: Gradient evaluation took 5.6e-05 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.56 seconds.
 Chain 3: Adjust your expectations accordingly!
 Chain 3: 
 Chain 3: 
@@ -328,15 +332,15 @@ Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 3: 
-Chain 3:  Elapsed Time: 0.626806 seconds (Warm-up)
-Chain 3:                0.412011 seconds (Sampling)
-Chain 3:                1.03882 seconds (Total)
+Chain 3:  Elapsed Time: 0.583276 seconds (Warm-up)
+Chain 3:                0.382057 seconds (Sampling)
+Chain 3:                0.965333 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL '655600699b538de2140509ff7589b483' NOW (CHAIN 4).
 Chain 4: 
-Chain 4: Gradient evaluation took 3.6e-05 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.36 seconds.
+Chain 4: Gradient evaluation took 3.7e-05 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.37 seconds.
 Chain 4: Adjust your expectations accordingly!
 Chain 4: 
 Chain 4: 
@@ -353,9 +357,9 @@ Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 4: 
-Chain 4:  Elapsed Time: 0.610308 seconds (Warm-up)
-Chain 4:                0.404339 seconds (Sampling)
-Chain 4:                1.01465 seconds (Total)
+Chain 4:  Elapsed Time: 0.601002 seconds (Warm-up)
+Chain 4:                0.400494 seconds (Sampling)
+Chain 4:                1.0015 seconds (Total)
 Chain 4: </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>logreg_mod1 <span class="ot">&lt;-</span> <span class="fu">brm</span>(sensi_binary <span class="sc">~</span> effsize_abs <span class="sc">+</span> type <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>session), </span>
@@ -403,8 +407,8 @@ make: *** [foo.o] Error 1</code></pre>
 <pre><code>
 SAMPLING FOR MODEL '655600699b538de2140509ff7589b483' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 8.6e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.86 seconds.
+Chain 1: Gradient evaluation took 8.5e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.85 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -421,15 +425,15 @@ Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 0.609116 seconds (Warm-up)
-Chain 1:                0.409744 seconds (Sampling)
-Chain 1:                1.01886 seconds (Total)
+Chain 1:  Elapsed Time: 0.610339 seconds (Warm-up)
+Chain 1:                0.40393 seconds (Sampling)
+Chain 1:                1.01427 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL '655600699b538de2140509ff7589b483' NOW (CHAIN 2).
 Chain 2: 
-Chain 2: Gradient evaluation took 2.8e-05 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.28 seconds.
+Chain 2: Gradient evaluation took 5.4e-05 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.54 seconds.
 Chain 2: Adjust your expectations accordingly!
 Chain 2: 
 Chain 2: 
@@ -446,15 +450,15 @@ Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 2: 
-Chain 2:  Elapsed Time: 0.59781 seconds (Warm-up)
-Chain 2:                0.405855 seconds (Sampling)
-Chain 2:                1.00367 seconds (Total)
+Chain 2:  Elapsed Time: 0.555439 seconds (Warm-up)
+Chain 2:                0.406341 seconds (Sampling)
+Chain 2:                0.96178 seconds (Total)
 Chain 2: 
 
 SAMPLING FOR MODEL '655600699b538de2140509ff7589b483' NOW (CHAIN 3).
 Chain 3: 
-Chain 3: Gradient evaluation took 3.9e-05 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.39 seconds.
+Chain 3: Gradient evaluation took 3.3e-05 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.33 seconds.
 Chain 3: Adjust your expectations accordingly!
 Chain 3: 
 Chain 3: 
@@ -471,15 +475,15 @@ Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 3: 
-Chain 3:  Elapsed Time: 0.615905 seconds (Warm-up)
-Chain 3:                0.407073 seconds (Sampling)
-Chain 3:                1.02298 seconds (Total)
+Chain 3:  Elapsed Time: 0.568609 seconds (Warm-up)
+Chain 3:                0.396191 seconds (Sampling)
+Chain 3:                0.9648 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL '655600699b538de2140509ff7589b483' NOW (CHAIN 4).
 Chain 4: 
-Chain 4: Gradient evaluation took 4.9e-05 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.49 seconds.
+Chain 4: Gradient evaluation took 3.4e-05 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.34 seconds.
 Chain 4: Adjust your expectations accordingly!
 Chain 4: 
 Chain 4: 
@@ -496,9 +500,9 @@ Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 4: 
-Chain 4:  Elapsed Time: 0.670441 seconds (Warm-up)
-Chain 4:                0.411134 seconds (Sampling)
-Chain 4:                1.08157 seconds (Total)
+Chain 4:  Elapsed Time: 0.620773 seconds (Warm-up)
+Chain 4:                0.403147 seconds (Sampling)
+Chain 4:                1.02392 seconds (Total)
 Chain 4: </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_factor</span>(logreg_mod0, logreg_mod1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -509,6 +513,7 @@ Iteration: 3
 Iteration: 4
 Iteration: 5
 Iteration: 6
+Iteration: 7
 Iteration: 1
 Iteration: 2
 Iteration: 3
@@ -518,7 +523,7 @@ Iteration: 6
 Iteration: 7</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Estimated Bayes factor in favor of logreg_mod0 over logreg_mod1: 176.43283</code></pre>
+<pre><code>Estimated Bayes factor in favor of logreg_mod0 over logreg_mod1: 174.22469</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>sjPlot<span class="sc">::</span><span class="fu">tab_model</span>(logreg_mod0, logreg_mod1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -541,35 +546,35 @@ Iteration: 7</code></pre>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.68</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.57&nbsp;–&nbsp;0.79</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.69</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.56&nbsp;–&nbsp;0.80</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.57&nbsp;–&nbsp;0.81</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">effsize_abs</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.75</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.87&nbsp;–&nbsp;-0.63</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.74</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.86&nbsp;–&nbsp;-0.63</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.86&nbsp;–&nbsp;-0.62</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">typehalfeye_xaxis</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "></td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "></td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.03</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.12&nbsp;–&nbsp;0.05</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.12&nbsp;–&nbsp;0.06</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">typehalfeye_yaxis</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "></td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "></td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.04</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.13&nbsp;–&nbsp;0.04</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.13&nbsp;–&nbsp;0.05</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">typeraincloud_yaxis</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "></td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "></td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.03</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.05&nbsp;–&nbsp;0.12</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.06&nbsp;–&nbsp;0.12</td>
 </tr>
 <tr>
 <td colspan="5" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
@@ -603,7 +608,7 @@ Iteration: 7</code></pre>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">0.167 / 0.472</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">0.173 / 0.477</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">0.173 / 0.476</td>
 </tr>
 
 </tbody></table>
@@ -615,6 +620,392 @@ Iteration: 7</code></pre>
 </div>
 <div class="cell-output-display">
 <p><img src="Analysis_RQ1_Sensitivity_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="cumulative-link-models-with-unequal-variances-brms-or-nominal-effects-ordinal" class="level2">
+<h2 class="anchored" data-anchor-id="cumulative-link-models-with-unequal-variances-brms-or-nominal-effects-ordinal">Cumulative link models with unequal variances <code>{brms}</code> or nominal effects <code>{ordinal}</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ordinal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attache Paket: 'ordinal'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:brms':
+
+    ranef, VarCorr</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Das folgende Objekt ist maskiert 'package:dplyr':
+
+    slice</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>ordinal_brm_mod0 <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> <span class="fu">bf</span>(sensi_ordinal <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> effsize <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>session)),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> study1_w,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">cumulative</span>(<span class="st">"probit"</span>),</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">save_pars =</span> <span class="fu">save_pars</span>(<span class="at">all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Rows containing NAs were excluded from the model.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Trying to compile a simple C file</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running /Library/Frameworks/R.framework/Resources/bin/R CMD SHLIB foo.c
+clang -mmacosx-version-min=10.13 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/Rcpp/include/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/unsupported"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/BH/include" -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/src/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppParallel/include/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DBOOST_NO_AUTO_PTR  -include '/Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include   -fPIC  -Wall -g -O2  -c foo.c -o foo.o
+In file included from &lt;built-in&gt;:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/Dense:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/Core:88:
+/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:1: error: unknown type name 'namespace'
+namespace Eigen {
+^
+/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:16: error: expected ';' after top level declarator
+namespace Eigen {
+               ^
+               ;
+In file included from &lt;built-in&gt;:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/Dense:1:
+/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/Core:96:10: fatal error: 'complex' file not found
+#include &lt;complex&gt;
+         ^~~~~~~~~
+3 errors generated.
+make: *** [foo.o] Error 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+SAMPLING FOR MODEL '087578e070e7929bac155bcbeba325eb' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000246 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.46 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 2.67527 seconds (Warm-up)
+Chain 1:                1.95392 seconds (Sampling)
+Chain 1:                4.62918 seconds (Total)
+Chain 1: 
+
+SAMPLING FOR MODEL '087578e070e7929bac155bcbeba325eb' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.00012 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.2 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 2.9478 seconds (Warm-up)
+Chain 2:                1.83881 seconds (Sampling)
+Chain 2:                4.78661 seconds (Total)
+Chain 2: 
+
+SAMPLING FOR MODEL '087578e070e7929bac155bcbeba325eb' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 0.000129 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 1.29 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 2.99531 seconds (Warm-up)
+Chain 3:                1.86525 seconds (Sampling)
+Chain 3:                4.86056 seconds (Total)
+Chain 3: 
+
+SAMPLING FOR MODEL '087578e070e7929bac155bcbeba325eb' NOW (CHAIN 4).
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000129 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 1.29 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 3.03318 seconds (Warm-up)
+Chain 4:                1.70336 seconds (Sampling)
+Chain 4:                4.73654 seconds (Total)
+Chain 4: </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>ordinal_brm_mod1 <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> <span class="fu">bf</span>(sensi_ordinal <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> effsize <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>session)) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lf</span>(disc <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> type, <span class="at">cmc =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> study1_w,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">cumulative</span>(<span class="st">"probit"</span>),</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">save_pars =</span> <span class="fu">save_pars</span>(<span class="at">all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Rows containing NAs were excluded from the model.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...
+Trying to compile a simple C file</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running /Library/Frameworks/R.framework/Resources/bin/R CMD SHLIB foo.c
+clang -mmacosx-version-min=10.13 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/Rcpp/include/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/unsupported"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/BH/include" -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/src/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppParallel/include/"  -I"/Library/Frameworks/R.framework/Versions/4.1/Resources/library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DBOOST_NO_AUTO_PTR  -include '/Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include   -fPIC  -Wall -g -O2  -c foo.c -o foo.o
+In file included from &lt;built-in&gt;:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/Dense:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/Core:88:
+/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:1: error: unknown type name 'namespace'
+namespace Eigen {
+^
+/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:16: error: expected ';' after top level declarator
+namespace Eigen {
+               ^
+               ;
+In file included from &lt;built-in&gt;:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13:
+In file included from /Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/Dense:1:
+/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppEigen/include/Eigen/Core:96:10: fatal error: 'complex' file not found
+#include &lt;complex&gt;
+         ^~~~~~~~~
+3 errors generated.
+make: *** [foo.o] Error 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+SAMPLING FOR MODEL '5290e40cf13063d76718c619cc8fc6ca' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000297 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.97 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 4.15777 seconds (Warm-up)
+Chain 1:                2.37423 seconds (Sampling)
+Chain 1:                6.532 seconds (Total)
+Chain 1: 
+
+SAMPLING FOR MODEL '5290e40cf13063d76718c619cc8fc6ca' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.000157 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.57 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 4.29626 seconds (Warm-up)
+Chain 2:                2.4058 seconds (Sampling)
+Chain 2:                6.70205 seconds (Total)
+Chain 2: 
+
+SAMPLING FOR MODEL '5290e40cf13063d76718c619cc8fc6ca' NOW (CHAIN 3).
+Chain 3: Rejecting initial value:
+Chain 3:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 3:   Stan can't start sampling from this initial value.
+Chain 3: Rejecting initial value:
+Chain 3:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 3:   Stan can't start sampling from this initial value.
+Chain 3: Rejecting initial value:
+Chain 3:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 3:   Stan can't start sampling from this initial value.
+Chain 3: 
+Chain 3: Gradient evaluation took 0.000149 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 1.49 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 3.95231 seconds (Warm-up)
+Chain 3:                2.31409 seconds (Sampling)
+Chain 3:                6.26641 seconds (Total)
+Chain 3: 
+
+SAMPLING FOR MODEL '5290e40cf13063d76718c619cc8fc6ca' NOW (CHAIN 4).
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: Rejecting initial value:
+Chain 4:   Log probability evaluates to log(0), i.e. negative infinity.
+Chain 4:   Stan can't start sampling from this initial value.
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000138 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 1.38 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 3.92035 seconds (Warm-up)
+Chain 4:                2.27496 seconds (Sampling)
+Chain 4:                6.19532 seconds (Total)
+Chain 4: </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_factor</span>(ordinal_brm_mod0, ordinal_brm_mod1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 1
+Iteration: 2
+Iteration: 3
+Iteration: 4
+Iteration: 5</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: 2 of the 2000 log_prob() evaluations on the proposal draws produced
+-Inf/Inf.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 1
+Iteration: 2
+Iteration: 3
+Iteration: 4
+Iteration: 5</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Estimated Bayes factor in favor of ordinal_brm_mod0 over ordinal_brm_mod1: 0.07152</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>clmm0 <span class="ot">&lt;-</span> <span class="fu">clmm2</span>(sensi_ordinal <span class="sc">~</span> effsize, </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">random =</span> <span class="fu">as.factor</span>(session), </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data =</span> study1_w, </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Hess =</span> T)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>clmm1 <span class="ot">&lt;-</span> <span class="fu">clmm2</span>(sensi_ordinal <span class="sc">~</span> effsize, </span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">random =</span> <span class="fu">as.factor</span>(session), </span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nominal =</span> <span class="sc">~</span> type,</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data =</span> study1_w, </span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Hess =</span> T)</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(clmm0, clmm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio tests of cumulative link models
+
+Response: sensi_ordinal
+              Model Resid. df -2logLik   Test    Df LR stat.   Pr(Chi)
+1     effsize |  |        476 714.2997                                
+2 effsize |  | type       470 707.9021 1 vs 2     6 6.397611 0.3801531</code></pre>
 </div>
 </div>
 </section>

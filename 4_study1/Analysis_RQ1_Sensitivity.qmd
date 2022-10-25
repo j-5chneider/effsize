@@ -69,6 +69,10 @@ study1_w <- full_join(plot_info, item_values,
                   sensi_binary = ifelse(is.na(sensi), 
                                         NA,
                                         as.numeric(grepl("equal", sensi))),
+                  sensi_ordinal = ordered(factor(sensi,
+                                         levels = c("sensitivity_tablet_livelesson_simulation_videowithsub_inferior",
+                                                    "sensitivity_tablet_livelesson_simulation_videowithsub_equal",
+                                                    "sensitivity_tablet_livelesson_simulation_videowithsub_superior"))),
                   effsize_abs = abs(effsize)) 
 
 ```
@@ -90,5 +94,40 @@ bayes_factor(logreg_mod0, logreg_mod1)
 sjPlot::tab_model(logreg_mod0, logreg_mod1)
 
 pp_check(logreg_mod1)
+```
+
+## Cumulative link models with unequal variances `{brms}` or nominal effects `{ordinal}`
+```{r}
+library(ordinal)
+ordinal_brm_mod0 <- brm(
+    formula = bf(sensi_ordinal ~ 1 + effsize + (1|session)),
+    data = study1_w,
+    family = cumulative("probit"),
+    save_pars = save_pars(all = TRUE)
+)
+
+ordinal_brm_mod1 <- brm(
+    formula = bf(sensi_ordinal ~ 1 + effsize + (1|session)) +
+        lf(disc ~ 0 + type, cmc = FALSE),
+    data = study1_w,
+    family = cumulative("probit"),
+    save_pars = save_pars(all = TRUE)
+)
+
+bayes_factor(ordinal_brm_mod0, ordinal_brm_mod1)
+
+clmm0 <- clmm2(sensi_ordinal ~ effsize, 
+                      random = as.factor(session), 
+                      data = study1_w, 
+                      Hess = T)
+
+clmm1 <- clmm2(sensi_ordinal ~ effsize, 
+                      random = as.factor(session), 
+                      nominal = ~ type,
+                      data = study1_w, 
+                      Hess = T)
+
+anova(clmm0, clmm1)
+
 ```
 
