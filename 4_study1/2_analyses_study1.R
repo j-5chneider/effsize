@@ -150,7 +150,7 @@ ggplot(results_clm, aes(x=value, y=type, color = threshold)) +
 
 ######### TIMESTAMP DATA ######################################################
 # import data
-study1_timestamp <- rio::import("data/teachers_study1_detailed.csv")
+study1_timestamp <- rio::import("data/teachers_study1_N40_detailed.csv")
 
 
 # wrangle data
