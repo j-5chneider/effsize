@@ -7,7 +7,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-
+# ICCs 
 ```{r}
 library(dplyr)
 library(BFpack)
@@ -172,30 +172,109 @@ psychometric::ICC1.lme(effic, type, data_effic)
 BF_effic <- BF(mod_effic, hypothesis = "icc = 0; icc > 0")
 summary(BF_effic) # BF12 = 28.78
 # BF_effic$BFtu_exploratory
+```
+
+# Multilevelregressions
+```{r}
+study1_accuracy <-  study1_w %>%
+    dplyr::select(session, type, acccl:accov, effsize) %>% 
+    na.omit() 
+
+library(brms) 
+
+### acccl 
+set.seed(2810)
+mod0_acccl <- brm(acccl ~ effsize + (1 |session),
+        data = study1_accuracy,
+        save_pars = save_pars(all = TRUE))
+mod1_acccl <- brm(acccl ~ type + effsize + (1 | session),
+        data = study1_accuracy,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2811)
+bayes_factor(mod1_acccl, mod0_acccl)
+
+### accu3
+set.seed(2812)
+mod0_accu3 <- brm(accu3 ~ effsize + (1 |session),
+        data = study1_accuracy,
+        save_pars = save_pars(all = TRUE))
+mod1_accu3 <- brm(accu3 ~ type + effsize + (1 | session),
+        data = study1_accuracy,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2813)
+bayes_factor(mod1_accu3, mod0_accu3)
 
 
-study1_plot <-  study1_w %>%
-    dplyr::select(session, plot, type, acccl, accu3, accov, diffi, infor, value) %>%
-    pivot_longer(acccl:value, names_to = "variables", values_to = "values", values_transform = as.character) %>%
-    mutate(var = paste(variables, type, sep = "_"))%>%
-    pivot_wider(id_cols = c(session, plot),names_from = "var", values_from = "values") %>%
-    dplyr::select(-plot) 
+### accov
+set.seed(2814)
+mod0_accov <- brm(accov ~ effsize + (1 |session),
+        data = study1_accuracy,
+        save_pars = save_pars(all = TRUE))
+mod1_accov <- brm(accov ~ type + effsize + (1 | session),
+        data = study1_accuracy,
+        save_pars = save_pars(all = TRUE))
 
-skim(study1_plot)
+set.seed(2815)
+bayes_factor(mod1_accov, mod0_accov)
 
-study1_plot_accuracy <- study1_plot %>%
-    dplyr::select(session, acccl_gardneraltman_xaxis, acccl_halfeye_xaxis, acccl_raincloud_yaxis, acccl_halfeye_yaxis)
+### perceived variables 
+study1_perceived <-  study1_w %>%
+    dplyr::select(session, type, diffi:value, effsize) 
 
+## perceived difficulty
+set.seed(2816)
+mod0_diffi <- brm(diffi ~ effsize + (1 |session),
+        data = study1_perceived,
+        save_pars = save_pars(all = TRUE))
+mod1_diffi <- brm(diffi ~ type + effsize + (1 | session),
+        data = study1_perceived,
+        save_pars = save_pars(all = TRUE))
 
-### Multiple Imputation of Planned Missings
-library(mice)
-set.seed(2001)
-M_plot <- 5
-out_plot <- mice(data = study1_plot_accuracy%>%
-                     dplyr::select(-starts_with("session")),
-            m = M_plot,
-            meth=c("pmm","pmm","pmm","pmm"),
-            diagnostics = FALSE,
-            printFlag = F,
-            seed = 83851)
+set.seed(2817)
+bayes_factor(mod1_diffi, mod0_diffi)
+
+## perceived informativity
+
+set.seed(2818)
+mod0_infor <- brm(infor ~ effsize + (1 |session),
+        data = study1_perceived,
+        save_pars = save_pars(all = TRUE))
+mod1_infor <- brm(infor ~ type + effsize + (1 | session),
+        data = study1_perceived,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2819)
+bayes_factor(mod1_infor, mod0_infor)
+
+## perceived value
+set.seed(2820)
+mod0_value <- brm(value ~ effsize + (1 |session),
+        data = study1_perceived,
+        save_pars = save_pars(all = TRUE))
+mod1_value <- brm(value ~ type + effsize + (1 | session),
+        data = study1_perceived,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2821)
+bayes_factor(mod1_value, mod0_value)
+
+## efficiency
+study1_efficiency <-  study1_w_timestamp %>%
+    dplyr::select(session, type, effic, effsize) 
+
+set.seed(2822)
+mod0_effic <- brm(effic ~ effsize + (1 |session),
+        data = study1_efficiency,
+        save_pars = save_pars(all = TRUE))
+mod1_effic <- brm(effic ~ type + effsize + (1 | session),
+        data = study1_efficiency,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2823)
+bayes_factor(mod1_effic, mod0_effic)
+
+sjPlot::tab_model(mod1_acccl, mod1_accu3, mod1_accov, mod1_diffi, mod1_infor, mod1_value, mod1_effic)
+
 ```
