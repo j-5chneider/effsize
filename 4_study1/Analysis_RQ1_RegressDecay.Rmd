@@ -111,13 +111,60 @@ study1_w_timestamp <- left_join(study1_w, study1_timestamp, by=c("session", "plo
 study1_w_timestamp <- study1_w_timestamp %>%
     group_by(session, type) %>%
     mutate(plotNrWithin = 1:6) %>%
+    ungroup() %>% 
+    group_by(plotNrWithin, type) %>% 
+    mutate(effic_10righttrunc = ifelse(effic > quantile(effic, .9), NA, effic),
+           effic_05righttrunc = ifelse(effic > quantile(effic, .95), NA, effic),
+           log_effic_05righttrunc =log(effic_05righttrunc),
+           log_effic_10righttrunc = log(effic_10righttrunc),
+           plotNrWithin0 = plotNrWithin -1) %>% 
     ungroup()
 
 ```
 
+
 # Limited Regression Decay
 
+## Visualisation
+### Raw data
+```{r}
+library(ggforce)
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
+    geom_sina() +
+    coord_cartesian(ylim = c(0,100000)) + 
+    geom_smooth(aes(plotNrWithin, effic)) +
+    facet_wrap(~type)
+```
 
+### 5% Percent truncated of the top
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_05righttrunc)) +
+    geom_sina() +
+    coord_cartesian(ylim = c(0,100000)) + 
+    geom_smooth(aes(plotNrWithin, effic_05righttrunc)) +
+    facet_wrap(~type)
+```
+
+
+### 10% Percent truncated of the top
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_10righttrunc)) +
+    geom_sina() +
+    coord_cartesian(ylim = c(0,100000)) + 
+    geom_smooth(aes(plotNrWithin, effic_10righttrunc)) +
+    facet_wrap(~type)
+```
+
+### log'ed
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), log(effic_05righttrunc))) +
+    geom_sina() +
+    geom_smooth(aes(plotNrWithin, log(effic_05righttrunc))) +
+    facet_wrap(~type)
+```
+
+
+## Modelling with `{brms}`
 
 ```{r}
 
@@ -132,7 +179,26 @@ study1_w_timestamp <- study1_w_timestamp %>%
 
 fit_limDecReg <- brm(
     bf(# define model
-       effic ~ Asym + # Overall asymptote
+       effic_05righttrunc ~ Asym + # Overall asymptote
+       (R0-Asym)*
+           # curve parameters for plot type dummies  (reference category: GardnerX)
+            exp(k*plotNrWithin0),
+       
+       # define non-linear parameters
+       Asym + R0 + k ~ 1,  
+       nl = TRUE), # with nl = T a non-linear model is computed
+    data = study1_w_timestamp,
+    prior = c(
+        prior(normal(0,1000), nlpar = "Asym"),
+        prior(normal(0,1000), nlpar = "R0"),
+        prior(normal(0,1), nlpar = "k")
+        ),
+    save_pars = save_pars(all = T)
+    )
+
+fit_limDecReg_type <- brm(
+    bf(# define model
+       effic_05righttrunc ~ Asym + # Overall asymptote
        # asymptotes for plot type dummies (reference category: GardnerX)
        AsymshiftHalfeyeX*HalfeyeX +
        AsymshiftHalfeyeY*HalfeyeY +
@@ -145,7 +211,7 @@ fit_limDecReg <- brm(
             exp((k +
                  kshiftHalfeyeX*HalfeyeX +
                  kshiftHalfeyeY*HalfeyeY +
-                 kshiftRaincloY*RaincloY )*plotNrWithin),
+                 kshiftRaincloY*RaincloY )*plotNrWithin0),
        
        # define non-linear parameters
        AsymshiftHalfeyeX + AsymshiftHalfeyeY + AsymshiftRaincloY +
@@ -163,8 +229,69 @@ fit_limDecReg <- brm(
         prior(normal(0,1), nlpar = "kshiftHalfeyeX"),
         prior(normal(0,1), nlpar = "kshiftHalfeyeY"),
         prior(normal(0,1), nlpar = "kshiftRaincloY")
-        )
+        ),
+    save_pars = save_pars(all = T)
     )
 
-summary(fit_limDecReg)
+bayes_factor(fit_limDecReg_type, fit_limDecReg)
 ```
+
+
+## Modelling with linear models on log'ed data
+```{r}
+library(BayesFactor)
+# time = 1
+lmBF(formula = log_effic_05righttrunc ~ type,
+     data = study1_w_timestamp %>%
+         filter(plotNrWithin == 1) %>%
+         select(type, log_effic_05righttrunc) %>%
+         mutate(type = as.factor(type)) %>%
+         na.omit()
+)
+
+# time = 2
+lmBF(formula = log_effic_05righttrunc ~ type,
+     data = study1_w_timestamp %>%
+         filter(plotNrWithin == 2) %>%
+         select(type, log_effic_05righttrunc) %>%
+         mutate(type = as.factor(type)) %>%
+         na.omit()
+)
+
+# time = 3
+lmBF(formula = log_effic_05righttrunc ~ type,
+     data = study1_w_timestamp %>%
+         filter(plotNrWithin == 3) %>%
+         select(type, log_effic_05righttrunc) %>%
+         mutate(type = as.factor(type)) %>%
+         na.omit()
+)
+
+# time = 4
+lmBF(formula = log_effic_05righttrunc ~ type,
+     data = study1_w_timestamp %>%
+         filter(plotNrWithin == 4) %>%
+         select(type, log_effic_05righttrunc) %>%
+         mutate(type = as.factor(type)) %>%
+         na.omit()
+)
+
+# time = 5
+lmBF(formula = log_effic_05righttrunc ~ type,
+     data = study1_w_timestamp %>%
+         filter(plotNrWithin == 5) %>%
+         select(type, log_effic_05righttrunc) %>%
+         mutate(type = as.factor(type)) %>%
+         na.omit()
+)
+
+# time = 6
+lmBF(formula = log_effic_05righttrunc ~ type,
+     data = study1_w_timestamp %>%
+         filter(plotNrWithin == 6) %>%
+         select(type, log_effic_05righttrunc) %>%
+         mutate(type = as.factor(type)) %>%
+         na.omit()
+)
+```
+

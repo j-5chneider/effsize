@@ -99,22 +99,6 @@ pp_check(logreg_mod1)
 ## Cumulative link models with unequal variances `{brms}` or nominal effects `{ordinal}`
 ```{r}
 library(ordinal)
-ordinal_brm_mod0 <- brm(
-    formula = bf(sensi_ordinal ~ 1 + effsize + (1|session)),
-    data = study1_w,
-    family = cumulative("probit"),
-    save_pars = save_pars(all = TRUE)
-)
-
-ordinal_brm_mod1 <- brm(
-    formula = bf(sensi_ordinal ~ 1 + effsize + (1|session)) +
-        lf(disc ~ 0 + type, cmc = FALSE),
-    data = study1_w,
-    family = cumulative("probit"),
-    save_pars = save_pars(all = TRUE)
-)
-
-bayes_factor(ordinal_brm_mod0, ordinal_brm_mod1)
 
 clmm0 <- clmm2(sensi_ordinal ~ effsize, 
                       random = as.factor(session), 

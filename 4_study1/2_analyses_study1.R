@@ -1,7 +1,7 @@
 library(ggpubr)
 library(ggdist)
 library(corrgram)
-library(formr)
+#library(formr)
 library(tidyverse)
 library(skimr)
 library(car)
@@ -89,7 +89,7 @@ study1_wl <- study1_w %>%
 
 ggplot(study1_wl, aes(x=variables, y=values, color = type)) + 
     stat_summary(fun = mean, position = position_dodge(width=.5)) + 
-    stat_summary(fun.data = mean_se, geom = "linerange", position = position_dodge(width=.5)) +
+    stat_summary(fun.data = mean_sd, geom = "linerange", position = position_dodge(width=.5)) +
     scale_color_viridis_d() +
     theme_light()
 
