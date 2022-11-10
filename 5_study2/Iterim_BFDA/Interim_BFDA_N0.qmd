@@ -5,7 +5,13 @@ format: html
 
 ## Modeling
 ### IV & DV
-* The dependent variables are binary (ICC = .3) or gaussian (ICC = )
+* The dependent variables are binary (ICC = .3) or gaussian 
+    (accuracy cliffs delta ICC = 0.01;
+     accuracy u3 ICC = 0.55;
+     accuracy overlap ICC = 0.68;
+     perceived difficulty ICC = 0.43;
+     perceived informativity ICC = 0.40;
+     perceived value ICC = 0.50)
 * The independet variables are dummy coded with max 3 binary indicator variables
 * There are three covariates:
     * Topic - between person, 3 dummy variables

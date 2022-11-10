@@ -184,6 +184,10 @@ library(brms)
 
 ### acccl 
 set.seed(2810)
+mod00_acccl <- brm(acccl ~  + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
 mod0_acccl <- brm(acccl ~ effsize + (1 |session),
         data = study1_accuracy,
         iter = 10000,
@@ -198,6 +202,10 @@ bayes_factor(mod1_acccl, mod0_acccl)
 
 ### accu3
 set.seed(2812)
+mod00_accu3 <- brm(accu3 ~ + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
 mod0_accu3 <- brm(accu3 ~ effsize + (1 |session),
         data = study1_accuracy,
         iter = 10000,
@@ -213,6 +221,10 @@ bayes_factor(mod1_accu3, mod0_accu3)
 
 ### accov
 set.seed(2814)
+mod00_accov <- brm(accov ~ effsize + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
 mod0_accov <- brm(accov ~ effsize + (1 |session),
         data = study1_accuracy,
         iter = 10000,
@@ -231,6 +243,10 @@ study1_perceived <-  study1_w %>%
 
 ## perceived difficulty
 set.seed(2816)
+mod00_diffi <- brm(diffi ~ + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
 mod0_diffi <- brm(diffi ~ effsize + (1 |session),
         data = study1_perceived,
         iter = 10000,
@@ -246,6 +262,10 @@ bayes_factor(mod1_diffi, mod0_diffi)
 ## perceived informativity
 
 set.seed(2818)
+mod00_infor <- brm(infor ~ + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
 mod0_infor <- brm(infor ~ effsize + (1 |session),
         data = study1_perceived,
         iter = 10000,
@@ -260,6 +280,10 @@ bayes_factor(mod1_infor, mod0_infor)
 
 ## perceived value
 set.seed(2820)
+mod00_value <- brm(value ~ + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
 mod0_value <- brm(value ~ effsize + (1 |session),
         data = study1_perceived,
         iter = 10000,
@@ -289,6 +313,6 @@ mod1_effic <- brm(effic ~ type + effsize + (1 | session),
 set.seed(2823)
 bayes_factor(mod1_effic, mod0_effic)
 
-sjPlot::tab_model(mod1_acccl, mod1_accu3, mod1_accov, mod1_diffi, mod1_infor, mod1_value, mod1_effic)
+sjPlot::tab_model(mod00_acccl,mod00_accu3, mod00_accov, mod00_diffi, mod00_infor, mod00_value, mod1_acccl, mod1_accu3, mod1_accov, mod1_diffi, mod1_infor, mod1_value, mod1_effic)
 
 ```
