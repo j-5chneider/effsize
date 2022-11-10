@@ -1,0 +1,27 @@
+---
+title: "Iterim_BFDA_N0"
+format: html
+---
+
+## Modeling
+### IV & DV
+* The dependent variables are binary (ICC = .3) or gaussian (ICC = )
+* The independet variables are dummy coded with max 3 binary indicator variables
+* There are three covariates:
+    * Topic - between person, 3 dummy variables
+    * Objective effectsize - within person, continous
+    * Plot type - within-person, 1 dummy variable
+
+### Models
+Bayesian generalized hierarchical models with logit link for binary IV.
+As we have absolutely no clue what effect sizes to assume, we will simulate null effects at the stage of N = 0 and adapt the empirically found effect sizes afterwards.
+
+## First simulation without any data
+```{r}
+logregmod_0 <- brms(notequal ~ effsize + 
+                        topic_01 + topic_02 + topic_03 + 
+                        plottype_01 +
+                        (1|PID),
+                    data = simdata)
+```
+

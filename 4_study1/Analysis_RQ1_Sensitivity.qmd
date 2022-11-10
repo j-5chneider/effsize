@@ -1,14 +1,15 @@
 ---
 title: "Sensitivity_Analysis_N40"
 format: html
-editor: visual
 ---
 
 ## Data wrangling
+
 ```{r}
 library(tidyverse)
+library(haven)
 # import from data folder
-load("../data/teachers_study1_N40.RData")
+load(here::here("data", "teachers_study1_N40.RData"))
 
 # wrangle information on the plot type, ES, ...
 plot_info <- study1 %>%
@@ -77,11 +78,16 @@ study1_w <- full_join(plot_info, item_values,
 
 ```
 
-
 ## Multi-level logistic regression
+
 ```{r}
 library(brms)
 library(modelsummary)
+
+
+logreg_mod00 <- brm(sensi_binary ~ + (1|session), 
+                    data = study1_w,
+                    save_pars = save_pars(all = TRUE))
 logreg_mod0 <- brm(sensi_binary ~ effsize_abs + (1|session), 
                    data = study1_w,
                    save_pars = save_pars(all = TRUE))
@@ -90,13 +96,14 @@ logreg_mod1 <- brm(sensi_binary ~ effsize_abs + type + (1|session),
                    save_pars = save_pars(all = TRUE))
     
 bayes_factor(logreg_mod0, logreg_mod1)
+sjPlot::tab_model(logreg_mod00, logreg_mod0, logreg_mod1, show.icc = TRUE)
 
-sjPlot::tab_model(logreg_mod0, logreg_mod1)
 
 pp_check(logreg_mod1)
 ```
 
-## Cumulative link models with unequal variances `{brms}` or nominal effects `{ordinal}`
+## Cumulative link models with nominal effects `{ordinal}`
+
 ```{r}
 library(ordinal)
 
@@ -114,4 +121,3 @@ clmm1 <- clmm2(sensi_ordinal ~ effsize,
 anova(clmm0, clmm1)
 
 ```
-
