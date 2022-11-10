@@ -19,7 +19,7 @@ format: html
     * Plot type - within-person, 1 dummy variable
 
 ### Models
-Bayesian generalized hierarchical models with logit link for binary IV.
+Bayesian generalized hierarchical models with logit link for binary DV.
 As we have absolutely no clue what effect sizes to assume, we will simulate null effects at the stage of N = 0 and adapt the empirically found effect sizes afterwards.
 
 ## First simulation without any data
