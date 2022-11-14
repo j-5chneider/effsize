@@ -7,12 +7,12 @@ editor_options:
   chunk_output_type: console
 ---
 
-# ICCs 
+# Import & warangle
 ```{r}
 library(dplyr)
 library(BFpack)
 library(ggdist)
-library(corrgram)
+# library(corrgram)
 library(formr)
 library(tidyverse)
 library(skimr)
@@ -90,6 +90,10 @@ study1_timestamp <- study1_timestamp %>%
 
 # join data and time stamps
 study1_w_timestamp <- left_join(study1_w, study1_timestamp, by=c("session", "plot"))
+```
+
+# ICCs 
+```{r}
 #### ALternative Way #########################################
 ## import data from formr (not needed if imported from data folder)
 # study1 <- formr_results("TueDiBASE_study1a")
