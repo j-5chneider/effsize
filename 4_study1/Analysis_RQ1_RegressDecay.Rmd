@@ -295,3 +295,148 @@ lmBF(formula = log_effic_05righttrunc ~ type,
 )
 ```
 
+
+## Modelling with linear models on log'ed data + ES as predictor
+```{r}
+library(BayesFactor)
+## time = 1
+# model with type and effsize
+fit_log_time1_mod1 <- lmBF(formula = log_effic_05righttrunc ~ type + effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 1) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# model with effsize only
+fit_log_time1_mod0 <- lmBF(formula = log_effic_05righttrunc ~ effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 1) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# BF between the two models
+fit_log_time1_mod1 / fit_log_time1_mod0
+
+
+
+## time = 2
+# model with type and effsize
+fit_log_time2_mod1 <- lmBF(formula = log_effic_05righttrunc ~ type + effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 2) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# model with effsize only
+fit_log_time2_mod0 <- lmBF(formula = log_effic_05righttrunc ~ effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 2) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# BF between the two models
+fit_log_time2_mod1 / fit_log_time2_mod0
+
+## time = 3
+# model with type and effsize
+fit_log_time3_mod1 <- lmBF(formula = log_effic_05righttrunc ~ type + effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 3) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# model with effsize only
+fit_log_time3_mod0 <- lmBF(formula = log_effic_05righttrunc ~ effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 3) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# BF between the two models
+fit_log_time3_mod1 / fit_log_time3_mod0
+
+
+
+## time = 4
+# model with type and effsize
+fit_log_time4_mod1 <- lmBF(formula = log_effic_05righttrunc ~ type + effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 4) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# model with effsize only
+fit_log_time4_mod0 <- lmBF(formula = log_effic_05righttrunc ~ effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 4) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# BF between the two models
+fit_log_time4_mod1 / fit_log_time4_mod0
+
+
+
+## time = 5
+# model with type and effsize
+fit_log_time5_mod1 <- lmBF(formula = log_effic_05righttrunc ~ type + effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 5) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# model with effsize only
+fit_log_time5_mod0 <- lmBF(formula = log_effic_05righttrunc ~ effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 5) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# BF between the two models
+fit_log_time5_mod1 / fit_log_time5_mod0
+
+
+
+## time = 6
+# model with type and effsize
+fit_log_time6_mod1 <- lmBF(formula = log_effic_05righttrunc ~ type + effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 6) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# model with effsize only
+fit_log_time6_mod0 <- lmBF(formula = log_effic_05righttrunc ~ effsize,
+                         data = study1_w_timestamp %>%
+                             filter(plotNrWithin == 6) %>%
+                             select(type, log_effic_05righttrunc, effsize) %>%
+                             mutate(type = as.factor(type)) %>%
+                             na.omit()
+                         )
+
+# BF between the two models
+fit_log_time6_mod1 / fit_log_time6_mod0
+```
+
