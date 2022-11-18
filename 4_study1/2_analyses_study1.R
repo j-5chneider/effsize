@@ -1,6 +1,6 @@
 library(ggpubr)
 library(ggdist)
-library(corrgram)
+# library(corrgram)
 #library(formr)
 library(tidyverse)
 library(skimr)
@@ -64,7 +64,7 @@ study1_w <- full_join(plot_info, item_values,
                   infor = as.numeric(infor),
                   value = as.numeric(value),
                   effsize = as.numeric(effsize),
-                  effsize_cl = case_when( # there is no negative Cliff's Delta, so we have to compute two transformations
+                  effsize_cl = case_when( # our formula only computes positive Cliff's Delta values, so we have to compute two transformations
                       effsize > 0 ~   (((2*pnorm(effsize/2))-1)/pnorm(effsize/2)), # transform the actual effect size Cohen's d to Cliff's Delta
                       effsize < 0 ~ (- (((2*pnorm(abs(effsize)/2))-1)/pnorm(abs(effsize)/2))) # transform the actual effect size Cohen's d to Cliff's Delta and make it negative as in the item
                   ),
@@ -89,7 +89,15 @@ study1_wl <- study1_w %>%
 
 ggplot(study1_wl, aes(x=variables, y=values, color = type)) + 
     stat_summary(fun = mean, position = position_dodge(width=.5)) + 
-    stat_summary(fun.data = mean_sd, geom = "linerange", position = position_dodge(width=.5)) +
+    stat_summary(fun.data = mean_sd, geom = "linerange", 
+                 position = position_dodge(width=.5),
+                 alpha = .4,
+                 size = 1) +
+    scale_x_discrete(labels = c("Accuracy\nCliff's Delta", "Accuracy\nOverlap", 
+                                  "Accuracy\nCohen's U3", "Task difficulty", 
+                                  "Informativity", "Perceived value")) +
+    xlab("") +
+    ylab("Accuracy / Rating\n[-1 to 1]") +
     scale_color_viridis_d() +
     theme_light()
 
