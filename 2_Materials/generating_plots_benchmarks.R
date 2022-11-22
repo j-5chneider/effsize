@@ -35,13 +35,13 @@ for (i1 in group_names) {# all group names (vignettes)
         data <- tibble::tibble(group1 = round(distribution_normal(309, 
                                                           # mean = half an es 
                                                           # lower than 50
-                                                          55-((15*i2)/2), 
+                                                          80-((15*i2)/2), 
                                                           15), 
                                       0),
                        group2 = round(distribution_normal(309, 
                                                           # mean = half an es 
                                                           # higher than 50
-                                                          55+((15*i2)/2), 
+                                                          80+((15*i2)/2), 
                                                           15), 
                                       0)) %>% 
             tidyr::pivot_longer(1:2, names_to = "group", values_to = "testscore")
@@ -49,7 +49,7 @@ for (i1 in group_names) {# all group names (vignettes)
         # Halfeye - Groups as nominal y-axis
         ggplot2::ggplot(data, ggplot2::aes(x=testscore, y=group)) + 
             stat_halfeye() + 
-            ggplot2::xlim(c(5, 105)) + 
+            ggplot2::xlim(c(30, 130)) + 
             ggplot2::scale_y_discrete(labels = i1) +
             hrbrthemes::theme_ipsum() +
             ggplot2::xlab("knowledge test score")  +
@@ -57,7 +57,8 @@ for (i1 in group_names) {# all group names (vignettes)
                              cols = unit(4, "in")) +
             theme(axis.text = element_text(family = 'Arial'),
                   axis.title.x = element_text(family = 'Arial'),
-                  axis.title.y = element_text(family = 'Arial'))
+                  axis.title.y = element_text(family = 'Arial'),
+                  panel.grid = element_line(linetype=2))
         
         # save this plot
         ggplot2::ggsave(
