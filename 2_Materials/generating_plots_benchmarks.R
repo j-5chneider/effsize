@@ -32,7 +32,7 @@ set.seed(823876) # seed for replicability
 for (i1 in group_names) {# all group names (vignettes)
     for (i2 in es) {     # and all effect sizes
         # for nearly perfectly distributed empirical data
-        data <- tibble(group1 = round(distribution_normal(309, 
+        data <- tibble::tibble(group1 = round(distribution_normal(309, 
                                                           # mean = half an es 
                                                           # lower than 50
                                                           55-((15*i2)/2), 
@@ -44,23 +44,26 @@ for (i1 in group_names) {# all group names (vignettes)
                                                           55+((15*i2)/2), 
                                                           15), 
                                       0)) %>% 
-            pivot_longer(1:2, names_to = "group", values_to = "testscore")
+            tidyr::pivot_longer(1:2, names_to = "group", values_to = "testscore")
         
         # Halfeye - Groups as nominal y-axis
-        ggplot(data, aes(x=testscore, y=group)) + 
+        ggplot2::ggplot(data, ggplot2::aes(x=testscore, y=group)) + 
             stat_halfeye() + 
-            xlim(c(5, 105)) + 
-            scale_y_discrete(labels = i1) +
-            theme_ipsum() +
-            xlab("knowledge test score")  +
-            force_panelsizes(rows = unit(4, "in"),
-                             cols = unit(4, "in"))
+            ggplot2::xlim(c(5, 105)) + 
+            ggplot2::scale_y_discrete(labels = i1) +
+            hrbrthemes::theme_ipsum() +
+            ggplot2::xlab("knowledge test score")  +
+            ggh4x::force_panelsizes(rows = unit(4, "in"),
+                             cols = unit(4, "in")) +
+            theme(axis.text = element_text(family = 'Arial'),
+                  axis.title.x = element_text(family = 'Arial'),
+                  axis.title.y = element_text(family = 'Arial'))
         
         # save this plot
-        ggsave(
+        ggplot2::ggsave(
             file = paste0("2_Materials/plots/halfeye_yaxis_", 
-                          str_remove(gsub(" ", "", i1[1]), "\n"), 
-                          str_remove(gsub(" ", "", i1[2]), "\n"), 
+                          stringr::str_remove(gsub(" ", "", i1[1]), "\n"), 
+                          stringr::str_remove(gsub(" ", "", i1[2]), "\n"), 
                           "_", i2, "_benchmarks", ".svg"),
             width = 6,
             height = 6,
