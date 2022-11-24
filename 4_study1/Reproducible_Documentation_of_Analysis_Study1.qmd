@@ -90,7 +90,19 @@ study1_w <- full_join(plot_info, item_values,
                   # actual accuracy of rating relative to depicted effectsize 
                   diffi_normed = ((diffi - 1)  / 3) - 1, # transform item to -1 to 1
                   infor_normed = ((infor - 1)  / 3) - 1, # transform item to -1 to 1
-                  value_normed = ((value - 1)  / 3) - 1) # transform item to -1 to 1
+                  value_normed = ((value - 1)  / 3) - 1) %>%  # transform item to -1 to 1
+    group_by(session) %>% 
+    mutate(# within-person rank transformation
+           accov_wp_rank = rank(accov),
+           accu3_wp_rank = rank(accu3),
+           # within-person standardization
+           accov_wp_stand = (accov - mean(accov, na.rm = T))/
+               sd(accov, na.rm = T),
+           accu3_wp_stand = (accu3 - mean(accu3, na.rm = T))/
+               sd(accu3, na.rm = T),
+           accov_missconcept = median(accov, na.rm = T) < 50,
+           accu3_missconcept = median(accu3, na.rm = T) < 20) %>% 
+    ungroup()
 ```
 
 ## Graphical Overview
@@ -106,7 +118,7 @@ study1_w %>%
         ) %>% 
     ggplot(., aes(judged_effectsize)) +
     geom_histogram() +
-    facet_wrap(~operationalization, scales = "free_x")x
+    facet_wrap(~operationalization, scales = "free_x")
 ```
 Somewhat disturbing is the first mode in `accov`. Maybe some users confused `overlap` and `non-overlap`?
 Another artefact seems to be the first mode in `accu3`.
@@ -114,36 +126,39 @@ Another artefact seems to be the first mode in `accu3`.
 #### Association of Ratings and Actual Effect Size
 ```{r}
 study1_w %>% 
-    select(acccl, accu3, accov, effsize, effsize_cl) %>% 
-    pivot_longer(
-        c(acccl, accu3, accov),
-        names_to = "operationalization", 
-        values_to = "judged_effectsize"
-        ) %>%
-    ggplot(., aes(effsize, judged_effectsize)) +
+    ggplot(., aes(effsize, acccl)) +
     geom_jitter() +
-    facet_wrap(.~operationalization, scales = "free_y") + 
     stat_smooth()
-    
-# reshape data set for plot
-study1_wl <- study1_w %>%
-    dplyr::select(-c(acccl:effsize_ov)) %>%
-    pivot_longer(6:11, names_to = "variables", values_to = "values")
 
-ggplot(study1_wl, aes(x=variables, y=values, color = type)) + 
-    stat_summary(fun = mean, position = position_dodge(width=.5)) + 
-    stat_summary(fun.data = mean_sd, geom = "linerange", position = position_dodge(width=.5)) +
-    scale_color_viridis_d() +
-    theme_light()
+study1_w %>% 
+    ggplot(., aes(effsize, accu3, color = accu3_missconcept)) +
+    geom_jitter() +
+    stat_smooth()
+
+study1_w %>% 
+    ggplot(., aes(abs(effsize), accov, color = accov_missconcept)) +
+    geom_jitter() +
+    stat_smooth(method = "lm")
 ```
 
-The correlations undermine the interpretation of the zero-inflations. Therefor we will look at the intercorrelations of the dependent variables
+The correlations undermine the interpretation of the missconceptions Therefor we will look at the intercorrelations of the dependent variables.
 
 #### Compute Kendall's $\tau$ for `accl`, `accu3` and `accov`
 ```{r}
-cor(study1_w$effsize, study1_w$acccl, method = "kendall", use = "pairwise.complete")
-cor(abs(study1_w$effsize), study1_w$accov, method = "kendall", use = "pairwise.complete")
-cor(study1_w$effsize, study1_w$accu3, method = "kendall", use = "pairwise.complete")
+study1_w %>% 
+    do(tau_cl = unlist(cor(.$effsize, .$acccl, method = "kendall", use = "pairwise.complete"))) %>% 
+    unnest(tau_cl)
+
+study1_w %>% 
+    group_by(accov_missconcept) %>% 
+    do(tau_ov = unlist(cor(abs(.$effsize), .$accov, method = "kendall", use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+study1_w %>% 
+    group_by(accu3_missconcept) %>% 
+    do(tau_u3 = unlist(cor(abs(.$effsize), .$accu3, method = "kendall", use = "pairwise.complete"))) %>% 
+    unnest(tau_u3)
+
 ```
 
 
@@ -160,7 +175,7 @@ ggplot(study1_w,
     geom_jitter()
 ```
 
-#### Are there Constant Misconceptions per Persons
+#### Are there Constant Misconceptions per Persons?
 ```{r}
 ggplot(study1_w %>% 
     select(acccl, accu3, accov, effsize, effsize_cl, session) %>% 
@@ -175,7 +190,26 @@ ggplot(study1_w %>%
     geom_jitter(height = 0) +
     facet_wrap(~ operationalization, scales = "free_x") +
     theme(legend.position = "none")
-    
+```
 
+It seems to be so, as ....
+However, let's look at the rank transformation
+
+```{r}
+ggplot(study1_w %>% 
+    select(acccl, accu3_wp_rank, accov_wp_rank,  session) %>% 
+    pivot_longer(
+        c(acccl, accu3_wp_rank, accov_wp_rank),
+        names_to = "operationalization", 
+        values_to = "judged_effectsize"
+        ),
+    aes(judged_effectsize, as.numeric(as.factor(session)),
+        color = session)
+        ) +
+    geom_jitter(height = 0) +
+    facet_wrap(~ operationalization, scales = "free_x") +
+    theme(legend.position = "none")
+
+cor(study1_w$effsize, study1_w$accu3_wp_rank, method = "kendall", use = "pairwise.complete")
 ```
 
