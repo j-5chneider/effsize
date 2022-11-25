@@ -140,7 +140,7 @@ ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
 ```{r}
 ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_05righttrunc)) +
     geom_sina() +
-    coord_cartesian(ylim = c(0,100000)) + 
+   # coord_cartesian(ylim = c(0,100000)) + 
     geom_smooth(aes(plotNrWithin, effic_05righttrunc)) +
     facet_wrap(~type)
 ```
@@ -150,7 +150,7 @@ ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_05righttrunc)) +
 ```{r}
 ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_10righttrunc)) +
     geom_sina() +
-    coord_cartesian(ylim = c(0,100000)) + 
+    #coord_cartesian(ylim = c(0,100000)) + 
     geom_smooth(aes(plotNrWithin, effic_10righttrunc)) +
     facet_wrap(~type)
 ```

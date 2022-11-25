@@ -1,7 +1,13 @@
 ---
-title: "Reproducible_Documentation_of_Analysis_Study1"
-format: html
-editor: visual
+title: "Reproducible Documentation of Analysis Study 1"
+format: 
+  html:
+    theme: solar
+    fontsize: 0.85em
+    toc: true
+    toc-location: left
+    toc-depth: 4
+editor: source
 bibliography: references.bib
 editor_options: 
   chunk_output_type: console
@@ -12,14 +18,23 @@ editor_options:
 The data was assessed with the `formr` survey framework [@arslan2020]. The raw data was imported via the following code.
 
 ```{r}
+#| label: libraries and data import
 library(tidyverse)
+library(lme4)
+library(BFpack)
 library(hrbrthemes)
 library(patchwork)
-load("data/teachers_study1_N40.RData")
+library(brms)
+library(viridis)
+load("../data/teachers_study1_N40.RData")
+
+set.seed(25051982)
 ```
 
 ## Data Wrangling
 ```{r}
+#| label: data wrangling
+
 # wrangle information on the plot type, ES, ...
 plot_info <- study1 %>%
     pivot_longer(2:195, names_to = "variables", values_to = "values", 
@@ -62,9 +77,9 @@ study1_w <- full_join(plot_info, item_values,
                                by = c("session", "plot")) %>% 
     # by participant and page (plot)
     dplyr::select(-values) %>%
-    dplyr::mutate(acccl = as.numeric(acccl), # some var need to be defined as
-                  accu3 = as.numeric(accu3), # numeric again
-                  accov = as.numeric(accov),
+    dplyr::mutate(rating_cl = as.numeric(acccl), # some var need to be defined as
+                  rating_u3 = as.numeric(accu3), # numeric again
+                  rating_ov = as.numeric(accov),
                   diffi = as.numeric(diffi),
                   infor = as.numeric(infor),
                   value = as.numeric(value),
@@ -82,105 +97,120 @@ study1_w <- full_join(plot_info, item_values,
                   # transform the actual effect size Cohen's d to Cohen's U3
                   effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
                   # transform the actual effect size Cohen's d to overlap
-                  acccl_eff = (acccl - effsize_cl)/2, 
-                  # actual accuracy of rating relative to depicted effectsize 
-                  accu3_eff = (accu3/100) - effsize_u3, 
-                  # actual accuracy of rating relative to depicted effectsize
-                  accov_eff = (accov/100) - effsize_ov, 
-                  # actual accuracy of rating relative to depicted effectsize 
+                  # actual difference of rating relative to depicted effectsize 
+                  diff_cl = (rating_cl - effsize_cl)/2,
+                  # actual difference of rating relative to depicted effectsize
+                  diff_u3 = (rating_u3/100) - effsize_u3,
+                  # actual difference of rating relative to depicted effectsize 
+                  diff_ov = (rating_ov/100) - effsize_ov,
                   diffi_normed = ((diffi - 1)  / 3) - 1, # transform item to -1 to 1
                   infor_normed = ((infor - 1)  / 3) - 1, # transform item to -1 to 1
                   value_normed = ((value - 1)  / 3) - 1) %>%  # transform item to -1 to 1
     group_by(session) %>% 
-    mutate(# within-person rank transformation
-           accov_wp_rank = rank(accov),
-           accu3_wp_rank = rank(accu3),
-           # within-person standardization
-           accov_wp_stand = (accov - mean(accov, na.rm = T))/
-               sd(accov, na.rm = T),
-           accu3_wp_stand = (accu3 - mean(accu3, na.rm = T))/
-               sd(accu3, na.rm = T),
-           accov_missconcept = median(accov, na.rm = T) < 50,
-           accu3_missconcept = median(accu3, na.rm = T) < 20) %>% 
+    mutate(rating_ov_missconcept = median(rating_ov, na.rm = T) < 68,
+           rating_u3_missconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
+    ungroup() %>% 
+    mutate(rating_u3_filtered = ifelse(rating_u3_missconcept == T, NA, rating_u3),
+           rating_ov_filtered = ifelse(rating_ov_missconcept == T, NA, rating_ov),
+           diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
+           diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
+           sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
+                                        NA,
+                                        as.numeric(!grepl("equal", sensi))),
+           sensi_ordinal = ordered(factor(substr(sensi, 55, 100)),
+                                   levels = c("inferior",
+                                              "equal",
+                                              "superior")),
+           sensi_binary_filtered = case_when(sensi_ordinal == "equal" ~ 0, 
+                                              (sensi_ordinal == "inferior" & 
+                                                  effsize < 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize > 0) ~ as.numeric(NA),
+                                              TRUE ~ 1),
+           effsize_abs = abs(effsize))
+
+# create a list of u3_misconceptualizers
+u3_misconceptualizers <-
+    study1_w %>% 
+    filter(rating_u3_missconcept == T) %>% 
+    pull(session) %>% 
+    unique()
+
+# create a list of ov_misconceptualizers
+ov_misconceptualizers <-
+    study1_w %>% 
+    filter(rating_ov_missconcept == T) %>% 
+    pull(session) %>% 
+    unique()    
+
+### wrangle time stamp data ####################################################
+#study1_timestamp <- 
+    read_csv("data/teachers_study1_N40_detailed.csv") %>% 
+    # create var with plot number
+    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1)),
+           # recode wrong item labelling
+           plot = ifelse(plot == "plotx__6", "plotx_06", plot)) %>% 
+    # we only need vars sensitivity or accuracy
+    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>%  
+    # delete the page number in item name
+    mutate(item_name = str_sub(item_name, 1, 5)) %>%  
+    # make structure similar to `study_1w` data set
+    dplyr::select(session, item_name, answer, answered_relative, plot) %>%
+    pivot_wider(id_cols = c(session, plot), names_from = item_name, 
+                values_from = answered_relative) %>% 
+    rowwise() %>%
+    # what was the time of the first item to be clicked?
+    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>%
+    ungroup() %>% 
+   # dplyr::select(session, plot, effic) %>% 
+    left_join(., study1_w, by=c("session", "plot")) %>% 
+    # generate data set so that the six plots from the same type are ordered
+    # one after the other (and not 1-24)
+    group_by(session, type) %>%
+    arrange(plot) %>% 
+    mutate(plotNrWithin = 1:n()) %>%
+    ungroup() %>% 
+    group_by(plotNrWithin, type) %>% 
+    mutate(effic_10righttrunc = ifelse(effic > quantile(effic, .9), NA, effic),
+           effic_05righttrunc = ifelse(effic > quantile(effic, .95), NA, effic),
+           log_effic_05righttrunc =log(effic_05righttrunc),
+           log_effic_10righttrunc = log(effic_10righttrunc),
+           plotNrWithin0 = plotNrWithin -1,
+           plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
     ungroup()
 ```
 
-## Graphical Overview
-### Accuracy
-#### Distribution of the Variables
+## Accuracy
+
+### Distribution of the Dependent Variables
+
 ```{r}
+#| label: distribution acc dvs
+
 study1_w %>% 
-    select(acccl, accu3, accov, effsize) %>% 
+    select(rating_cl, rating_u3, rating_ov) %>% 
     pivot_longer(
-        c(acccl, accu3, accov),
-        names_to = "operationalization", 
-        values_to = "judged_effectsize"
+        c(rating_cl, rating_u3, rating_ov),
+        names_to = "dependent_variable", 
+        values_to = "rated_effectsize"
         ) %>% 
-    ggplot(., aes(judged_effectsize)) +
+    ggplot(., aes(rated_effectsize)) +
     geom_histogram() +
-    facet_wrap(~operationalization, scales = "free_x")
-```
-Somewhat disturbing is the first mode in `accov`. Maybe some users confused `overlap` and `non-overlap`?
-Another artefact seems to be the first mode in `accu3`.
-
-#### Association of Ratings and Actual Effect Size
-```{r}
-study1_w %>% 
-    ggplot(., aes(effsize, acccl)) +
-    geom_jitter() +
-    stat_smooth()
-
-study1_w %>% 
-    ggplot(., aes(effsize, accu3, color = accu3_missconcept)) +
-    geom_jitter() +
-    stat_smooth()
-
-study1_w %>% 
-    ggplot(., aes(abs(effsize), accov, color = accov_missconcept)) +
-    geom_jitter() +
-    stat_smooth(method = "lm")
+    facet_wrap(~dependent_variable, scales = "free_x") +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"))
 ```
 
-The correlations undermine the interpretation of the missconceptions Therefor we will look at the intercorrelations of the dependent variables.
+Somewhat disturbing is the first mode in `accov`. Maybe some users confused `overlap` and `non-overlap`? Another artefact seems to be the first mode in `accu3`.
 
-#### Compute Kendall's $\tau$ for `accl`, `accu3` and `accov`
+### Are there Constant Misconceptions per Persons?
+
 ```{r}
-study1_w %>% 
-    do(tau_cl = unlist(cor(.$effsize, .$acccl, method = "kendall", use = "pairwise.complete"))) %>% 
-    unnest(tau_cl)
-
-study1_w %>% 
-    group_by(accov_missconcept) %>% 
-    do(tau_ov = unlist(cor(abs(.$effsize), .$accov, method = "kendall", use = "pairwise.complete"))) %>% 
-    unnest(tau_ov)
-
-study1_w %>% 
-    group_by(accu3_missconcept) %>% 
-    do(tau_u3 = unlist(cor(abs(.$effsize), .$accu3, method = "kendall", use = "pairwise.complete"))) %>% 
-    unnest(tau_u3)
-
-```
-
-
-#### Associations of the Dependent Variables
-```{r}
-ggplot(study1_w, 
-       aes(acccl, accu3)) +
-    geom_jitter() +
-ggplot(study1_w, 
-       aes(acccl, accov)) +
-    geom_jitter() +
-ggplot(study1_w, 
-       aes(accov, accu3)) +
-    geom_jitter()
-```
-
-#### Are there Constant Misconceptions per Persons?
-```{r}
+#| label: misconceptiosn per person
 ggplot(study1_w %>% 
-    select(acccl, accu3, accov, effsize, effsize_cl, session) %>% 
+    select(rating_cl, rating_u3, rating_ov, effsize, effsize_cl, session) %>% 
     pivot_longer(
-        c(acccl, accu3, accov),
+        c(rating_cl, rating_u3, rating_ov),
         names_to = "operationalization", 
         values_to = "judged_effectsize"
         ),
@@ -189,27 +219,370 @@ ggplot(study1_w %>%
         ) +
     geom_jitter(height = 0) +
     facet_wrap(~ operationalization, scales = "free_x") +
-    theme(legend.position = "none")
+    theme_modern_rc() +
+    theme(legend.position = "none",
+          strip.text = element_text(color = "white"))
 ```
 
 It seems to be so, as ....
-However, let's look at the rank transformation
+
+### Association of Ratings and Actual Effect Size
 
 ```{r}
-ggplot(study1_w %>% 
-    select(acccl, accu3_wp_rank, accov_wp_rank,  session) %>% 
-    pivot_longer(
-        c(acccl, accu3_wp_rank, accov_wp_rank),
-        names_to = "operationalization", 
-        values_to = "judged_effectsize"
-        ),
-    aes(judged_effectsize, as.numeric(as.factor(session)),
-        color = session)
-        ) +
-    geom_jitter(height = 0) +
-    facet_wrap(~ operationalization, scales = "free_x") +
-    theme(legend.position = "none")
+#| label: acc associations
+study1_w %>% 
+    ggplot(., aes(effsize, rating_cl)) +
+    geom_jitter() +
+    stat_smooth() +
+    theme_modern_rc()
 
-cor(study1_w$effsize, study1_w$accu3_wp_rank, method = "kendall", use = "pairwise.complete")
+study1_w %>% 
+    ggplot(., aes(effsize, rating_u3, color = rating_u3_missconcept)) +
+    geom_jitter() +
+    stat_smooth() +
+    theme_modern_rc()
+
+study1_w %>% 
+    ggplot(., aes(abs(effsize), rating_ov, color = rating_ov_missconcept)) +
+    geom_jitter() +
+    stat_smooth(method = "lm") +
+    theme_modern_rc()
 ```
 
+The correlations undermine the interpretation of the misconceptions Therefor we will look at the intercorrelations of the dependent variables.
+
+### Compute Kendall's $\tau$ for `accl`, `accu3` and `accov`
+
+```{r}
+#| label: kendalls tau
+study1_w %>% 
+    group_by(type) %>% 
+    do(tau_cl = unlist(cor(.$effsize, .$rating_cl, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_cl)
+
+study1_w %>% 
+    group_by(rating_ov_missconcept, type) %>% 
+    do(tau_ov = unlist(cor(abs(.$effsize), .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+study1_w %>% 
+    group_by(rating_u3_missconcept, type) %>% 
+    do(tau_u3 = cor(.$effsize, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete")) %>% 
+    unnest(tau_u3)
+```
+
+### Associations of the Dependent Variables
+
+```{r}
+#| label: associactions inter-dv
+#| out-height: "30%"
+ggplot(study1_w, 
+       aes(rating_cl, rating_u3)) +
+    geom_jitter() +
+    theme_modern_rc() +
+ggplot(study1_w, 
+       aes(rating_cl, rating_ov)) +
+    geom_jitter() +
+    theme_modern_rc() +
+ggplot(study1_w, 
+       aes(rating_ov, rating_u3)) +
+    geom_jitter() +
+    theme_modern_rc()
+```
+
+### Global Under- or Overestimation
+
+```{r}
+#| label: under- overestimation
+study1_w %>% 
+    select(diff_cl, diff_u3_filtered, diff_ov_filtered, session, type) %>% 
+    gather(dependent_variable, difference_to_true_effsize, 
+           diff_cl, diff_u3_filtered, diff_ov_filtered) %>% 
+    ggplot(., aes(type, difference_to_true_effsize)) +
+    geom_boxplot(alpha = .3) +
+    facet_wrap(~dependent_variable, scales = "free_y") +
+    geom_jitter(aes(color = type)) +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"),
+          axis.text.x = element_blank())
+```
+
+### Intraclasscorrleations
+
+```{r}
+#| label: acc iccs
+#| cache: true
+icc_mod_rating_cl <- lmer(rating_cl ~  1 + (1|type), 
+                          data = study1_w )
+icc_mod_rating_u3 <- lmer(rating_u3 ~  1 + (1|type), 
+                          data = study1_w %>% 
+                              filter(rating_u3_missconcept == F))
+icc_mod_rating_ov <- lmer(rating_ov ~  1 + (1|type), 
+                          data = study1_w %>% 
+                              filter(rating_ov_missconcept == F))
+icc_mod_diffi <- lmer(diffi ~  1 + (1|type), 
+                      data = study1_w)
+icc_mod_infor <- lmer(infor ~  1 + (1|type), 
+                      data = study1_w )
+icc_mod_value <- lmer(value ~  1 + (1|type), 
+                      data = study1_w )
+
+sjPlot::tab_model(
+    icc_mod_rating_cl,
+    icc_mod_rating_u3,
+    icc_mod_rating_ov,
+    icc_mod_diffi,
+    icc_mod_infor,
+    icc_mod_value
+)
+
+BF(icc_mod_rating_cl, hypothesis = "icc = 0; icc > 0")
+BF(icc_mod_rating_u3, hypothesis = "icc = 0; icc > 0")
+BF(icc_mod_rating_ov, hypothesis = "icc = 0; icc > 0")
+BF(icc_mod_diffi, hypothesis = "icc = 0; icc > 0")
+BF(icc_mod_infor, hypothesis = "icc = 0; icc > 0")
+BF(icc_mod_value, hypothesis = "icc = 0; icc > 0")
+```
+
+## Perceived Informativity
+
+### Graphical Overview
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, infor)) +
+    geom_jitter() +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white") +
+    theme_modern_rc() +
+    labs(title = "Informativity",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+### ICCs
+
+```{r}
+
+```
+
+## Perceived Practical Relevance
+
+### Graphical Overview
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, value)) +
+    geom_jitter() +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white") +
+    theme_modern_rc() +
+    labs(title = "Informativity",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+### ICCs
+
+```{r}
+
+```
+
+## Sensitivity
+
+```{r}
+#| label: sensi plot
+
+ggplot(study1_w %>% 
+           select(sensi_ordinal, type) %>% 
+           na.omit(), aes(sensi_ordinal, 
+                          color = sensi_ordinal,
+                          fill = sensi_ordinal)) +
+    facet_wrap(~ type) +
+    geom_bar() +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white")) +
+    ggtitle("Sensitivity", "all participants")
+
+ggplot(study1_w %>% 
+           select(sensi_ordinal, type, session) %>% 
+           na.omit() %>% 
+           filter(!session %in% ov_misconceptualizers & 
+                      !session %in% u3_misconceptualizers), aes(sensi_ordinal, 
+                          color = sensi_ordinal,
+                          fill = sensi_ordinal)) +
+    facet_wrap(~ type) +
+    geom_bar() +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white")) +
+    ggtitle("Sensitivity", "without missconceptualizers")
+
+ggplot(study1_w %>% 
+           select(sensi_binary_filtered, type, session),
+       aes(sensi_binary_filtered, 
+           color = sensi_binary_filtered,
+           fill = sensi_binary_filtered)) +
+    facet_wrap(~ type) +
+    geom_bar() +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white")) +
+    ggtitle("Binary Sensitivity", "without wrong decisions")
+```
+
+Fitting a series of logistic regressions with non-informative priors
+
+```{r}
+#| label: sensi models
+#| cache: true
+
+logreg_mod0 <- brm(sensi_binary_filtered ~ + (1|session), 
+                    family = bernoulli(link = "logit"),
+                    data = study1_w,
+                    save_pars = save_pars(all = TRUE),
+                   silent = 2,
+                   refresh = 0)
+logreg_mod1 <- brm(sensi_binary_filtered ~ effsize_abs + (1|session), 
+                   family = bernoulli(link = "logit"),
+                   data = study1_w,
+                   save_pars = save_pars(all = TRUE),
+                   silent = 2,
+                   refresh = 0)
+logreg_mod2 <- brm(sensi_binary_filtered ~ effsize_abs + type + (1|session), 
+                   family = bernoulli(link = "logit"),
+                   data = study1_w,
+                   save_pars = save_pars(all = TRUE),
+                   silent = 2,
+                   refresh = 0)
+    
+bayes_factor(logreg_mod0, logreg_mod1)
+bayes_factor(logreg_mod1, logreg_mod2)
+
+sjPlot::tab_model(logreg_mod0, logreg_mod1, logreg_mod2, show.icc = TRUE)
+
+pp_check(logreg_mod2) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+## Effectivity
+### Visualisation
+#### Raw data
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    coord_cartesian(ylim = c(0,75000)) + 
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+#### 5% Percent Truncated 
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_05righttrunc)) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    coord_cartesian(ylim = c(0,75000)) + 
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="5% Truncated Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+#### 10% Percent Truncated 
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_10righttrunc)) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    coord_cartesian(ylim = c(0,75000)) + 
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="10% Truncated Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+#### `log()` Transformed 
+```{r}
+ggplot(study1_w_timestamp, 
+       aes(as.factor(plotNrWithin), 
+           log(effic_05righttrunc))) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="log Transformed Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+### Modeling with `{brms}`
+#### Efficacy for First Plot
+```{r}
+plot01_mod0 <- 
+    brm(effic | trunc(lb = 0) ~ 1 + (1|session),
+    data = study1_w_timestamp %>% 
+        filter(plotNrWithin == 1),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0)
+
+pp_check(plot01_mod0) +
+    xlim(c(0,250000)) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+
+plot01_mod1 <- 
+    brm(effic | trunc(lb = 0) ~ 1 + type + (1|session),
+    data = study1_w_timestamp %>% 
+        filter(plotNrWithin == 1),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0)
+
+pp_check(plot01_mod1) +
+    xlim(c(0,250000)) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+#### Efficacy for Last Three Plots
+```{r}
+plot0306_mod0 <- 
+    brm(effic | trunc(lb = 0) ~ 1 + plotNrWithin_factor + (1|session),
+    data = study1_w_timestamp %>% 
+        filter(plotNrWithin >= 4),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0)
+
+pp_check(plot0306_mod0) +
+    xlim(c(0,250000)) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+
+plot0306_mod1 <- 
+    brm(effic | trunc(lb = 0) ~ 1 + plotNrWithin_factor + type + (1|session),
+    data = study1_w_timestamp %>% 
+        filter(plotNrWithin >= 4),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0)
+
+pp_check(plot0306_mod1) +
+    xlim(c(0,250000)) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
