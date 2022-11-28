@@ -7,6 +7,7 @@ format:
     toc: true
     toc-location: left
     toc-depth: 4
+    embed-resources: true
 editor: source
 bibliography: references.bib
 editor_options: 
@@ -20,6 +21,7 @@ The data was assessed with the `formr` survey framework [@arslan2020]. The raw d
 ```{r}
 #| label: libraries and data import
 library(tidyverse)
+library(ggforce)
 library(lme4)
 library(BFpack)
 library(hrbrthemes)
@@ -144,29 +146,31 @@ ov_misconceptualizers <-
     unique()    
 
 ### wrangle time stamp data ####################################################
-#study1_timestamp <- 
-    read_csv("data/teachers_study1_N40_detailed.csv") %>% 
+study1_w_timestamp <- 
+    read_csv("../data/teachers_study1_N40_detailed.csv") %>% 
+    # filter participants from study1_w only
+    filter(session %in% study1_w$session) %>% 
+    # we only need vars sensitivity or accuracy
+    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>%  
     # create var with plot number
     mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1)),
            # recode wrong item labelling
            plot = ifelse(plot == "plotx__6", "plotx_06", plot)) %>% 
-    # we only need vars sensitivity or accuracy
-    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>%  
+    relocate(session, plot) %>% 
     # delete the page number in item name
     mutate(item_name = str_sub(item_name, 1, 5)) %>%  
-    # make structure similar to `study_1w` data set
-    dplyr::select(session, item_name, answer, answered_relative, plot) %>%
     pivot_wider(id_cols = c(session, plot), names_from = item_name, 
                 values_from = answered_relative) %>% 
     rowwise() %>%
     # what was the time of the first item to be clicked?
     mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>%
     ungroup() %>% 
-   # dplyr::select(session, plot, effic) %>% 
-    left_join(., study1_w, by=c("session", "plot")) %>% 
+    dplyr::select(session, plot, effic, sensi, acccl, accu3, accov) %>% 
+    left_join(., study1_w %>% 
+                  select(session, plot, type), by=c("session", "plot")) %>% 
     # generate data set so that the six plots from the same type are ordered
     # one after the other (and not 1-24)
-    group_by(session, type) %>%
+    group_by(session, type) %>% 
     arrange(plot) %>% 
     mutate(plotNrWithin = 1:n()) %>%
     ungroup() %>% 
@@ -476,7 +480,7 @@ pp_check(logreg_mod2) +
 ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
     geom_boxplot(alpha = .2, color = "lightgrey") +
     geom_sina(alpha = .5) +
-    coord_cartesian(ylim = c(0,75000)) + 
+    coord_cartesian(ylim = c(0,100000)) + 
     facet_wrap(~type) +
     theme_modern_rc() +
     labs(title ="Dwell Times Until First Decision",
@@ -489,7 +493,7 @@ ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
 ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_05righttrunc)) +
     geom_boxplot(alpha = .2, color = "lightgrey") +
     geom_sina(alpha = .5) +
-    coord_cartesian(ylim = c(0,75000)) + 
+    coord_cartesian(ylim = c(0,85000)) + 
     facet_wrap(~type) +
     theme_modern_rc() +
     labs(title ="5% Truncated Dwell Times Until First Decision",
@@ -502,7 +506,7 @@ ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_05righttrunc)) +
 ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_10righttrunc)) +
     geom_boxplot(alpha = .2, color = "lightgrey") +
     geom_sina(alpha = .5) +
-    coord_cartesian(ylim = c(0,75000)) + 
+    coord_cartesian(ylim = c(0,85000)) + 
     facet_wrap(~type) +
     theme_modern_rc() +
     labs(title ="10% Truncated Dwell Times Until First Decision",
@@ -527,6 +531,10 @@ ggplot(study1_w_timestamp,
 ### Modeling with `{brms}`
 #### Efficacy for First Plot
 ```{r}
+#| cache: true
+#| error: false
+#| warning: false
+#| results: hide
 plot01_mod0 <- 
     brm(effic | trunc(lb = 0) ~ 1 + (1|session),
     data = study1_w_timestamp %>% 
@@ -534,7 +542,8 @@ plot01_mod0 <-
     family = "student",
     save_pars = save_pars(all = TRUE),
     silent = 2,
-    refresh = 0)
+    refresh = 0,
+    iter = 15000)
 
 pp_check(plot01_mod0) +
     xlim(c(0,250000)) +
@@ -548,7 +557,8 @@ plot01_mod1 <-
     family = "student",
     save_pars = save_pars(all = TRUE),
     silent = 2,
-    refresh = 0)
+    refresh = 0,
+    iter = 15000)
 
 pp_check(plot01_mod1) +
     xlim(c(0,250000)) +
@@ -556,8 +566,17 @@ pp_check(plot01_mod1) +
     scale_color_manual(values=viridis(2, begin = .3))
 ```
 
+
+```{r}
+sjPlot::tab_model(plot01_mod0, plot01_mod1)
+```
+
 #### Efficacy for Last Three Plots
 ```{r}
+#| cache: true
+#| error: false
+#| warning: false
+#| results: hide
 plot0306_mod0 <- 
     brm(effic | trunc(lb = 0) ~ 1 + plotNrWithin_factor + (1|session),
     data = study1_w_timestamp %>% 
@@ -565,7 +584,8 @@ plot0306_mod0 <-
     family = "student",
     save_pars = save_pars(all = TRUE),
     silent = 2,
-    refresh = 0)
+    refresh = 0,
+    iter = 15000)
 
 pp_check(plot0306_mod0) +
     xlim(c(0,250000)) +
@@ -579,10 +599,18 @@ plot0306_mod1 <-
     family = "student",
     save_pars = save_pars(all = TRUE),
     silent = 2,
-    refresh = 0)
+    refresh = 0,
+    iter = 35000,
+    cores = 8)
 
 pp_check(plot0306_mod1) +
     xlim(c(0,250000)) +
     theme_modern_rc() +
     scale_color_manual(values=viridis(2, begin = .3))
 ```
+
+
+```{r}
+sjPlot::tab_model(plot0306_mod0, plot0306_mod1)
+```
+

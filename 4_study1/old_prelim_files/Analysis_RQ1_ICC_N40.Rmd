@@ -1,0 +1,322 @@
+---
+title: "Analysis_RQ1"
+author: "Kirstin Schmidt"
+date: '2022-10-20'
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Import & warangle
+```{r}
+library(dplyr)
+library(BFpack)
+library(ggdist)
+# library(corrgram)
+library(formr)
+library(tidyverse)
+library(skimr)
+library(car)
+library(MASS)
+library(ordinal)
+library(lme4)
+
+# import from data folder
+load("data/teachers_study1_N40.RData")
+
+
+# wrangle information on the plot type, ES, ...
+plot_info <- study1 %>%
+    pivot_longer(3:195, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::filter(str_detect(variables, "plot")) %>% # we only need the rows with info on plots
+    tidyr::separate(col = values, into = c("type", "axis", "effsize"), # separate the info into three columns
+                    sep = "_", remove = F) %>%
+    dplyr::mutate(plot = variables,       # rename variables for later join
+                  type = paste(type, axis, sep = "_")) %>%
+    dplyr::select(-variables, -axis)
+
+# wrangle answers to items on each page
+item_values <- study1 %>%
+    dplyr::select(-c(topic:itemo)) %>%
+    pivot_longer(2:169, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::mutate(variables = case_when(      # recode variable names that have
+        variables == "sensi_6" ~ "sensi_06",  # accidentally been labeled
+        variables == "acccl_6" ~ "acccl_06",  # without zero
+        variables == "accu3_6" ~ "accu3_06",
+        variables == "accov_6" ~ "accov_06",
+        variables == "diffi_6" ~ "diffi_06",
+        variables == "infor_6" ~ "infor_06",
+        variables == "value_6" ~ "value_06",
+        TRUE ~ variables 
+    )) %>%
+    dplyr::mutate(plot = paste0("plotx_", str_sub(variables, -2, -1)), # create variable for later join
+                  variables = str_sub(variables, 1, -4)) %>%    # rename variable names to get a data set 
+                                                                # with one line per participant per page
+    pivot_wider(id_cols = c(session, plot), names_from = "variables", 
+                values_from = "values")
+
+study1_w <- full_join(plot_info, item_values, 
+                               by = c("session", "plot")) %>% # by participant and page (plot)
+    dplyr::select(-values) %>%
+    dplyr::mutate(acccl = as.numeric(acccl), # some var need to be defined as
+                  accu3 = as.numeric(accu3), # numeric again
+                  accov = as.numeric(accov),
+                  diffi = as.numeric(diffi),
+                  infor = as.numeric(infor),
+                  value = as.numeric(value),
+                  effsize = as.numeric(effsize))
+skim(study1_w)
+
+######### TIMESTAMP DATA ######################################################
+# import data
+study1_timestamp <- rio::import("data/teachers_study1_N40_detailed.csv")
+
+
+# wrangle data
+study1_timestamp <- study1_timestamp %>%
+    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1))) %>%  # create var with plot number
+    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>% # we only need vars sensitivity or accuracy
+    mutate(item_name = str_sub(item_name, 1, 5)) %>%  # delete the page number in item name
+    dplyr::select(session, item_name, answer, answered_relative, plot) %>% 
+    pivot_wider(id_cols = c(session, plot), names_from = item_name, # make structure similar to existing data set
+                values_from = answered_relative) %>%
+    mutate(plot = ifelse(plot == "plotx__6", "plotx_06", plot))%>% # recode wrong item labelling
+    rowwise() %>%
+    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>% # what was the the time of the first item to be clicked?
+    dplyr::select(session, plot, effic)
+
+
+# join data and time stamps
+study1_w_timestamp <- left_join(study1_w, study1_timestamp, by=c("session", "plot"))
+```
+
+# ICCs 
+```{r}
+#### ALternative Way #########################################
+## import data from formr (not needed if imported from data folder)
+# study1 <- formr_results("TueDiBASE_study1a")
+# import from data folder
+# study1 <- rio::import("data/teachers_study1.Rdata")
+
+
+# Perceived Accuracy
+## Accuracy Cliffs Delta
+mod_acccl <- lmer(acccl ~  1 + (1|type),
+              data = study1_w)
+
+psychometric::ICC1.lme(acccl, type, study1_w)
+BF_acccl <- BF(mod_acccl, hypothesis = "icc = 0; icc > 0")
+summary(BF_acccl) # BF12 = 56.55
+# BF_acccl$BFtu_exploratory
+# BF_acccl$PHP_exploratory
+
+## Accuracy Overlap
+mod_accov <- lmer(accov ~  1 + (1|type),
+              data = study1_w)
+
+psychometric::ICC1.lme(accov, type, study1_w)
+BF_accov <- BF(mod_accov, hypothesis = "icc = 0; icc > 0") # inconclusive
+summary(BF_accov) # BF12= 27.42
+#BF_accov$BFtu_exploratory
+
+## Accuracy U3
+mod_accu3 <- lmer(accu3 ~  1 + (1|type),
+              data = study1_w)
+
+psychometric::ICC1.lme(accu3, type, study1_w)
+BF_accu3 <- BF(mod_accu3, hypothesis = "icc = 0; icc > 0") # inconclusive
+summary(BF_accu3) # BF12 = 41.10
+#BF_accu3$BFtu_exploratory
+
+# Perceived Difficulty 
+mod_diffi <- lmer(diffi ~  1 + (1|type),
+              data = study1_w)
+psychometric::ICC1.lme(diffi, type, study1_w)
+
+# alternative approach 
+# library(misty)
+# multilevel.icc(study1_w$diffi, study1_w$type, type = 1, method = "lme4", REML = TRUE,
+#               as.na = NULL, check = TRUE)
+
+BF_diffi <- BF(mod_diffi, hypothesis = "icc = 0; icc > 0") # evidence in favor of a ICC >0 
+summary(BF_diffi) # BF21 = 6297167
+# BF_diffi$BFtu_exploratory
+
+# Perceived Informativity 
+mod_infor <- lmer(infor ~  1 + (1|type),
+              data = study1_w)
+
+psychometric::ICC1.lme(infor, type, study1_w)
+BF_infor <- BF(mod_infor, hypothesis = "icc = 0; icc > 0")
+summary(BF_infor) # BF21 = 21.86
+# BF_infor$BFtu_exploratory
+
+# Perceived Value
+mod_value <- lmer(value ~  1 + (1|type),
+              data = study1_w)
+
+psychometric::ICC1.lme(value, type, study1_w)
+BF_value <- BF(mod_value, hypothesis = "icc = 0; icc > 0")
+summary(BF_value) # BF21 = 321.36
+# BF_value$BFtu_exploratory
+
+# Efficiency
+skim(study1_w_timestamp)
+data_effic <- study1_w_timestamp %>%
+    filter(!effic=="Inf")
+
+skim(data_effic)
+
+mod_effic <- lmer(as.numeric(effic) ~  1 + (1|type),
+              data = data_effic)
+
+psychometric::ICC1.lme(effic, type, data_effic)
+BF_effic <- BF(mod_effic, hypothesis = "icc = 0; icc > 0")
+summary(BF_effic) # BF12 = 28.78
+# BF_effic$BFtu_exploratory
+```
+
+# Multilevelregressions
+```{r}
+study1_accuracy <-  study1_w %>%
+    dplyr::select(session, type, acccl:accov, effsize) %>% 
+    na.omit() 
+
+library(brms) 
+
+### acccl 
+set.seed(2810)
+mod00_acccl <- brm(acccl ~  + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod0_acccl <- brm(acccl ~ effsize + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod1_acccl <- brm(acccl ~ type + effsize + (1 | session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2811)
+bayes_factor(mod1_acccl, mod0_acccl)
+
+### accu3
+set.seed(2812)
+mod00_accu3 <- brm(accu3 ~ + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod0_accu3 <- brm(accu3 ~ effsize + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod1_accu3 <- brm(accu3 ~ type + effsize + (1 | session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2813)
+bayes_factor(mod1_accu3, mod0_accu3)
+
+
+### accov
+set.seed(2814)
+mod00_accov <- brm(accov ~ effsize + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod0_accov <- brm(accov ~ effsize + (1 |session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod1_accov <- brm(accov ~ type + effsize + (1 | session),
+        data = study1_accuracy,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2815)
+bayes_factor(mod1_accov, mod0_accov)
+
+### perceived variables 
+study1_perceived <-  study1_w %>%
+    dplyr::select(session, type, diffi:value, effsize) 
+
+## perceived difficulty
+set.seed(2816)
+mod00_diffi <- brm(diffi ~ + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod0_diffi <- brm(diffi ~ effsize + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod1_diffi <- brm(diffi ~ type + effsize + (1 | session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2817)
+bayes_factor(mod1_diffi, mod0_diffi)
+
+## perceived informativity
+
+set.seed(2818)
+mod00_infor <- brm(infor ~ + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod0_infor <- brm(infor ~ effsize + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod1_infor <- brm(infor ~ type + effsize + (1 | session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2819)
+bayes_factor(mod1_infor, mod0_infor)
+
+## perceived value
+set.seed(2820)
+mod00_value <- brm(value ~ + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod0_value <- brm(value ~ effsize + (1 |session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod1_value <- brm(value ~ type + effsize + (1 | session),
+        data = study1_perceived,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2821)
+bayes_factor(mod1_value, mod0_value)
+
+## efficiency
+study1_efficiency <-  study1_w_timestamp %>%
+    dplyr::select(session, type, effic, effsize) 
+
+set.seed(2822)
+mod0_effic <- brm(effic ~ effsize + (1 |session),
+        data = study1_efficiency,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+mod1_effic <- brm(effic ~ type + effsize + (1 | session),
+        data = study1_efficiency,
+        iter = 10000,
+        save_pars = save_pars(all = TRUE))
+
+set.seed(2823)
+bayes_factor(mod1_effic, mod0_effic)
+
+sjPlot::tab_model(mod00_acccl,mod00_accu3, mod00_accov, mod00_diffi, mod00_infor, mod00_value, mod1_acccl, mod1_accu3, mod1_accov, mod1_diffi, mod1_infor, mod1_value, mod1_effic)
+
+```
