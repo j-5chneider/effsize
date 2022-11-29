@@ -651,7 +651,7 @@ ggplot(study1_w_timestamp,
 ```
 
 ### Modeling with `{brms}`
-#### Efficacy for First Plot
+#### Efficiency for First Plot
 We fitted models and assumed truncated (lower bound lb = 0) t-distributions for the response variable ..
 ```{r}
 #| cache: true
@@ -692,9 +692,11 @@ pp_check(plot01_mod1) +
 
 ```{r}
 sjPlot::tab_model(plot01_mod0, plot01_mod1)
+
+bayes_factor(plot01_mod1, plot01_mod0)
 ```
 
-#### Efficacy for Last Three Plots
+#### Efficiency for Last Three Plots
 ```{r}
 #| cache: true
 #| error: false
@@ -735,6 +737,8 @@ pp_check(plot0306_mod1) +
 
 ```{r}
 sjPlot::tab_model(plot0306_mod0, plot0306_mod1)
+
+bayes_factor(plot0306_mod1, plot0306_mod0)
 ```
 
 
