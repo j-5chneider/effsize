@@ -773,7 +773,8 @@ mod_plot_diffi %>%
              )) +
 #  geom_pointinterval() +
   stat_halfeye() +
-  scale_x_continuous(name="Perceived Task Difficulty", limits=c(-0.6, 0.6)) 
+  scale_x_continuous(name="Perceived Task Difficulty", limits=c(-0.6, 0.6)) +
+    theme_ipsum_rc()
 
 # informativity
 mod_plot_infor <- brm (scale(infor) ~ (1|type),
@@ -794,7 +795,8 @@ mod_plot_infor %>%
              )) +
 #  geom_pointinterval() +
   stat_halfeye()+
-  scale_x_continuous(name="Perceived Informativity", limits=c(-0.6, 0.6)) 
+  scale_x_continuous(name="Perceived Informativity", limits=c(-0.6, 0.6)) +
+    theme_ipsum_rc()
 
 # value 
 
@@ -816,7 +818,8 @@ mod_plot_value %>%
              )) +
 #  geom_pointinterval() +
   stat_halfeye() +
-  scale_x_continuous(name="Perceived Value ", limits=c(-0.6, 0.6)) 
+  scale_x_continuous(name="Perceived Value ", limits=c(-0.6, 0.6)) +
+    theme_ipsum_rc()
 
 
 study1_w %>% 
