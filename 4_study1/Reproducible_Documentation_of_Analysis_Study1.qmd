@@ -746,10 +746,76 @@ bayes_factor(plot0306_mod1, plot0306_mod0,
 
 # Research Question 2
 
-## Contrasteffects 
+## Contrast Effects 
 
 ### Graphical Overview
 ```{r}
+# preparing mulilevel model with brms for graphical overview
+
+library(ggdist)
+
+# difficulty
+mod_plot_diffi <- brm (diffi ~ (1|type),
+                 data = study1_w,
+                   prior = c(
+    prior(normal(0, 1), class = Intercept),
+    prior(student_t(3, 0, 1), class = sd),
+    prior(student_t(3, 0, 1), class = sigma)
+  ),
+  control = list(adapt_delta = .99)
+  )
+
+mod_plot_diffi %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+ # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean, #xmin = .lower, xmax = .upper
+             )) +
+#  geom_pointinterval() +
+  stat_halfeye()
+
+# informativity
+mod_plot_infor <- brm (infor ~ (1|type),
+                 data = study1_w,
+                   prior = c(
+    prior(normal(0, 1), class = Intercept),
+    prior(student_t(3, 0, 1), class = sd),
+    prior(student_t(3, 0, 1), class = sigma)
+  ),
+  control = list(adapt_delta = .99)
+  )
+
+mod_plot_infor %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+ # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean, #xmin = .lower, xmax = .upper
+             )) +
+#  geom_pointinterval() +
+  stat_halfeye()
+
+# value 
+
+mod_plot_value <- brm (value ~ (1|type),
+                 data = study1_w,
+                   prior = c(
+    prior(normal(0, 1), class = Intercept),
+    prior(student_t(3, 0, 1), class = sd),
+    prior(student_t(3, 0, 1), class = sigma)
+  ),
+  control = list(adapt_delta = .99)
+  )
+
+mod_plot_value %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+ # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean, #xmin = .lower, xmax = .upper
+             )) +
+#  geom_pointinterval() +
+  stat_halfeye()
+
+
 study1_w %>% 
     select(rating_cl, rating_u3_filtered, rating_ov_filtered,
            diffi, infor, value, type) %>% 
@@ -856,10 +922,98 @@ mod_value_gardneraltman_halfeye_y <-
                           iter = 10000,
                           save_pars = save_pars(all = TRUE))
 
-sjPlot::tab_model(mod_accu3_gardneraltman_halfeye_x, mod_accov_gardneraltman_halfeye_x, mod_diffi_gardneraltman_halfeye_x, mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
-mod_accu3_gardneraltman_halfeye_y, mod_accov_gardneraltman_halfeye_y, mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, mod_value_gardneraltman_halfeye_y)
+## Raincloud Plot vs. Halfeye x axis
+raincloud_vs_halfeye_x <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_raincloud_halfeye_x = 
+               case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "halfeye_xaxis" | type == "raincloud_yaxis") %>%
+    ungroup()
 
+mod_accu3_raincloud_halfeye_x <- 
+    brm(scale(rating_u3) ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_x %>% 
+                              filter(rating_u3_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
 
+mod_accov_raincloud_halfeye_x <- 
+    brm(scale(rating_ov) ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_x %>% 
+                              filter(rating_ov_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+mod_diffi_raincloud_halfeye_x <- 
+    brm(scale(diffi) ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_x,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+mod_infor_raincloud_halfeye_x <- 
+    brm(scale(infor) ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_x,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+mod_value_raincloud_halfeye_x <- 
+    brm(scale(value) ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_x,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+##  Raincloud Plot vs.Halfeye yaxis
+raincloud_vs_halfeye_y <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_raincloud_halfeye_y = 
+               case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "halfeye_yaxis" | type == "raincloud_yaxis") %>%
+    ungroup()
+
+mod_accu3_raincloud_halfeye_y <- 
+    brm(scale(rating_u3) ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_y %>% 
+                              filter(rating_u3_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+mod_accov_raincloud_halfeye_y <- 
+    brm(scale(rating_ov) ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_y %>% 
+                              filter(rating_ov_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+mod_diffi_raincloud_halfeye_y <- 
+    brm(scale(diffi) ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_y,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+mod_infor_raincloud_halfeye_y <- 
+    brm(scale(infor) ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_y,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+mod_value_raincloud_halfeye_y <- 
+    brm(scale(value) ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
+                          data = raincloud_vs_halfeye_y,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+
+sjPlot::tab_model(mod_accu3_gardneraltman_halfeye_x, 
+        mod_accov_gardneraltman_halfeye_x, mod_diffi_gardneraltman_halfeye_x, 
+        mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
+        mod_accu3_gardneraltman_halfeye_y, mod_accov_gardneraltman_halfeye_y, 
+        mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, 
+        mod_value_gardneraltman_halfeye_y,
+        mod_accov_raincloud_halfeye_x, mod_diffi_raincloud_halfeye_x, 
+        mod_infor_raincloud_halfeye_x, mod_value_raincloud_halfeye_x,
+        mod_accu3_raincloud_halfeye_y, mod_accov_raincloud_halfeye_y, 
+        mod_diffi_raincloud_halfeye_y, mod_infor_raincloud_halfeye_y, 
+        mod_value_raincloud_halfeye_y)
+    
 ## Gardner Altman Plot vs. Raincloud Plot
 gardneraltman_vs_raincloud <- study1_w %>%
     group_by(session) %>%
@@ -942,94 +1096,6 @@ mod_value_halfeye_x_halfeye_y <-
                           save_pars = save_pars(all = TRUE))
 
 sjPlot::tab_model(mod_accu3_halfeye_x_halfeye_y, mod_accov_halfeye_x_halfeye_y, mod_diffi_halfeye_x_halfeye_y, mod_infor_halfeye_x_halfeye_y, mod_value_halfeye_x_halfeye_y,mod_accu3_gardneraltman_raincloud, mod_accov_gardneraltman_raincloud, mod_diffi_gardneraltman_raincloud, mod_infor_gardneraltman_raincloud, mod_value_gardneraltman_raincloud)
-
-## Halfeye xaxis vs. Raincloud Plot 
-halfeye_x_vs_raincloud <- study1_w %>%
-    group_by(session) %>%
-    mutate(dummy_halfeye_x_raincloud = 
-               case_when(type == "halfeye_xaxis" ~ 0, TRUE ~ 1)) %>%
-    filter(type == "halfeye_xaxis" | type == "raincloud_yaxis") %>%
-    ungroup()
-
-mod_accu3_halfeye_x_raincloud <- 
-    brm(scale(rating_u3) ~ dummy_halfeye_x_raincloud + effsize + (1|session), 
-                          data = halfeye_x_vs_raincloud %>% 
-                              filter(rating_u3_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-mod_accov_halfeye_x_raincloud <- 
-    brm(scale(rating_ov) ~ dummy_halfeye_x_raincloud + effsize + (1|session), 
-                          data = halfeye_x_vs_raincloud%>% 
-                              filter(rating_ov_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-mod_diffi_halfeye_x_raincloud <- 
-    brm(scale(diffi) ~ dummy_halfeye_x_raincloud + effsize + (1|session), 
-                          data = halfeye_x_vs_raincloud,
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-mod_infor_halfeye_x_raincloud <- 
-    brm(scale(infor) ~ dummy_halfeye_x_raincloud + effsize + (1|session), 
-                          data = halfeye_x_vs_raincloud,
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-mod_value_halfeye_x_raincloud <- 
-    brm(scale(value) ~ dummy_halfeye_x_raincloud + effsize + (1|session), 
-                          data = halfeye_x_vs_raincloud,
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-sjPlot::tab_model(mod_accu3_halfeye_x_raincloud, mod_accov_halfeye_x_raincloud, mod_diffi_halfeye_x_raincloud, mod_infor_halfeye_x_raincloud, mod_value_halfeye_x_raincloud)
-
-
-## Halfeye yaxis vs. Raincloud Plot 
-halfeye_y_vs_raincloud <- study1_w %>%
-    group_by(session) %>%
-    mutate(dummy_halfeye_y_raincloud = 
-               case_when(type == "halfeye_yaxis" ~ 0, TRUE ~ 1)) %>%
-    filter(type == "halfeye_yaxis" | type == "raincloud_yaxis") %>%
-    ungroup()
-
-mod_accu3_halfeye_y_raincloud <- 
-    brm(scale(rating_u3) ~ dummy_halfeye_y_raincloud + effsize + (1|session), 
-                          data = halfeye_y_vs_raincloud %>% 
-                              filter(rating_u3_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-mod_accov_halfeye_y_raincloud <- 
-    brm(scale(rating_ov) ~ dummy_halfeye_y_raincloud + effsize + (1|session), 
-                          data = halfeye_y_vs_raincloud%>% 
-                              filter(rating_ov_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-mod_diffi_halfeye_y_raincloud <- 
-    brm(scale(diffi) ~ dummy_halfeye_y_raincloud + effsize + (1|session), 
-                          data = halfeye_y_vs_raincloud,
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-mod_infor_halfeye_y_raincloud <- 
-    brm(scale(infor) ~ dummy_halfeye_y_raincloud + effsize + (1|session), 
-                          data = halfeye_y_vs_raincloud,
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-mod_value_halfeye_y_raincloud <- 
-    brm(scale(value) ~ dummy_halfeye_y_raincloud + effsize + (1|session), 
-                          data = halfeye_y_vs_raincloud,
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE))
-
-sjPlot::tab_model(mod_accu3_gardneraltman_halfeye_x, mod_accov_gardneraltman_halfeye_x, mod_diffi_gardneraltman_halfeye_x, mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
-mod_accu3_gardneraltman_halfeye_y, mod_accov_gardneraltman_halfeye_y, mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, mod_value_gardneraltman_halfeye_y,
-mod_accu3_halfeye_x_raincloud, mod_accov_halfeye_x_raincloud, mod_diffi_halfeye_x_raincloud, mod_infor_halfeye_x_raincloud, mod_value_halfeye_x_raincloud,
-mod_accu3_halfeye_y_raincloud, mod_accov_halfeye_y_raincloud, mod_diffi_halfeye_y_raincloud, mod_infor_halfeye_y_raincloud, mod_value_halfeye_y_raincloud)
 ```
 
 
