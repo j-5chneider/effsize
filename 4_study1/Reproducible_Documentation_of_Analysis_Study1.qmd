@@ -772,7 +772,8 @@ mod_plot_diffi %>%
   ggplot(aes(y = type, x = type_mean, #xmin = .lower, xmax = .upper
              )) +
 #  geom_pointinterval() +
-  stat_halfeye()
+  stat_halfeye() +
+  scale_x_continuous(name="Perceived Task Difficulty", limits=c(-0.6, 0.6)) 
 
 # informativity
 mod_plot_infor <- brm (scale(infor) ~ (1|type),
@@ -792,7 +793,8 @@ mod_plot_infor %>%
   ggplot(aes(y = type, x = type_mean, #xmin = .lower, xmax = .upper
              )) +
 #  geom_pointinterval() +
-  stat_halfeye()
+  stat_halfeye()+
+  scale_x_continuous(name="Perceived Informativity", limits=c(-0.6, 0.6)) 
 
 # value 
 
@@ -813,7 +815,8 @@ mod_plot_value %>%
   ggplot(aes(y = type, x = type_mean, #xmin = .lower, xmax = .upper
              )) +
 #  geom_pointinterval() +
-  stat_halfeye()
+  stat_halfeye() +
+  scale_x_continuous(name="Perceived Value ", limits=c(-0.6, 0.6)) 
 
 
 study1_w %>% 
