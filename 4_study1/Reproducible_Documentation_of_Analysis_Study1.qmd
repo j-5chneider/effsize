@@ -754,6 +754,52 @@ bayes_factor(plot0306_mod1, plot0306_mod0,
 
 library(ggdist)
 
+# rating u3
+mod_plot_ratingu3 <- brm (scale(rating_u3) ~ (1|type),
+                 data = study1_w,
+                   prior = c(
+    prior(normal(0, 1), class = Intercept),
+    prior(student_t(3, 0, 1), class = sd),
+    prior(student_t(3, 0, 1), class = sigma)
+  ),
+  control = list(adapt_delta = .99)
+  )
+
+mod_plot_ratingu3 %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+ # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean, #xmin = .lower, xmax = .upper
+             )) +
+#  geom_pointinterval() +
+  stat_halfeye() +
+  scale_x_continuous(name="Accuracy in U3 Metrics"#, #limits=c(-0.6, 0.6)
+                     ) +
+    theme_ipsum_rc()
+
+# rating ov
+mod_plot_ratingov <- brm (scale(rating_ov) ~ (1|type),
+                 data = study1_w,
+                   prior = c(
+    prior(normal(0, 1), class = Intercept),
+    prior(student_t(3, 0, 1), class = sd),
+    prior(student_t(3, 0, 1), class = sigma)
+  ),
+  control = list(adapt_delta = .99)
+  )
+
+mod_plot_ratingov %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+ # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean, #xmin = .lower, xmax = .upper
+             )) +
+#  geom_pointinterval() +
+  stat_halfeye() +
+  scale_x_continuous(name="Accuracy in Overlap Metrics"#, #limits=c(-0.6, 0.6)
+                     ) +
+    theme_ipsum_rc()
+
 # difficulty
 mod_plot_diffi <- brm (scale(diffi) ~ (1|type),
                  data = study1_w,
@@ -773,7 +819,8 @@ mod_plot_diffi %>%
              )) +
 #  geom_pointinterval() +
   stat_halfeye() +
-  scale_x_continuous(name="Perceived Task Difficulty", limits=c(-0.6, 0.6)) +
+  scale_x_continuous(name="Perceived Task Difficulty"#, limits=c(-0.6, 0.6)
+                     ) +
     theme_ipsum_rc()
 
 # informativity
@@ -795,7 +842,8 @@ mod_plot_infor %>%
              )) +
 #  geom_pointinterval() +
   stat_halfeye()+
-  scale_x_continuous(name="Perceived Informativity", limits=c(-0.6, 0.6)) +
+  scale_x_continuous(name="Perceived Informativity"#, limits=c(-0.6, 0.6)
+                     ) +
     theme_ipsum_rc()
 
 # value 
@@ -818,26 +866,27 @@ mod_plot_value %>%
              )) +
 #  geom_pointinterval() +
   stat_halfeye() +
-  scale_x_continuous(name="Perceived Value ", limits=c(-0.6, 0.6)) +
+  scale_x_continuous(name="Perceived Value "#, limits=c(-0.6, 0.6)
+                     ) +
     theme_ipsum_rc()
 
 
-study1_w %>% 
-    select(rating_cl, rating_u3_filtered, rating_ov_filtered,
-           diffi, infor, value, type) %>% 
-    pivot_longer(names_to = "Dependent Variable",
-                 values_to = "Rating", 
-                 cols =  c(rating_cl, rating_u3_filtered, rating_ov_filtered,
-                           diffi, infor)) %>% 
-    ggplot(aes(Rating, type)) +
-    geom_dots() +
-    stat_slab(aes(fill = stat(level)), .width = c(.66, .95, 1),
-              alpha = .3) +
-    facet_wrap(~`Dependent Variable`, 
-               ncol = 6,
-               scales = "free") +
-    theme_ipsum_rc()
-    
+#study1_w %>% 
+#    select(rating_cl, rating_u3_filtered, rating_ov_filtered,
+#           diffi, infor, value, type) %>% 
+#    pivot_longer(names_to = "Dependent Variable",
+#                 values_to = "Rating", 
+#                 cols =  c(rating_cl, rating_u3_filtered, #rating_ov_filtered,
+#                           diffi, infor)) %>% 
+#    ggplot(aes(Rating, type)) +
+#    geom_dots() +
+#    stat_slab(aes(fill = stat(level)), .width = c(.66, .95, 1),
+#              alpha = .3) +
+#    facet_wrap(~`Dependent Variable`, 
+#               ncol = 6,
+#               scales = "free") +
+#    theme_ipsum_rc()
+#    
 ```
 
 
