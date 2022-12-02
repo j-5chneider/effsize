@@ -751,7 +751,6 @@ bayes_factor(plot0306_mod1, plot0306_mod0,
 ### Graphical Overview
 ```{r}
 study1_w %>% 
-    # recode dependent variables with missconceptions
     select(rating_cl, rating_u3_filtered, rating_ov_filtered,
            diffi, infor, value, type) %>% 
     pivot_longer(names_to = "Dependent Variable",
@@ -760,10 +759,12 @@ study1_w %>%
                            diffi, infor)) %>% 
     ggplot(aes(Rating, type)) +
     geom_dots() +
-    stat_slab(alpha = .3, type = "cdf") +
+    stat_slab(aes(fill = stat(level)), .width = c(.66, .95, 1),
+              alpha = .3) +
     facet_wrap(~`Dependent Variable`, 
                ncol = 6,
-               scales = "free")
+               scales = "free") +
+    theme_ipsum_rc()
     
 ```
 
