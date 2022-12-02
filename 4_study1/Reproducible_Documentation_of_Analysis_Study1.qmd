@@ -755,7 +755,7 @@ bayes_factor(plot0306_mod1, plot0306_mod0,
 library(ggdist)
 
 # difficulty
-mod_plot_diffi <- brm (diffi ~ (1|type),
+mod_plot_diffi <- brm (scale(diffi) ~ (1|type),
                  data = study1_w,
                    prior = c(
     prior(normal(0, 1), class = Intercept),
@@ -775,7 +775,7 @@ mod_plot_diffi %>%
   stat_halfeye()
 
 # informativity
-mod_plot_infor <- brm (infor ~ (1|type),
+mod_plot_infor <- brm (scale(infor) ~ (1|type),
                  data = study1_w,
                    prior = c(
     prior(normal(0, 1), class = Intercept),
@@ -796,7 +796,7 @@ mod_plot_infor %>%
 
 # value 
 
-mod_plot_value <- brm (value ~ (1|type),
+mod_plot_value <- brm (scale(value) ~ (1|type),
                  data = study1_w,
                    prior = c(
     prior(normal(0, 1), class = Intercept),
