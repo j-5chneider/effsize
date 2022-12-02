@@ -748,6 +748,28 @@ bayes_factor(plot0306_mod1, plot0306_mod0,
 
 ## Contrasteffects 
 
+### Graphical Overview
+```{r}
+study1_w %>% 
+    # recode dependent variables with missconceptions
+    select(rating_cl, rating_u3_filtered, rating_ov_filtered,
+           diffi, infor, value, type) %>% 
+    pivot_longer(names_to = "Dependent Variable",
+                 values_to = "Rating", 
+                 cols =  c(rating_cl, rating_u3_filtered, rating_ov_filtered,
+                           diffi, infor)) %>% 
+    ggplot(aes(Rating, type)) +
+    geom_dots() +
+    stat_slab(alpha = .3, type = "cdf") +
+    facet_wrap(~`Dependent Variable`, 
+               ncol = 6,
+               scales = "free")
+    
+```
+
+
+### Model Contrast Effects with `{brms}`
+
 ```{r}
 
 # create dummy variables to compare visualization types for those measures that showed evidence for difference (accuracy U3, accuracy overlap, perceived task difficulty, perceived informativity, perceived value, efficiency)
