@@ -997,7 +997,6 @@ mod_effic0306_gardneraltman_halfeye_x <-
     iter = 15000,
     cores = 8)
 
-sjPlot::tab_model(mod_effic01_gardneraltman_halfeye_x, mod_effic0306_gardneraltman_halfeye_x)
                   
 ## Gardner Altman Plot vs. Halfeye yaxis
 gardneraltman_vs_halfeye_y <- study1_w %>%
@@ -1006,6 +1005,15 @@ gardneraltman_vs_halfeye_y <- study1_w %>%
                case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "gardneraltman_xaxis" | type == "halfeye_yaxis") %>%
     ungroup()
+
+gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_halfeye_x = 
+               case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "gardneraltman_xaxis" | type == "halfeye_yaxis") %>%
+    ungroup() # %>% 
+   # full_join(study1_w %>% select(session, effsize), by = "session")
+
 
 mod_accu3_gardneraltman_halfeye_y <- 
     brm(scale(rating_u3) ~ dummy_gardneraltman_halfeye_y + effsize + (1|session), 
@@ -1042,6 +1050,29 @@ mod_value_gardneraltman_halfeye_y <-
                           iter = 10000,
                           save_pars = save_pars(all = TRUE))
 
+mod_effic01_gardneraltman_halfeye_y <- 
+    brm(effic | trunc(lb = 0) ~ dummy_gardneraltman_halfeye_y + (1|session),
+    data = gardneraltman_vs_halfeye_y_effic %>%  
+    filter(plotNrWithin == 1),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000
+    )
+
+mod_effic0306_gardneraltman_halfeye_y <- 
+    brm(effic | trunc(lb = 0) ~ dummy_gardneraltman_halfeye_y +
+            (1|session),
+    data = gardneraltman_vs_halfeye_y_effic %>% 
+        filter(plotNrWithin >= 4),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000,
+    cores = 8)
+
 ## Raincloud Plot vs. Halfeye x axis
 raincloud_vs_halfeye_x <- study1_w %>%
     group_by(session) %>%
@@ -1050,7 +1081,7 @@ raincloud_vs_halfeye_x <- study1_w %>%
     filter(type == "halfeye_xaxis" | type == "raincloud_yaxis") %>%
     ungroup()
 
-gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
+raincloud_vs_halfeye_x_effic <- study1_w_timestamp %>%
     group_by(session) %>%
     mutate(dummy_gardneraltman_halfeye_x = 
                case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
@@ -1093,6 +1124,29 @@ mod_value_raincloud_halfeye_x <-
                           iter = 10000,
                           save_pars = save_pars(all = TRUE))
 
+mod_effic01_raincloud_halfeye_x <- 
+    brm(effic | trunc(lb = 0) ~ dummy_raincloud_halfeye_x + (1|session),
+    data = raincloud_vs_halfeye_x_effic %>%  
+    filter(plotNrWithin == 1),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000
+    )
+
+mod_effic0306_raincloud_halfeye_x <- 
+    brm(effic | trunc(lb = 0) ~ dummy_raincloud_halfeye_x +
+            (1|session),
+    data = raincloud_vs_halfeye_x_effic %>% 
+        filter(plotNrWithin >= 4),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000,
+    cores = 8)
+
 ##  Raincloud Plot vs.Halfeye yaxis
 raincloud_vs_halfeye_y <- study1_w %>%
     group_by(session) %>%
@@ -1100,6 +1154,14 @@ raincloud_vs_halfeye_y <- study1_w %>%
                case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "halfeye_yaxis" | type == "raincloud_yaxis") %>%
     ungroup()
+
+raincloud_vs_halfeye_y_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_halfeye_x = 
+               case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "raincloud_yaxis" | type == "halfeye_yaxis") %>%
+    ungroup() # %>% 
+   # full_join(study1_w %>% select(session, effsize), by = "session")
 
 mod_accu3_raincloud_halfeye_y <- 
     brm(scale(rating_u3) ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
@@ -1136,17 +1198,44 @@ mod_value_raincloud_halfeye_y <-
                           iter = 10000,
                           save_pars = save_pars(all = TRUE))
 
+mod_effic01_raincloud_halfeye_y <- 
+    brm(effic | trunc(lb = 0) ~ dummy_raincloud_halfeye_y + (1|session),
+    data = raincloud_vs_halfeye_y_effic %>%  
+    filter(plotNrWithin == 1),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000
+    )
+
+mod_effic0306_raincloud_halfeye_y <- 
+    brm(effic | trunc(lb = 0) ~ dummy_raincloud_halfeye_y +
+            (1|session),
+    data = raincloud_vs_halfeye_y_effic %>% 
+        filter(plotNrWithin >= 4),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000,
+    cores = 8)
+
 sjPlot::tab_model(mod_accu3_gardneraltman_halfeye_x, 
         mod_accov_gardneraltman_halfeye_x, mod_diffi_gardneraltman_halfeye_x, 
         mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
+        mod_effic01_gardneraltman_halfeye_x, mod_effic0306_gardneraltman_halfeye_x,
         mod_accu3_gardneraltman_halfeye_y, mod_accov_gardneraltman_halfeye_y, 
         mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, 
         mod_value_gardneraltman_halfeye_y,
+        mod_effic01_gardneraltman_halfeye_y, mod_effic0306_gardneraltman_halfeye_y,
         mod_accov_raincloud_halfeye_x, mod_diffi_raincloud_halfeye_x, 
         mod_infor_raincloud_halfeye_x, mod_value_raincloud_halfeye_x,
+        mod_effic01_raincloud_halfeye_x, mod_effic0306_raincloud_halfeye_x,
         mod_accu3_raincloud_halfeye_y, mod_accov_raincloud_halfeye_y, 
         mod_diffi_raincloud_halfeye_y, mod_infor_raincloud_halfeye_y, 
-        mod_value_raincloud_halfeye_y)
+        mod_value_raincloud_halfeye_y,
+        mod_effic01_raincloud_halfeye_y, mod_effic0306_raincloud_halfeye_y)
     
 ## Gardner Altman Plot vs. Raincloud Plot
 gardneraltman_vs_raincloud <- study1_w %>%
@@ -1155,6 +1244,14 @@ gardneraltman_vs_raincloud <- study1_w %>%
                case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "gardneraltman_xaxis" | type == "raincloud_yaxis") %>%
     ungroup()
+
+gardneraltman_vs_raincloud_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_halfeye_x = 
+               case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "gardneraltman_xaxis" | type == "raincloud_yaxis") %>%
+    ungroup() # %>% 
+   # full_join(study1_w %>% select(session, effsize), by = "session")
 
 mod_accu3_gardneraltman_raincloud <- 
     brm(scale(rating_u3) ~ dummy_gardneraltman_raincloud + effsize + (1|session), 
@@ -1191,11 +1288,41 @@ mod_value_gardneraltman_raincloud <-
                           iter = 10000,
                           save_pars = save_pars(all = TRUE))
 
+mod_effic01_gardneraltman_raincloud <- 
+    brm(effic | trunc(lb = 0) ~ dummy_gardneraltman_raincloud + (1|session),
+    data = gardneraltman_vs_raincloud_effic %>%  
+    filter(plotNrWithin == 1),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000
+    )
+
+mod_effic0306_gardneraltman_raincloud <- 
+    brm(effic | trunc(lb = 0) ~ dummy_gardneraltman_raincloud +
+            (1|session),
+    data = gardneraltman_vs_raincloud_effic %>% 
+        filter(plotNrWithin >= 4),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000,
+    cores = 8)
+
 ## Halfeye xaxis vs. Halfeye yaxis
 
 halfeye_x_vs_halfeye_y <- study1_w %>%
     group_by(session) %>%
     mutate(dummy_halfeye_x_halfeye_y = 
+               case_when(type == "halfeye_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "halfeye_xaxis" | type == "halfeye_yaxis") %>%
+    ungroup()
+
+halfeye_x_vs_halfeye_y <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_raincloud_halfeye_y = 
                case_when(type == "halfeye_xaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "halfeye_xaxis" | type == "halfeye_yaxis") %>%
     ungroup()
@@ -1235,7 +1362,41 @@ mod_value_halfeye_x_halfeye_y <-
                           iter = 10000,
                           save_pars = save_pars(all = TRUE))
 
-sjPlot::tab_model(mod_accu3_halfeye_x_halfeye_y, mod_accov_halfeye_x_halfeye_y, mod_diffi_halfeye_x_halfeye_y, mod_infor_halfeye_x_halfeye_y, mod_value_halfeye_x_halfeye_y,mod_accu3_gardneraltman_raincloud, mod_accov_gardneraltman_raincloud, mod_diffi_gardneraltman_raincloud, mod_infor_gardneraltman_raincloud, mod_value_gardneraltman_raincloud)
+mod_effic01_halfeye_x_halfeye_y <- 
+    brm(effic | trunc(lb = 0) ~ dummy_halfeye_x_halfeye_y + (1|session),
+    data = halfeye_x_vs_halfeye_y %>%  
+    filter(plotNrWithin == 1),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000
+    )
+
+mod_effic0306_halfeye_x_halfeye_y <- 
+    brm(effic | trunc(lb = 0) ~ dummy_halfeye_x_halfeye_y +
+            (1|session),
+    data = halfeye_x_vs_halfeye_y %>% 
+        filter(plotNrWithin >= 4),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 15000,
+    cores = 8)
+
+sjPlot::tab_model(mod_accu3_halfeye_x_halfeye_y, mod_accov_halfeye_x_halfeye_y, 
+                  mod_diffi_halfeye_x_halfeye_y, mod_infor_halfeye_x_halfeye_y, 
+                  mod_value_halfeye_x_halfeye_y,
+                  mod_effic01_halfeye_x_halfeye_y, 
+                  mod_effic0306_halfeye_x_halfeye_y,
+                  mod_accu3_gardneraltman_raincloud, 
+                  mod_accov_gardneraltman_raincloud, 
+                  mod_diffi_gardneraltman_raincloud, 
+                  mod_infor_gardneraltman_raincloud, 
+                  mod_value_gardneraltman_raincloud,
+                  mod_effic01_gardneraltman_raincloud, 
+                  mod_effic0306_gardneraltman_raincloud)
 ```
 
 
