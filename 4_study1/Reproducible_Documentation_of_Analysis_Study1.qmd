@@ -28,7 +28,8 @@ library(hrbrthemes)
 library(patchwork)
 library(brms)
 library(viridis)
-load("data/teachers_study1_N40.RData")
+library(here)
+load(here("data/teachers_study1_N40.RData"))
 
 set.seed(25051982)
 ```
@@ -147,7 +148,7 @@ ov_misconceptualizers <-
 
 ### wrangle time stamp data ####################################################
 study1_w_timestamp <- 
-    read_csv("data/teachers_study1_N40_detailed.csv") %>% 
+    read_csv(here("data/teachers_study1_N40_detailed.csv")) %>% 
     # filter participants from study1_w only
     filter(session %in% study1_w$session) %>% 
     # we only need vars sensitivity or accuracy
