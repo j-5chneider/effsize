@@ -751,7 +751,7 @@ bayes_factor(plot0306_mod1, plot0306_mod0,
 
 ## Contrast Effects 
 
-### Graphical Overview
+ ### Graphical Overview
 ```{r}
 # preparing mulilevel model with brms for graphical overview
 library(ggdist)
