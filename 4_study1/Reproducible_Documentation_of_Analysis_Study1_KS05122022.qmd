@@ -1006,9 +1006,9 @@ gardneraltman_vs_halfeye_y <- study1_w %>%
     filter(type == "gardneraltman_xaxis" | type == "halfeye_yaxis") %>%
     ungroup()
 
-gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
+gardneraltman_vs_halfeye_y_effic <- study1_w_timestamp %>%
     group_by(session) %>%
-    mutate(dummy_gardneraltman_halfeye_x = 
+    mutate(dummy_gardneraltman_halfeye_y = 
                case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "gardneraltman_xaxis" | type == "halfeye_yaxis") %>%
     ungroup() # %>% 
