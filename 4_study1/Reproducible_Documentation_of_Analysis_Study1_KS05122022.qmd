@@ -1083,7 +1083,7 @@ raincloud_vs_halfeye_x <- study1_w %>%
 
 raincloud_vs_halfeye_x_effic <- study1_w_timestamp %>%
     group_by(session) %>%
-    mutate(dummy_gardneraltman_halfeye_x = 
+    mutate(dummy_raincloud_halfeye_x = 
                case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "raincloud_yaxis" | type == "halfeye_xaxis") %>%
     ungroup() # %>% 
