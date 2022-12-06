@@ -80,8 +80,8 @@ study1_w <- full_join(plot_info, item_values,
                                by = c("session", "plot")) %>% 
     # by participant and page (plot)
     dplyr::select(-values) %>%
-    dplyr::mutate(rating_cl = as.numeric(acccl), # some var need to be defined as
-                  rating_u3 = as.numeric(accu3), # numeric again
+    dplyr::mutate(rating_cl = as.numeric(acccl), # some var need to be defined as numeric again
+                  rating_u3 = 100-as.numeric(accu3), # reverse so that it fits the direction of the effect size
                   rating_ov = as.numeric(accov),
                   diffi = as.numeric(diffi),
                   infor = as.numeric(infor),
