@@ -95,7 +95,7 @@ study1_w <- full_join(plot_info, item_values,
                   # transform the actual effect size Cohen's d to Cliff's Delta 
                   # and make it negative as in the item
                   ),
-                  effsize_u3 = pnorm(effsize), 
+                  effsize_u3 = 1-pnorm(effsize), # reverse so that it fits the direction of the U3 item
                   # transform the actual effect size Cohen's d to Cohen's U3
                   effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
                   # transform the actual effect size Cohen's d to overlap
