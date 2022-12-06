@@ -80,8 +80,8 @@ study1_w <- full_join(plot_info, item_values,
                                by = c("session", "plot")) %>% 
     # by participant and page (plot)
     dplyr::select(-values) %>%
-    dplyr::mutate(rating_cl = as.numeric(acccl), # some var need to be defined as numeric again
-                  rating_u3 = 100-as.numeric(accu3), # reverse so that it fits the direction of the effect size
+    dplyr::mutate(rating_cl = as.numeric(acccl), # some var need to be defined 
+                  rating_u3 = as.numeric(accu3), # as numeric again
                   rating_ov = as.numeric(accov),
                   diffi = as.numeric(diffi),
                   infor = as.numeric(infor),
@@ -96,7 +96,7 @@ study1_w <- full_join(plot_info, item_values,
                   # transform the actual effect size Cohen's d to Cliff's Delta 
                   # and make it negative as in the item
                   ),
-                  effsize_u3 = pnorm(effsize), 
+                  effsize_u3 = 100-pnorm(effsize), # reverse so that it fits the direction of the U3 item
                   # transform the actual effect size Cohen's d to Cohen's U3
                   effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
                   # transform the actual effect size Cohen's d to overlap
