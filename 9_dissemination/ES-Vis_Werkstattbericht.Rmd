@@ -38,6 +38,9 @@ library(kableExtra)
 ```
 
 
+# Slides: [bit.ly/WB-06-12](https://bit.ly/WB-06-12)
+
+
 ## Background & Focus | Why designing science communication?
 
 <div class="box-bg-r">
@@ -893,7 +896,7 @@ __Cooperation__<br /><br />
 </div>
 
 <div style="position: absolute; bottom: 2%; left:0; width: 100%; text-align: center;">
-__Slides__: [bit.ly/sig67-v (view)](https://bit.ly/sig67-v) | [bit.ly/sig67-d (download)](https://bit.ly/sig67-d)
+__Slides__: [bit.ly/WB-06-12](https://bit.ly/WB-06-12)
 </div>
 
 
@@ -929,31 +932,6 @@ Icons by Font Awesome CC BY 4.0
 
 </div>
 
-
-
-## Objectives & Research Questions | Exploratory & descriptive: plot types
-
-<img src="../www/uv-av2.jpg" style="width:80%" />
-
-1. <span style="background-color:#f5f5f5;">Does __plot type__ affect the outcomes in assessing ES?</span>  
-2. <span style="background-color:#f5f5f5;">Which plot types produce the __most desirable scores__ in the outcomes?</span> 
-
-
-<div class="notes">
-</div>
-
-
-
-## Objectives & Research Questions | Confirmatory: Enrichment options
-
-<img src="../www/uv-av2.jpg" style="width:80%" />
-
-
-
-1. <span style="background-color:#f5f5f5;">Does __plot type__ affect the outcomes in assessing ES?</span>  
-2. <span style="background-color:#f5f5f5;">Which plot types produce the __most desirable scores__ in the outcomes?</span>
-3. <span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
-4. <span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
 
 
 
@@ -1005,70 +983,7 @@ p + stat_function(fun = mydnorm, n = 100, geom = "area", alpha = .5, fill = "dar
 ```
 
 
-## Study 2 | Enrichment options: Design
 
-<span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
-  
-<span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
-
-\
-
-* in-service __teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: cues (difference, overlap, no cue)
-
-<div style="position:absolute; top: 3%; right:7%; height: 70%; width:30%"><img src="../www/benchmarking.jpg" style="width:100%" /> 
-</div>
-
-<div class="notes">
-* visual benchmarking CAN look like this (first draft of the condition)
-* on the top we provide a benchmark of a certain effect size
-* on the bottom we provide the ES to be evaluated
-* so participants are able to draw comparisons to the benchmark
-</div>
-
-## Study 2 | Enrichment options: Design
-
-<span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
-  
-<span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
-
-\
-
-* in-service __teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: cues (difference, overlap, no cue)
-
-<div style="position:absolute; top: 40%; right:7%; width:37%"><img src="../www/signalling1.png" style="width:100%" />
-</div>
-
-<div class="notes">
-* this is a first draft of a cue on difference
-* labeling a mean and an area, describing the effect size Cohens U3
-</div>
-
-## Study 2 | Enrichment options: Design
-
-<span style="background-color:#d4d4d4;">How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?</span>  
-  
-<span style="background-color:#d4d4d4;">How do plots with __cues__ affect the outcomes compared to plots without cues?</span>
-
-\
-
-* in-service __teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: cues (difference, overlap, no cue)<br /><br />
-* __randomizations__
-  - size of effect (d= -.8 to .8)
-  - order of conditions
-  - vignettes (1 of 4 randomized between)
-  
-<div class="notes">
-* we again randomize the same variables
-</div>
 
 ## Study 2 | plot types: Measures
 
