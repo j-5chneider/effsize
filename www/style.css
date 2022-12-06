@@ -41,21 +41,21 @@ code {
 
 /* logo title slide */
 .plogo {
-  height: 40px;
+  height: 108px;
   float: left;
   margin-right: 10px;
   margin-top: 10px;
 }
 
 .gdbar img {
-  width: 200px !important;
-  height: 51px !important;
-  margin: 8px 8px;
+  width: 194px !important;
+  height: 108px !important;
+  margin: 0px 0px;
 }
 
 .gdbar {
-  width: 330px !important;
-  height: 67px !important;
+  width: 240px !important;
+  height: 120px !important;
   background: #fff !important;
 }
 
@@ -177,6 +177,20 @@ a:active {
   color: white;
 }
 
+.box-bg-r2 {
+  position: absolute;
+  left: 60%;
+  top:0;
+  width: 40%;
+  height: 100%;
+  padding-top: 5%;
+  background-color: #237986;
+  z-index: -1;
+  text-align: center;
+  font-weight: 900;
+  color: white;
+}
+
 .box-bg-l {
   position: absolute;
   left: 0%;
@@ -237,6 +251,55 @@ a:active {
   /*opacity: .5;*/
   z-index: -1;
   color: white;
+}
+
+
+.blueTop {
+    width:100%; 
+    color: #FFF;
+    background-color: #6ca5d990;
+    padding: 5px;
+}
+
+.blueBottom {
+    width:100%; 
+    background-color: #6ca5d940;
+    padding: 5px;
+}
+
+.flowchart1_w {
+    width: 25%;
+    
+}
+
+.flowchart1 {
+    width: 25%;
+    /*background-color: #6ca5d980;*/
+    background-image: url('eff1.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+}
+
+
+.flowchart2a, .flowchart2b, .flowchart2c {
+    
+    margin: 10px;
+    padding: 3px;
+    color: #373F43;
+}
+
+.flowchart2a {
+    background-color: #f3910080;
+}
+
+.flowchart2b {
+    background-color: #f3910055;
+}
+
+.flowchart2c {
+    background-color: #f3910030;
 }
 
 
