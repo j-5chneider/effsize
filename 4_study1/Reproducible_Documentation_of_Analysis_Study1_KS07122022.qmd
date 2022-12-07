@@ -938,7 +938,39 @@ plot_value <- mod_plot_value %>%
 
 plot_value
 
-plot_contrasteffects <- plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value +
+# efficiency for the first plot
+
+mod_plot_efficiency1 <- 
+    brm(scale(effic) ~ (1|type),
+    data = study1_w_timestamp_effsize %>% 
+        filter(plotNrWithin == 1),
+                   prior = c(
+    prior(normal(0, 1), class = Intercept),
+    prior(student_t(3, 0, 1), class = sd),
+    prior(student_t(3, 0, 1), class = sigma)
+  ),
+  control = list(adapt_delta = .99)
+  )
+ 
+
+plot_efficiency1 <- mod_plot_efficiency1 %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+ # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean #xmin = .lower, xmax = .upper
+             )) +
+#  geom_pointinterval() +
+  stat_halfeye() +
+    theme_ipsum_rc() +
+    theme(axis.title.x = element_blank(),
+          axis.text.y = element_blank(), 
+          axis.title.y = element_blank()) +
+    #scale_x_continuous(limits=c(-0.6, 0.6)) +
+    ggtitle('Efficiency for the First Plot')
+
+plot_efficiency1
+
+plot_contrasteffects <- plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value + plot_efficiency1 + 
     plot_layout(ncol=3)
 
 ggsave("plot_contrasteffects.png", 
