@@ -792,7 +792,7 @@ bayes_factor(plot0306_mod2, plot0306_mod1,
 
 ## Contrast Effects 
 
- ### Graphical Overview
+### Graphical Overview
 ```{r}
 # preparing mulilevel model with brms for graphical overview
 library(ggdist)
@@ -1451,5 +1451,3 @@ sjPlot::tab_model(mod_accu3_halfeye_x_halfeye_y, mod_accov_halfeye_x_halfeye_y,
                   mod_effic01_gardneraltman_raincloud, 
                   mod_effic0306_gardneraltman_raincloud)
 ```
-
-
