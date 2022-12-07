@@ -28,6 +28,8 @@ library(hrbrthemes)
 library(patchwork)
 library(brms)
 library(viridis)
+library(ggdist)
+library(tidybayes)
 load("data/teachers_study1_N40.RData")
 
 set.seed(25051982)
@@ -697,7 +699,7 @@ pp_check(plot01_mod1) +
 
 
 plot01_mod2 <- 
-    brm(effic | trunc(lb = 0) ~ 1 + type + effsize + (1|session),
+    brm(effic | trunc(lb = 0) ~ 1 + effsize + type + (1|session),
     data = study1_w_timestamp_effsize %>% 
         filter(plotNrWithin == 1),
     family = "student",
@@ -795,9 +797,6 @@ bayes_factor(plot0306_mod2, plot0306_mod1,
 ### Graphical Overview
 ```{r}
 # preparing mulilevel model with brms for graphical overview
-library(ggdist)
-library(patchwork)
-library(tidybayes)
 
 # rating u3
 mod_plot_ratingu3 <- brm (scale(rating_u3) ~ (1|type),
@@ -939,8 +938,13 @@ plot_value <- mod_plot_value %>%
 
 plot_value
 
-plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value +
+plot_contrasteffects <- plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value +
     plot_layout(ncol=3)
+
+ggsave("plot_contrasteffects.png", 
+       plot_contrasteffects,
+       width = 25*.55,
+       height = 16*.55)
 
 #study1_w %>% 
 #    select(rating_cl, rating_u3_filtered, rating_ov_filtered,
