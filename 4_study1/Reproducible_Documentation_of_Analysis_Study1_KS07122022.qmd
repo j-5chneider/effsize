@@ -661,9 +661,12 @@ We fitted models and assumed truncated (lower bound lb = 0) t-distributions for 
 #| warning: false
 #| results: hide
 
+study1_w_timestamp_effsize <- study1_w_timestamp %>% 
+    full_join(study1_w %>% select(session, effsize), by = "session")
+
 plot01_mod0 <- 
     brm(effic | trunc(lb = 0) ~ 1 + (1|session),
-    data = study1_w_timestamp %>% 
+    data = study1_w_timestamp_effsize %>% 
         filter(plotNrWithin == 1),
     family = "student", # Due to the self-paced participation in online surveys, implausible values (e.g. extreme outliers due to time away from keyboard) may have occurred and led to heavily skewed distributions. 
     save_pars = save_pars(all = TRUE),
@@ -677,8 +680,8 @@ pp_check(plot01_mod0) +
     scale_color_manual(values=viridis(2, begin = .3))
 
 plot01_mod1 <- 
-    brm(effic | trunc(lb = 0) ~ 1 + type + (1|session),
-    data = study1_w_timestamp %>% 
+    brm(effic | trunc(lb = 0) ~ 1 + effsize + (1|session),
+    data = study1_w_timestamp_effsize %>% 
         filter(plotNrWithin == 1),
     family = "student",
     save_pars = save_pars(all = TRUE)#,
@@ -691,12 +694,31 @@ pp_check(plot01_mod1) +
     xlim(c(0,250000)) +
     theme_modern_rc() +
     scale_color_manual(values=viridis(2, begin = .3))
+
+
+plot01_mod2 <- 
+    brm(effic | trunc(lb = 0) ~ 1 + type + effsize + (1|session),
+    data = study1_w_timestamp_effsize %>% 
+        filter(plotNrWithin == 1),
+    family = "student",
+    save_pars = save_pars(all = TRUE)#,
+   # silent = 2,
+   # refresh = 0,
+   # iter = 15000
+    )
+
+pp_check(plot01_mod2) +
+    xlim(c(0,250000)) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
 ```
 
 
 ```{r}
-sjPlot::tab_model(plot01_mod0, plot01_mod1)
+sjPlot::tab_model(plot01_mod0, plot01_mod1, plot01_mod2)
 bayes_factor(plot01_mod1, plot01_mod0,
+             repetitions = 3)
+bayes_factor(plot01_mod2, plot01_mod1,
              repetitions = 3)
 ```
 
@@ -708,7 +730,7 @@ bayes_factor(plot01_mod1, plot01_mod0,
 #| results: hide
 plot0306_mod0 <- 
     brm(effic | trunc(lb = 0) ~ 1 + plotNrWithin_factor + (1|session),
-    data = study1_w_timestamp %>% 
+    data = study1_w_timestamp_effsize %>% 
         filter(plotNrWithin >= 4),
     family = "student",
     save_pars = save_pars(all = TRUE),
@@ -722,8 +744,9 @@ pp_check(plot0306_mod0) +
     scale_color_manual(values=viridis(2, begin = .3))
 
 plot0306_mod1 <- 
-    brm(effic | trunc(lb = 0) ~ 1 + plotNrWithin_factor + type + (1|session),
-    data = study1_w_timestamp %>% 
+    brm(effic | trunc(lb = 0) ~ 1 + plotNrWithin_factor + effsize + 
+            (1|session),
+    data = study1_w_timestamp_effsize %>% 
         filter(plotNrWithin >= 4),
     family = "student",
     save_pars = save_pars(all = TRUE),
@@ -736,13 +759,32 @@ pp_check(plot0306_mod1) +
     xlim(c(0,250000)) +
     theme_modern_rc() +
     scale_color_manual(values=viridis(2, begin = .3))
+
+plot0306_mod2 <- 
+    brm(effic | trunc(lb = 0) ~ 1 + plotNrWithin_factor + effsize + 
+            type + (1|session),
+    data = study1_w_timestamp_effsize %>% 
+        filter(plotNrWithin >= 4),
+    family = "student",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 35000,
+    cores = 8)
+
+pp_check(plot0306_mod2) +
+    xlim(c(0,250000)) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
 ```
 
 
 ```{r}
-sjPlot::tab_model(plot0306_mod0, plot0306_mod1)
+sjPlot::tab_model(plot0306_mod0, plot0306_mod1, plot0306_mod2)
 bayes_factor(plot0306_mod1, plot0306_mod0,
              rep = 3) # add repetitions as warning messages informed about estimates that might be more variable than usual. Repetitions indicate that the estimates actually vary. However, the results fluctuate in a range where extreme evidence for H1 can always be assumed.
+bayes_factor(plot0306_mod2, plot0306_mod1,
+             rep = 3)
 ```
 
 
