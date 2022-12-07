@@ -1240,7 +1240,7 @@ raincloud_vs_halfeye_y <- study1_w %>%
 
 raincloud_vs_halfeye_y_effic <- study1_w_timestamp %>%
     group_by(session) %>%
-    mutate(dummy_gardneraltman_halfeye_x = 
+    mutate(dummy_raincloud_halfeye_y = 
                case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "raincloud_yaxis" | type == "halfeye_yaxis") %>%
     ungroup() %>% 
@@ -1331,7 +1331,7 @@ gardneraltman_vs_raincloud <- study1_w %>%
 
 gardneraltman_vs_raincloud_effic <- study1_w_timestamp %>%
     group_by(session) %>%
-    mutate(dummy_gardneraltman_halfeye_x = 
+    mutate(dummy_gardneraltman_raincloud = 
                case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "gardneraltman_xaxis" | type == "raincloud_yaxis") %>%
     ungroup() %>% 
@@ -1407,7 +1407,7 @@ halfeye_x_vs_halfeye_y <- study1_w %>%
 
 halfeye_x_vs_halfeye_y_effic <- study1_w_timestamp %>%
     group_by(session) %>%
-    mutate(dummy_raincloud_halfeye_y = 
+    mutate(dummy_halfeye_x_halfeye_y = 
                case_when(type == "halfeye_xaxis" ~ 0, TRUE ~ 1)) %>%
     filter(type == "halfeye_xaxis" | type == "halfeye_yaxis") %>%
     ungroup() %>% 
