@@ -31,7 +31,8 @@ library(brms)
 library(viridis)
 library(ggdist)
 library(tidybayes)
-load("../data/teachers_study1_N40.RData")
+library(here)
+load(here("data/teachers_study1_N40.RData"))
 
 set.seed(25051982)
 ```
@@ -150,7 +151,7 @@ ov_misconceptualizers <-
 
 ### wrangle time stamp data ####################################################
 study1_w_timestamp <- 
-    read_csv("../data/teachers_study1_N40_detailed.csv") %>% 
+    read_csv(here("data/teachers_study1_N40_detailed.csv")) %>% 
     # filter participants from study1_w only
     filter(session %in% study1_w$session) %>% 
     # we only need vars sensitivity or accuracy
@@ -203,7 +204,11 @@ study1_w %>%
         ) %>% 
     ggplot(., aes(rated_effectsize)) +
     geom_histogram() +
-    facet_wrap(~dependent_variable, scales = "free_x") +
+    xlab("Rated effect size") +
+    facet_wrap(~dependent_variable, scales = "free_x", 
+                labeller = as_labeller(c("rating_cl" = "Abstract metric",
+                                         "rating_ov" = "Overlap metric",
+                                         "rating_u3" = "Cohen's U3 metric"))) +
     theme_modern_rc() +
     theme(strip.text = element_text(color = "white"))
 ```
@@ -225,7 +230,12 @@ ggplot(study1_w %>%
         color = session)
         ) +
     geom_jitter(height = 0) +
-    facet_wrap(~ operationalization, scales = "free_x") +
+    xlab("Rated effect size") +
+    ylab("Participant ID") +
+    facet_wrap(~ operationalization, scales = "free_x", 
+                labeller = as_labeller(c("rating_cl" = "Abstract metric",
+                                         "rating_ov" = "Overlap metric",
+                                         "rating_u3" = "Cohen's U3 metric"))) +
     theme_modern_rc() +
     theme(legend.position = "none",
           strip.text = element_text(color = "white"))
@@ -240,18 +250,26 @@ study1_w %>%
     ggplot(., aes(effsize, rating_cl)) +
     geom_jitter() +
     stat_smooth() +
+    ylab("Abstract metric") +
+    xlab("Plotted effect size") +
     theme_modern_rc()
 
 study1_w %>% 
     ggplot(., aes(effsize, rating_u3, color = rating_u3_missconcept)) +
     geom_jitter() +
     stat_smooth() +
+    ylab("Cohen's U3 metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Misconcept") +
     theme_modern_rc()
 
 study1_w %>% 
     ggplot(., aes(abs(effsize), rating_ov, color = rating_ov_missconcept)) +
     geom_jitter() +
     stat_smooth(method = "lm") +
+    ylab("Overlap metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Misconcept") +
     theme_modern_rc()
 ```
 
@@ -289,14 +307,20 @@ study1_w %>%
 ggplot(study1_w, 
        aes(rating_cl, rating_u3)) +
     geom_jitter() +
+    xlab("Abstract metric") +
+    ylab("Cohen's U3 metric") +
     theme_modern_rc() +
 ggplot(study1_w, 
        aes(rating_cl, rating_ov)) +
     geom_jitter() +
+    xlab("Abstract metric") +
+    ylab("Overlap metric") +
     theme_modern_rc() +
 ggplot(study1_w, 
        aes(rating_ov, rating_u3)) +
     geom_jitter() +
+    xlab("Overlap metric") +
+    ylab("Cohen's U3 metric") +
     theme_modern_rc()
 ```
 
@@ -310,8 +334,14 @@ study1_w %>%
            diff_cl, diff_u3_filtered, diff_ov_filtered) %>% 
     ggplot(., aes(type, difference_to_true_effsize)) +
     geom_boxplot(alpha = .3) +
-    facet_wrap(~dependent_variable, scales = "free_y") +
+    facet_wrap(~dependent_variable, scales = "free_y", 
+                labeller = as_labeller(c("diff_cl" = "Abstract metric",
+                                         "diff_ov_filtered" = "Overlap metric (filtered)",
+                                         "diff_u3_filtered" = "Cohen's U3 metric (filtered)"))) +
     geom_jitter(aes(color = type)) +
+    ylab("Difference to true effect size") +
+    xlab("Accuracy item") +
+    labs(color = "Accuracy item") +
     theme_modern_rc() +
     theme(strip.text = element_text(color = "white"),
           axis.text.x = element_blank())
@@ -319,42 +349,6 @@ study1_w %>%
 
 # Research Question 1
 
-## Intraclasscorrelations for Accuracy, Perceived Difficulty, Informativity and Value
-
-```{r}
-#| label: acc iccs
-#| cache: true
-icc_mod_rating_cl <- lmer(rating_cl ~  1 + (1|type), 
-                          data = study1_w )
-icc_mod_rating_u3 <- lmer(rating_u3 ~  1 + (1|type), 
-                          data = study1_w %>% 
-                              filter(rating_u3_missconcept == F))
-icc_mod_rating_ov <- lmer(rating_ov ~  1 + (1|type), 
-                          data = study1_w %>% 
-                              filter(rating_ov_missconcept == F))
-icc_mod_diffi <- lmer(diffi ~  1 + (1|type), 
-                      data = study1_w)
-icc_mod_infor <- lmer(infor ~  1 + (1|type), 
-                      data = study1_w )
-icc_mod_value <- lmer(value ~  1 + (1|type), 
-                      data = study1_w )
-
-sjPlot::tab_model(
-    icc_mod_rating_cl,
-    icc_mod_rating_u3,
-    icc_mod_rating_ov,
-    icc_mod_diffi,
-    icc_mod_infor,
-    icc_mod_value
-)
-
-BF(icc_mod_rating_cl, hypothesis = "icc = 0; icc > 0")
-BF(icc_mod_rating_u3, hypothesis = "icc = 0; icc > 0")
-BF(icc_mod_rating_ov, hypothesis = "icc = 0; icc > 0")
-BF(icc_mod_diffi, hypothesis = "icc = 0; icc > 0")
-BF(icc_mod_infor, hypothesis = "icc = 0; icc > 0")
-BF(icc_mod_value, hypothesis = "icc = 0; icc > 0")
-```
 
 ## Random Intercept Models With and Without Visualization Type
 ```{r}
@@ -937,7 +931,7 @@ mod_plot_ratingu3 <- brm(
     data = study1_w,
     control = list(adapt_delta = .999),
     cores = 4,
-    iter = 20000
+    iter = 10000
     
 ) 
 
@@ -954,10 +948,12 @@ plot_ratingu3 <- mod_plot_ratingu3 %>%
     theme(axis.title.x = element_blank(),
           axis.text.y = element_text(hjust = 0)) +
     #scale_x_continuous(limits=c(-0.6, 0.6)) +
-    ggtitle('Accuracy in U3 Metrics')
-plot_ratingu3
+    ggtitle("Accuracy in Cohen's U3 Metric")
 ```
 
+```{r}
+plot_ratingu3
+```
 
 ```{r}
 #| cache: true
@@ -972,7 +968,7 @@ mod_plot_ratingov <- brm (
     
 )
 
-plot_ratingov <-mod_plot_ratingov %>%
+plot_ratingov <- mod_plot_ratingov %>%
   spread_draws(b_Intercept, r_type[type,]) %>%
  # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
   mutate(type_mean = b_Intercept + r_type) %>%
@@ -986,7 +982,7 @@ plot_ratingov <-mod_plot_ratingov %>%
           axis.text.y = element_blank(), 
           axis.title.y = element_blank()) +
     #scale_x_continuous(limits=c(-0.6, 0.6)) +
-    ggtitle('Accuracy in Overlap Metrics')
+    ggtitle('Accuracy in Overlap Metric')
 ```
 
 
@@ -1003,7 +999,8 @@ mod_plot_diffi <- brm (
     scale(diffi) ~ (1 | type),
     data = study1_w,
     control = list(adapt_delta = .999),
-    cores = 4
+    cores = 4,
+    iter = 10000
     
 )
 
@@ -1073,7 +1070,8 @@ mod_plot_value <- brm (
     scale(value) ~ (1 | type),
     data = study1_w,
     control = list(adapt_delta = .999),
-    cores = 4
+    cores = 4,
+    iter = 10000
     
 )
 
@@ -1139,13 +1137,14 @@ plot_efficiency1
 
 ```{r}
 #| cache: true
-plot_contrasteffects <- plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value + plot_efficiency1 + 
-    plot_layout(ncol=3)
 
-ggsave("plot_contrasteffects.png", 
-       plot_contrasteffects,
-       width = 25*.55,
-       height = 16*.55)
+# plot_contrasteffects <- plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value + plot_efficiency1 + 
+#     plot_layout(ncol=3)
+
+# ggsave("www/plot_contrasteffects.png", 
+#        plot_contrasteffects,
+#        width = 25*.55,
+#        height = 16*.55)
 ```
 
 
