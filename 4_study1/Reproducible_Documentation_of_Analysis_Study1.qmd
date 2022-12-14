@@ -14,6 +14,13 @@ editor_options:
   chunk_output_type: console
 ---
 
+# R Version
+
+```{r}
+R.version()
+```
+
+
 # Import of the Data
 
 The data was assessed with the `formr` survey framework [@arslan2020]. The raw data was imported via the following code.
@@ -21,6 +28,8 @@ The data was assessed with the `formr` survey framework [@arslan2020]. The raw d
 ```{r}
 #| label: libraries and data import
 #| results: hide
+#| warning: false
+#| message: false
 library(tidyverse)
 library(ggforce)
 library(lme4)
@@ -350,11 +359,13 @@ study1_w %>%
 # Research Question 1
 
 
-## Random Intercept Models With and Without Visualization Type
+## Accuracy abstract metric
+
+### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| cache: true
 #| results: hide
-# Rating Cliffs Delta
+# Rating abstract metric
 mod0_rating_cl <- brm(rating_cl ~ + (1|session), 
                           data = study1_w,
                           iter = 20000,
@@ -380,7 +391,8 @@ bayes_factor(mod1_rating_cl, mod0_rating_cl)
 bayes_factor(mod2_rating_cl, mod1_rating_cl)
 ```
 
-
+## Accuracy Cohen's U3
+### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| cache: true
 #| results: hide
@@ -415,7 +427,8 @@ bayes_factor(mod1_rating_u3, mod0_rating_u3)
 bayes_factor(mod2_rating_u3, mod1_rating_u3)
 ```
 
-
+## Accuracy overlap
+### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| cache: true
 #| results: hide
@@ -451,6 +464,24 @@ bayes_factor(mod2_rating_ov, mod1_rating_ov)
 ```
 
 
+## Perceived Difficulty
+
+### Graphichal Overview
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, diffi)) +
+    geom_jitter() +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white") +
+    theme_modern_rc() +
+    labs(title = "Difficulty",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| results: hide
 #| cache: true
@@ -482,7 +513,24 @@ bayes_factor(mod1_diffi, mod0_diffi)
 bayes_factor(mod2_diffi, mod1_diffi)
 ```
 
+## Perceived Informativity
 
+### Graphical Overview
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, infor)) +
+    geom_jitter() +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white") +
+    theme_modern_rc() +
+    labs(title = "Informativity",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| results: hide
 #| cache: true
@@ -514,7 +562,24 @@ bayes_factor(mod1_infor, mod0_infor)
 bayes_factor(mod2_infor, mod1_infor)
 ```
 
+## Perceived Value
 
+### Graphical Overview
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, value)) +
+    geom_jitter() +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white") +
+    theme_modern_rc() +
+    labs(title = "Perceived Value",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| results: hide
 #| cache: true
@@ -546,7 +611,7 @@ bayes_factor(mod1_value, mod0_value)
 bayes_factor(mod2_value, mod1_value)
 ```
 
-
+## Table all random intercept models
 ```{r}
 #| cache: true
 sjPlot::tab_model(
@@ -559,60 +624,10 @@ sjPlot::tab_model(
     )
 ```
 
-## Perceived Difficulty
-
-### Graphichal Overview
-
-```{r}
-study1_w %>% 
-    ggplot(aes(type, diffi)) +
-    geom_jitter() +
-    stat_summary(fun.data = mean_sdl,
-                 fun.args = list(mult = 1),
-                 color = "white") +
-    theme_modern_rc() +
-    labs(title = "Difficulty",
-         subtitle = "per Plot Type",
-         caption = "Means ± 1*SD")
-```
-
-
-## Perceived Informativity
-
-### Graphical Overview
-
-```{r}
-study1_w %>% 
-    ggplot(aes(type, infor)) +
-    geom_jitter() +
-    stat_summary(fun.data = mean_sdl,
-                 fun.args = list(mult = 1),
-                 color = "white") +
-    theme_modern_rc() +
-    labs(title = "Informativity",
-         subtitle = "per Plot Type",
-         caption = "Means ± 1*SD")
-```
-
-## Perceived Value
-
-### Graphical Overview
-
-```{r}
-study1_w %>% 
-    ggplot(aes(type, value)) +
-    geom_jitter() +
-    stat_summary(fun.data = mean_sdl,
-                 fun.args = list(mult = 1),
-                 color = "white") +
-    theme_modern_rc() +
-    labs(title = "Perceived Value",
-         subtitle = "per Plot Type",
-         caption = "Means ± 1*SD")
-```
 
 ## Sensitivity
 
+### Graphical Overview
 ```{r}
 #| label: sensi plot
 #| warning: false
@@ -652,6 +667,8 @@ ggplot(study1_w %>%
     theme(strip.text = element_text(color = "white")) +
     ggtitle("Binary Sensitivity", "without wrong decisions")
 ```
+
+### Logistic Regressions With and Without Visualization Type
 
 Fitting a series of logistic regressions with non-informative priors
 
