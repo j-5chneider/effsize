@@ -17,7 +17,7 @@ editor_options:
 # R Version
 
 ```{r}
-R.version()
+R.Version()
 ```
 
 
@@ -1369,7 +1369,7 @@ mod_effic01_gardneraltman_halfeye_y <-
     cores = 4)
 
 mod_effic0306_gardneraltman_halfeye_y <- 
-    brm(log_effic_05righttrunc ~ dummy_gardneraltman_halfeye_y + 
+    brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_halfeye_y + 
             effsize + (1|session),
     data = gardneraltman_vs_halfeye_y_effic %>% 
         filter(plotNrWithin >= 4),
