@@ -13,6 +13,12 @@ bibliography: references.bib
 editor_options: 
   chunk_output_type: console
 ---
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE
+)
+```
 
 # R Version
 
