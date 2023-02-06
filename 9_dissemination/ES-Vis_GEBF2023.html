@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="ES-Vis_GEBF2023_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ES-Vis_GEBF2023_files/libs/quarto-html/tabby.min.js"></script>
+<script src="ES-Vis_GEBF2023_files/libs/quarto-html/popper.min.js"></script>
+<script src="ES-Vis_GEBF2023_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="ES-Vis_GEBF2023_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ES-Vis_GEBF2023_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="ES-Vis_GEBF2023_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.2.269">
+
+  <meta name="author" content="Jürgen Schneider Kirstin Schmidt, Kristina Bohrer, Samuel Merk, Iris Backfisch, Salome Wagner">
+  <meta name="dcterms.date" content="2023-02-05">
+  <title>Vermittlung von Effektgrößen an Lehrkräfte</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="ES-Vis_GEBF2023_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="ES-Vis_GEBF2023_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="ES-Vis_GEBF2023_files/libs/revealjs/dist/theme/quarto.css" id="theme">
+  <link href="ES-Vis_GEBF2023_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="ES-Vis_GEBF2023_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="ES-Vis_GEBF2023_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="ES-Vis_GEBF2023_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-captioned.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-captioned) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-captioned.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-captioned .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-captioned .callout-caption  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-captioned.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-captioned.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-caption {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-caption {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-caption {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-captioned .callout-body > .callout-content > :last-child {
+    margin-bottom: 0.5rem;
+  }
+
+  .callout.callout-captioned .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-captioned) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-caption {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-caption {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-caption {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-caption {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-caption {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  
+  <script src="ES-Vis_GEBF2023_files/libs/kePrint-0.0.1/kePrint.js"></script>
+  <link href="ES-Vis_GEBF2023_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+  <link href="ES-Vis_GEBF2023_files/libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet">
+  <script src="ES-Vis_GEBF2023_files/libs/bsTable-3.3.7/bootstrapTable.js"></script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="www/title-bg.jpg" data-background-opacity="0.3" data-background-size="cover" class="quarto-title-block center">
+  <h1 class="title">Vermittlung von Effektgrößen an Lehrkräfte</h1>
+  <p class="subtitle">Untersuchung verschiedener Visualisierungen und ihrer Anreicherungsoptionen zur Förderung des Verständnisses</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<b>Jürgen Schneider</b><br><span style="font-size: .8em">Kirstin Schmidt, Kristina Bohrer, Samuel Merk, Iris Backfisch, Salome Wagner</span> 
+</div>
+</div>
+</div>
+
+  <p class="date">05 February 2023</p>
+</section>
+<section id="background-focus-why-designing-science-communication" class="slide level2">
+<h2>Background &amp; Focus | Why designing science communication?</h2>
+<ul>
+<li>Lehrpersonen: werden ermutigt, <strong>Evidenz</strong> aus der Forschung zu berücksichtigen <span class="citation" data-cites="slavin.2020 brownetal.2017">(<a href="#/section" role="doc-biblioref" onclick="">Brown et al., 2017</a>; <a href="#/section" role="doc-biblioref" onclick="">Slavin, 2020</a>)</span><br><br><br><br></li>
+<li>Herausforderungen: stützen sich <strong>nur selten</strong> auf Forschungsergebnisse in der täglichen PRaxis <span class="citation" data-cites="thommetal.2021">(z. B. <a href="#/section" role="doc-biblioref" onclick="">Thomm et al., 2021</a>)</span><br><br><br><br></li>
+<li>aktuelle: Ansätze für eine <strong>Lehrpersonen-orientierte</strong> Wissenschaftskommunikation<br> <span class="citation" data-cites="hedges.2018 farley-rippleetal.2020">(<a href="#/section" role="doc-biblioref" onclick="">Farley-Ripple et al., 2020</a>; <a href="#/section" role="doc-biblioref" onclick="">Hedges, 2018</a>)</span></li>
+</ul>
+<aside class="notes">
+<ul>
+<li>Teachers are encouraged to consider evidence in their professional practice</li>
+<li>teachers rarely draw on research evidence in their daily practice</li>
+<li>different strategies exist to increase / foster teachers’ engagement with evidence</li>
+<li>current approaches: toward a more teacher-friendly science communication</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="background-focus-why-looking-at-effect-sizes" class="slide level2">
+<h2>Background &amp; Focus | Why looking at effect sizes?</h2>
+<div class="columns">
+<div class="column" style="width:65%;">
+<ul>
+<li>“<strong>Clearinghaus</strong>” Ansätze<br><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg> Evidenzbasis systematischer Forschung bereitstellen <span class="citation" data-cites="knogleretal.2022">(<a href="#/section" role="doc-biblioref" onclick="">Knogler et al., 2022</a>)</span><br><br><br><br></li>
+<li>Effektstärken (ES) als eine der <strong>Schlüsselinformationen</strong> <span class="citation" data-cites="burnsetal.2011">(<a href="#/section" role="doc-biblioref" onclick="">Burns et al., 2011</a>)</span><br><br><br><br></li>
+<li>Wissenschaftler und “Clearinghäusern” verwenden in der Regel standardisierte <strong>textuelle</strong> ES-Metriken <span class="citation" data-cites="cohen.1988">(<a href="#/section" role="doc-biblioref" onclick="">Cohen, 1988</a>)</span></li>
+</ul>
+</div><div class="column" style="width:5%;">
+
+</div><div class="column" style="width:30%;">
+<p><img src="../www/chu_es1.jpg" style="border: 1px solid #000; width: 95%; margin: 5px;"><br>
+<span style="font-size: .7em"><a href="https://www.clearinghouse.edu.tum.de">clearinghouse.edu.tum.de</a></span></p>
+<p><img src="../www/eef_es1.jpg" style="border: 1px solid #000; width: 95%; margin: 5px;"><br>
+<img src="../www/eef_es2.jpg" style="width: 95%; margin: 5px;"><br>
+<span style="font-size: .7em"><a href="https://educationendowmentfoundation.org.uk">educationendowmentfoundation.org.uk</a></span></p>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>from an evidence-informed practice perspective</li>
+<li>so called “<strong>clearing house</strong>” approaches<br><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg> try to provide teachers with the “best available […] evidence from systematic research” <strong>accessible</strong> to …</li>
+<li>particularly evaluated according to the extent to which it allows to assess <strong>treatment effectiveness</strong>, i.e.&nbsp;the investigation of whether a treatment works<br><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg> so in our study we look at group differences</li>
+<li>Meta-analyses = highest level of evidence<br><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg> ES = key information to be communicated</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="background-focus-why-looking-at-es-visualizations" class="slide level2">
+<h2>Background &amp; Focus | Why looking at ES visualizations?</h2>
+<ul>
+<li>diese haben für Lehrpersonen <strong>wenig Aussagekraft</strong> <span class="citation" data-cites="haneletal.2019 lipseyetal.2012">(<a href="#/section" role="doc-biblioref" onclick="">Hanel et al., 2019</a>; <a href="#/section" role="doc-biblioref" onclick="">Lipsey et al., 2012</a>)</span><br><br><br></li>
+<li>Alternative Metriken (z. B. Cohen’s <span class="math inline">\(U_3\)</span>) werden als weniger informativ wahrgenommen oder produzieren Fehlkonzepte <span class="citation" data-cites="lortie-forguesetal.2021">(<a href="#/section" role="doc-biblioref" onclick="">Lortie-Forgues et al., 2021</a>, Schmidt et al., under review)</span></li>
+<li>Übersetzungen (z. B. Lernjahre) transportieren <strong>unerwünschte Eigenschaften</strong> <span class="citation" data-cites="bairdpane.2019 kimetal.2022">(<a href="#/section" role="doc-biblioref" onclick="">Baird &amp; Pane, 2019</a>; <a href="#/section" role="doc-biblioref" onclick="">Kim et al., 2022</a>)</span><br><br><br></li>
+<li>Alternative: Visualisierungen <span class="citation" data-cites="franconerietal.2021">(<a href="#/section" role="doc-biblioref" onclick="">Franconeri et al., 2021</a>)</span></li>
+</ul>
+<aside class="notes">
+<ul>
+<li>How do we normally communicate ES? As scientists &amp; some clearing houses use <strong>standardized</strong> and <strong>textual</strong> representations</li>
+<li>there is <strong>compelling evidence</strong> that <strong>textual</strong> representations of <strong>standardized</strong> ES are <strong>challenging</strong> for teachers’ perception and understanding
+<ul>
+<li>Cohen’S d / Percentile gain = rated as little informative</li>
+<li>depending on which metric we present: perceived treatment effectiveness differ</li>
+</ul></li>
+<li>Some clearing houses use <strong>Translations</strong> of ES (e.g.&nbsp;months of learning) often carry <strong>undesired characteristics</strong>
+<ul>
+<li>although they are often perceived as more informative (Lortie-forgues)</li>
+<li>may produce little accuracy (Kim)</li>
+<li>may produce misconceptions (Schmid et al.)</li>
+</ul></li>
+<li>Alternative: visualizations</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="background-focus-teacher-friendly-communication-of-es" class="slide level2">
+<h2>Background &amp; Focus | teacher-friendly communication of ES</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><br> <img data-src="www/eff1.jpg"></p>
+</div><div class="column" style="width:5%;">
+<p><br><br><br><br> <svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:45.71px;width:40px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg></p>
+</div><div class="column" style="width:60%;">
+<div class="flowchart2a">
+<strong>kognitive Verarbeitung</strong><br><br><br>
+</div>
+<div class="flowchart2b">
+<strong>Verständnis</strong><br><br><br>
+</div>
+<div class="flowchart2c">
+<strong>Relevanzwahrnehmung für die Praxis</strong><br><br><br>
+</div>
+</div>
+</div>
+<p><span class="citation" data-cites="jensengerber.2020">(<a href="#/section" role="doc-biblioref" onclick="">Jensen &amp; Gerber, 2020</a>)</span></p>
+<aside class="notes">
+<ul>
+<li>I was talking a lot about “teacher-friendly” so far, but what do we mean by that?<br>
+</li>
+<li>We are looking at <strong>three aspects</strong> that we found to be relevant in the realm of science communication…</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="background-focus-teacher-friendly-communication-of-es-1" class="slide level2">
+<h2>Background &amp; Focus | teacher-friendly communication of ES</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><br> <img data-src="www/eff1.jpg"></p>
+</div><div class="column" style="width:5%;">
+<p><br><br><br><br> <svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:45.71px;width:40px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg></p>
+</div><div class="column" style="width:60%;">
+<div class="flowchart2a">
+<strong>kognitive Verarbeitung</strong><br>
+- Aufgabenschwierigkeit<br>
+- Effizienz
+</div>
+<div class="flowchart2b">
+<strong>Verständnis</strong><br><br><br>
+</div>
+<div class="flowchart2c">
+<strong>Relevanzwahrnehmung für die Praxis</strong><br><br><br>
+</div>
+</div>
+</div>
+<p><span class="citation" data-cites="marcusetal.1996 korbachetal.2017">(<a href="#/section" role="doc-biblioref" onclick="">Korbach et al., 2017</a>; <a href="#/section" role="doc-biblioref" onclick="">Marcus et al., 1996</a>)</span></p>
+<aside class="notes">
+<p>Drawing on current research from <strong>ES communication</strong> and <strong>visualization</strong>, we address:</p>
+<ul>
+<li>… which is a cognitive load measure</li>
+<li>… how quickly are they able to do it?</li>
+<li>… which reflects at what point the effect size between two groups in a plot are perceived as <strong>difference</strong></li>
+<li>… are participants accurately estimating the size of the effect?</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="background-focus-teacher-friendly-communication-of-es-2" class="slide level2">
+<h2>Background &amp; Focus | teacher-friendly communication of ES</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><br> <img data-src="www/eff1.jpg"></p>
+</div><div class="column" style="width:5%;">
+<p><br><br><br><br> <svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:45.71px;width:40px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg></p>
+</div><div class="column" style="width:60%;">
+<div class="flowchart2a">
+<strong>kognitive Verarbeitung</strong><br>
+- Aufgabenschwierigkeit<br>
+- Effizienz
+</div>
+<div class="flowchart2b">
+<strong>Verständnis</strong><br>
+- Akkuratesse<br>
+- Sensitivität
+</div>
+<div class="flowchart2c">
+<strong>Relevanzwahrnehmung für die Praxis</strong><br><br><br>
+</div>
+</div>
+</div>
+<div class="citation myref">
+(Merk et al., in press)
+</div>
+<aside class="notes">
+<ul>
+<li>… are participants accurately estimating the size of the effect?</li>
+<li>… which reflects at what point the effect size between two groups in a plot are perceived as <strong>difference</strong></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="background-focus-teacher-friendly-communication-of-es-3" class="slide level2">
+<h2>Background &amp; Focus | teacher-friendly communication of ES</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><br> <img data-src="www/eff1.jpg"></p>
+</div><div class="column" style="width:5%;">
+<p><br><br><br><br> <svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:45.71px;width:40px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg></p>
+</div><div class="column" style="width:60%;">
+<div class="flowchart2a">
+<strong>kognitive Verarbeitung</strong><br>
+- Aufgabenschwierigkeit<br>
+- Effizienz
+</div>
+<div class="flowchart2b">
+<strong>Verständnis</strong><br>
+- Akkuratesse<br>
+- Sensitivität
+</div>
+<div class="flowchart2c">
+<strong>Relevanzwahrnehmung für die Praxis</strong><br>
+- Wahrgenommene Informativität<br>
+- Wahrgenommener Wert
+</div>
+</div>
+</div>
+<p><span class="citation" data-cites="lortie-forguesetal.2021">(<a href="#/section" role="doc-biblioref" onclick="">Lortie-Forgues et al., 2021</a>)</span></p>
+<aside class="notes">
+<p>concerning practical implications we look at</p>
+<ul>
+<li>how informative and valuable the visualized information is for teaching practice</li>
+<li>how high are the chances are participants will use the information in their practice</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="background-focus-what-we-know-about-visualizing-data-for-lay-people" class="slide level2">
+<h2>Background &amp; Focus | What we know about visualizing data (for lay people)</h2>
+<p><strong>Akkuratesse</strong> der Einschätzung statistischer Informationen: <strong>Visualisierungstyp</strong> spielt eine Rolle</p>
+<ul>
+<li>box plots: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg> Streuung; <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M128 288V64.03c0-17.67-14.33-31.1-32-31.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64C113.7 320 128 305.7 128 288zM481.5 229.1c1.234-5.092 1.875-10.32 1.875-15.64c0-22.7-11.44-43.13-29.28-55.28c.4219-3.015 .6406-6.076 .6406-9.122c0-22.32-11.06-42.6-28.83-54.83c-2.438-34.71-31.47-62.2-66.8-62.2h-52.53c-35.94 0-71.55 11.87-100.3 33.41L169.6 92.93c-6.285 4.71-9.596 11.85-9.596 19.13c0 12.76 10.29 24.04 24.03 24.04c5.013 0 10.07-1.565 14.38-4.811l36.66-27.51c20.48-15.34 45.88-23.81 71.5-23.81h52.53c10.45 0 18.97 8.497 18.97 18.95c0 3.5-1.11 4.94-1.11 9.456c0 26.97 29.77 17.91 29.77 40.64c0 9.254-6.392 10.96-6.392 22.25c0 13.97 10.85 21.95 19.58 23.59c8.953 1.671 15.45 9.481 15.45 18.56c0 13.04-11.39 13.37-11.39 28.91c0 12.54 9.702 23.08 22.36 23.94C456.2 266.1 464 275.2 464 284.1c0 10.43-8.516 18.93-18.97 18.93H307.4c-12.44 0-24 10.02-24 23.1c0 4.038 1.02 8.078 3.066 11.72C304.4 371.7 312 403.8 312 411.2c0 8.044-5.984 20.79-22.06 20.79c-12.53 0-14.27-.9059-24.94-28.07c-24.75-62.91-61.74-99.9-80.98-99.9c-13.8 0-24.02 11.27-24.02 23.99c0 7.041 3.083 14.02 9.016 18.76C238.1 402 211.4 480 289.9 480C333.8 480 360 445 360 411.2c0-12.7-5.328-35.21-14.83-59.33h99.86C481.1 351.9 512 321.9 512 284.1C512 261.8 499.9 241 481.5 229.1z"></path></svg> Verteilung</li>
+<li>bar/line plot: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg> Mittelwert</li>
+<li>modified stock chart: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg> Minima, Maxima; <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M128 288V64.03c0-17.67-14.33-31.1-32-31.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64C113.7 320 128 305.7 128 288zM481.5 229.1c1.234-5.092 1.875-10.32 1.875-15.64c0-22.7-11.44-43.13-29.28-55.28c.4219-3.015 .6406-6.076 .6406-9.122c0-22.32-11.06-42.6-28.83-54.83c-2.438-34.71-31.47-62.2-66.8-62.2h-52.53c-35.94 0-71.55 11.87-100.3 33.41L169.6 92.93c-6.285 4.71-9.596 11.85-9.596 19.13c0 12.76 10.29 24.04 24.03 24.04c5.013 0 10.07-1.565 14.38-4.811l36.66-27.51c20.48-15.34 45.88-23.81 71.5-23.81h52.53c10.45 0 18.97 8.497 18.97 18.95c0 3.5-1.11 4.94-1.11 9.456c0 26.97 29.77 17.91 29.77 40.64c0 9.254-6.392 10.96-6.392 22.25c0 13.97 10.85 21.95 19.58 23.59c8.953 1.671 15.45 9.481 15.45 18.56c0 13.04-11.39 13.37-11.39 28.91c0 12.54 9.702 23.08 22.36 23.94C456.2 266.1 464 275.2 464 284.1c0 10.43-8.516 18.93-18.97 18.93H307.4c-12.44 0-24 10.02-24 23.1c0 4.038 1.02 8.078 3.066 11.72C304.4 371.7 312 403.8 312 411.2c0 8.044-5.984 20.79-22.06 20.79c-12.53 0-14.27-.9059-24.94-28.07c-24.75-62.91-61.74-99.9-80.98-99.9c-13.8 0-24.02 11.27-24.02 23.99c0 7.041 3.083 14.02 9.016 18.76C238.1 402 211.4 480 289.9 480C333.8 480 360 445 360 411.2c0-12.7-5.328-35.21-14.83-59.33h99.86C481.1 351.9 512 321.9 512 284.1C512 261.8 499.9 241 481.5 229.1z"></path></svg> Streuung <span class="citation" data-cites="albersetal.2014 piercechick.2013">(<a href="#/section" role="doc-biblioref" onclick="">Albers et al., 2014</a>; <a href="#/section" role="doc-biblioref" onclick="">Pierce &amp; Chick, 2013</a>)</span></li>
+</ul>
+<div class="fragment">
+<p><br>
+<br>
+</p>
+<p><strong>Unterstützung im Prozess</strong>: <strong>Anreicherungsoptionen</strong></p>
+<ul>
+<li>benchmarks (anchoring) <span class="citation" data-cites="cohen.1988 jacowitzkahneman.1995">(<a href="#/section" role="doc-biblioref" onclick="">Cohen, 1988</a>; <a href="#/section" role="doc-biblioref" onclick="">Jacowitz &amp; Kahneman, 1995</a>)</span></li>
+<li>cues (signaling) <span class="citation" data-cites="schneideretal.2018">(<a href="#/section" role="doc-biblioref" onclick="">Schneider et al., 2018</a>)</span></li>
+</ul>
+<aside class="notes">
+<ul>
+<li><p>there is a lot of basic research on visualizing statistical information</p></li>
+<li><p>however, when plotting ES a lot of these phenomena we know about on a <strong>small scale</strong> come together and interact</p></li>
+<li><p>there is <strong>first evidence</strong> that the <strong>type of</strong> visualization we choose</p></li>
+<li><p>plays a role as to how <strong>accurately</strong> lay people estimate statistical information</p></li>
+<li></li>
+<li><p>Enrichment options for these visualizations may further support the complex processes of sense-making</p></li>
+<li><p>A common approach is to provide <strong>standardized benchmarks</strong> against which also researchers typically anchor their interpretations</p></li>
+<li><p>research on multimedia learning suggests that the use of <strong>cues</strong> (e.g.&nbsp;arrows, labels) can direct observers’ attention.</p></li>
+<li><p>This so-called signaling effect can increase understanding and reduce cognitive load</p></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="background-focus-what-we-know-about-visualizing-data-for-lay-people-1" class="slide level2">
+<h2>Background &amp; Focus | What we know about visualizing data (for lay people)</h2>
+<ul>
+<li>Laien sind <strong>unbeeindruckt</strong> von grafisch dargestellten ES <span class="citation" data-cites="mcphetrespennycook.2020">(<a href="#/section" role="doc-biblioref" onclick="">McPhetres &amp; Pennycook, 2020</a>)</span><br><br><br></li>
+<li>Mittelwerte zu Plots hinzuzufügen erhöht die wahrgenommene ES <span class="citation" data-cites="kaleetal.2020">(<a href="#/section" role="doc-biblioref" onclick="">Kale et al., 2020</a>)</span></li>
+</ul>
+<aside class="notes">
+<ul>
+<li>for d=.9: ~55% would say “Group A definitively has higher scores than Group B”
+<ul>
+<li>they would call it something between “small” and “medium”</li>
+</ul></li>
+<li>in a sense that it increases bias</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="background-focus-research-interests-studies" class="slide level2">
+<h2>Background &amp; Focus | Research interests &amp; Studies</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="blueTop">
+<strong>Delphi-Studie</strong>
+</div>
+<div class="blueBottom">
+<br><strong>Expertenurteil</strong> zu Lehrpersonen-orientierten Visualisierungen<br><br><em>explorativ</em>
+</div>
+</div><div class="column" style="width:30%;">
+<div class="blueTop">
+<strong>Studie 1</strong>
+</div>
+<div class="blueBottom">
+<br>Vergleich der Wirkung verschiedener <strong>Visualisierungs-typen</strong> auf das Verständnis<br><br><em>explorativ</em>
+</div>
+</div><div class="column" style="width:30%;">
+<div class="blueTop">
+<strong>Studie 2</strong>
+</div>
+<div class="blueBottom">
+<br>Vergleich der Wirkung verschiedener <strong>Anreicherungs-optionen</strong> auf das Verständnis<br><br><em>konfirmativ</em>
+</div>
+</div>
+</div>
+</section>
+<section id="delphi-studie" class="slide level2">
+<h2>Delphi Studie</h2>
+<ul>
+<li><strong>4 Experten</strong> der Datenvisualisierung, <strong>4 Experten</strong> der Wissenschaftskommunikation in Clearinghäusern &amp; Transfer</li>
+<li>Phase 1: Sammlung von <strong>16 Visualisierungstypen </strong> <br>(für Gruppenwerte auf einer metrischen Variable)</li>
+</ul>
+
+<img data-src="../www/eff1.jpg" style="width:30.0%" class="r-stretch"><aside class="notes">
+<ul>
+<li>now if we want to find out what are <strong>promising plot types</strong> to communicate ES<br><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg>we face the challenge that there is a universe of potential plot types to investigate</li>
+<li>so in a <strong>pilot study</strong> we consulted experts in Data Visualization and Science Communication to help us collect and rank</li>
+<li>“plot types that they gauge suitable for depicting effect sizes to teachers”</li>
+<li>synthesizing these lists, resulted in 16 suitable plot types</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="delphi-studie-1" class="slide level2">
+<h2>Delphi Studie</h2>
+<ul>
+<li><strong>4 Experten</strong> der Datenvisualisierung, <strong>4 Experten</strong> der Wissenschaftskommunikation in Clearinghäusern &amp; Transfer</li>
+<li>Phase 1: Sammlung von <strong>16 Visualisierungstypen </strong> <br>(für Gruppenwerte auf einer metrischen Variable)</li>
+<li>Phase 2: Rating und Ranking von <strong>44 plots</strong></li>
+</ul>
+<p><em>“How accurately might teachers assess the ES depicted in the plot above?”</em><br>
+(7-stufige Likert Skala; totally random - totally accurate)</p>
+<div class="fragment">
+<p><br>
+<br>
+</p>
+<p><strong>Ergebnisse: “Top ranked” Visualisierungen</strong></p>
+<p><img data-src="../www/best_ranked.jpg" style="width:65.0%"></p>
+<aside class="notes">
+<ul>
+<li><p>for each plot type we created a plot distinguishing the groups on the y-axis; x-axis and by color</p></li>
+<li><p>we then asked them to rate and rank these plots as to …</p></li>
+<li></li>
+<li><p>the top 4 ranked plots are…</p></li>
+<li><p>the rankings of both expert groups are <strong>surprisingly similar</strong>: top 4 plots in both groups</p></li>
+<li><p>and with these 4 plots we will investigate the RQ mentioned before</p></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
+</section>
+<section id="study-1-plot-types-design" class="slide level2">
+<h2>Study 1 | plot types: Design</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="blueTop">
+<strong>Studie 1</strong>
+</div>
+<div class="blueBottom">
+<br>Vergleich der Wirkung verschiedener <strong>Visualisierungs-typen</strong> auf das Verständnis<br><br><em>explorativ</em>
+</div>
+</div><div class="column" style="width:4%;">
+
+</div><div class="column" style="width:65%;">
+<ul>
+<li><strong>Lehrpersonen</strong> (N = 40)<br><br></li>
+<li><strong>4 x 6</strong> within-design
+<ul>
+<li>4 Visualisierungstypen</li>
+<li>6 ES (<em>d</em>= -.8 to .8)<br><br></li>
+</ul></li>
+<li><strong>randomizations</strong>
+<ul>
+<li>Reihenfolge der Bedingungen</li>
+<li>Vignetten (1 von 4 between randomisiert)</li>
+</ul></li>
+</ul>
+<p><br>
+<br>
+</p>
+<p>Link zu Open Materials</p>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>as a reminder the first part of the RQ were: …</li>
+<li>we will try to answer these questions with <strong>in-service</strong> teachers</li>
+<li>who will evaluate all 4 plots depicting 6 different effect sizes from …</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="study-1-plot-types-measures" class="slide level2">
+<h2>Study 1 | plot types: Measures</h2>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table" style="font-size: 24px; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> construct </th>
+   <th style="text-align:left;"> example_item </th>
+   <th style="text-align:left;"> source </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;background-color: #efefef !important;"> Perceived task difficulty </td>
+   <td style="text-align:left;background-color: #efefef !important;"> How difficult was it for you to understand the figure? </td>
+   <td style="text-align:left;background-color: #efefef !important;"> (Marcus et al., 1996) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;background-color: #efefef !important;"> Efficiency </td>
+   <td style="text-align:left;background-color: #efefef !important;"> [time taken to answer sensitivity and accuracy] </td>
+   <td style="text-align:left;background-color: #efefef !important;"> own creation </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sensitivity </td>
+   <td style="text-align:left;"> Is one group superior to the other or are they approximately the same? </td>
+   <td style="text-align:left;"> (Merk et al., in press) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Accuracy 
+...abstract metric </td>
+   <td style="text-align:left;"> The group that reads on... tablet is entirely superior to the one with paper - paper is entirely superior to the one with tablet </td>
+   <td style="text-align:left;"> own creation </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ...Cohen's U₃ </td>
+   <td style="text-align:left;"> Look at the mean test score of the group reading on paper: What percentage of the group that reads on tablet has a higher test score than this value? </td>
+   <td style="text-align:left;"> oriented at (Grice &amp; Barrett, 2014) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ...overlap </td>
+   <td style="text-align:left;"> How much percent of the groups will overlap on the test score? </td>
+   <td style="text-align:left;"> own creation </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;background-color: #efefef !important;"> Perceived informativity </td>
+   <td style="text-align:left;background-color: #efefef !important;"> How informative do you perceive the way the information is presented in the figure? </td>
+   <td style="text-align:left;background-color: #efefef !important;"> (Lortie-Forgues et al., 2021) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;background-color: #efefef !important;"> Perceived value </td>
+   <td style="text-align:left;background-color: #efefef !important;"> To what extent are these results relevant for your future teaching? </td>
+   <td style="text-align:left;background-color: #efefef !important;"> own creation </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br>
+</p>
+<p>Demo: <a href="https://es-vis-demo1.formr.org">es-vis-demo1.formr.org</a></p>
+<aside class="notes">
+<ul>
+<li>I can’t go into too much detail with the operationalizations of the 7 constructs</li>
+<li>but I can give you a glimpse of the survey structure</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="study-1-plot-types-results-iccs" class="slide level2">
+<h2>Study 1 | plot types: Results ICCs</h2>
+<p>Bayesianische Mehrebenenanalyse: Dummycodierte Visualisierungstypen</p>
+<p><br>
+</p>
+<p><strong>Visualisierungstypen haben Einfluss auf…</strong></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Aufgabenschwierigkeit: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1.3em;width:1.3em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#B4CF66;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg></li>
+<li>Effizienz: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1.3em;width:1.3em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#B4CF66;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg></li>
+<li>Akkuratesse:
+<ul>
+<li>Abstract metric: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#FF5A33;overflow:visible;position:relative;"><path d="M128 288V64.03c0-17.67-14.33-31.1-32-31.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64C113.7 320 128 305.7 128 288zM481.5 229.1c1.234-5.092 1.875-10.32 1.875-15.64c0-22.7-11.44-43.13-29.28-55.28c.4219-3.015 .6406-6.076 .6406-9.122c0-22.32-11.06-42.6-28.83-54.83c-2.438-34.71-31.47-62.2-66.8-62.2h-52.53c-35.94 0-71.55 11.87-100.3 33.41L169.6 92.93c-6.285 4.71-9.596 11.85-9.596 19.13c0 12.76 10.29 24.04 24.03 24.04c5.013 0 10.07-1.565 14.38-4.811l36.66-27.51c20.48-15.34 45.88-23.81 71.5-23.81h52.53c10.45 0 18.97 8.497 18.97 18.95c0 3.5-1.11 4.94-1.11 9.456c0 26.97 29.77 17.91 29.77 40.64c0 9.254-6.392 10.96-6.392 22.25c0 13.97 10.85 21.95 19.58 23.59c8.953 1.671 15.45 9.481 15.45 18.56c0 13.04-11.39 13.37-11.39 28.91c0 12.54 9.702 23.08 22.36 23.94C456.2 266.1 464 275.2 464 284.1c0 10.43-8.516 18.93-18.97 18.93H307.4c-12.44 0-24 10.02-24 23.1c0 4.038 1.02 8.078 3.066 11.72C304.4 371.7 312 403.8 312 411.2c0 8.044-5.984 20.79-22.06 20.79c-12.53 0-14.27-.9059-24.94-28.07c-24.75-62.91-61.74-99.9-80.98-99.9c-13.8 0-24.02 11.27-24.02 23.99c0 7.041 3.083 14.02 9.016 18.76C238.1 402 211.4 480 289.9 480C333.8 480 360 445 360 411.2c0-12.7-5.328-35.21-14.83-59.33h99.86C481.1 351.9 512 321.9 512 284.1C512 261.8 499.9 241 481.5 229.1z"></path></svg></li>
+<li>Overlap: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1.3em;width:1.3em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#B4CF66;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg></li>
+<li>Cohen’s U3: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1.3em;width:1.3em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#B4CF66;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg></li>
+</ul></li>
+<li>Sensitivität: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#FF5A33;overflow:visible;position:relative;"><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-114.7 0-208-93.31-208-208S141.3 48 256 48s208 93.31 208 208S370.7 464 256 464zM256 336c-18 0-32 14-32 32s13.1 32 32 32c17.1 0 32-14 32-32S273.1 336 256 336zM289.1 128h-51.1C199 128 168 159 168 198c0 13 11 24 24 24s24-11 24-24C216 186 225.1 176 237.1 176h51.1C301.1 176 312 186 312 198c0 8-4 14.1-11 18.1L244 251C236 256 232 264 232 272V288c0 13 11 24 24 24S280 301 280 288V286l45.1-28c21-13 34-36 34-60C360 159 329 128 289.1 128z"></path></svg></li>
+<li>Informativität: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1.3em;width:1.3em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#B4CF66;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg></li>
+<li>Wert: <svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1.3em;width:1.3em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#B4CF66;overflow:visible;position:relative;"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"></path></svg></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><span class="math inline">\((BF_{10} &gt; 100)\)</span><br>
+<span class="math inline">\((BF_{10} &gt; 100)\)</span><br>
+<br><br> <span class="math inline">\((BF_{10} &lt; 1/100)\)</span><br>
+<span class="math inline">\((BF_{10} &gt; 100)\)</span><br>
+<span class="math inline">\((BF_{10} &gt; 100)\)</span><br>
+<br> <span class="math inline">\((BF_{10} = 2.05)\)</span><br>
+<span class="math inline">\((BF_{10} &gt; 100)\)</span><br>
+<span class="math inline">\((BF_{10} &gt; 100)\)</span></p>
+</div>
+</div>
+<p><br>
+</p>
+<p>Link zu Open Data &amp; Open Code</p>
+</section>
+<section id="study-1-plot-types-results" class="slide level2">
+<h2>Study 1 | plot types: Results</h2>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class=" lightable-paper table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto; font-size: 24px; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Type </th>
+   <th style="text-align:right;"> Task Difficulty </th>
+   <th style="text-align:right;"> Efficiency </th>
+   <th style="text-align:right;"> Accuracy U3 </th>
+   <th style="text-align:right;"> Accuracy overlap </th>
+   <th style="text-align:right;"> Informativity </th>
+   <th style="text-align:right;"> Value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Gardner-Altman (x-Achse) </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;"> 3.587 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;"> 23379.21 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(34, 140, 141, 1) !important;"> -0.061 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(58, 84, 140, 1) !important;"> 0.024 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;"> 3.800 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;"> 3.800 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Halfeye (x-Achse) </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(31, 152, 139, 1) !important;"> 4.233 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(101, 203, 94, 1) !important;"> 17178.32 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(31, 161, 135, 1) !important;"> -0.054 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;"> 0.035 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(32, 147, 140, 1) !important;"> 4.188 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(68, 191, 112, 1) !important;"> 4.312 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Halfeye (y-Achse) </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(122, 209, 81, 1) !important;"> 4.554 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(122, 209, 81, 1) !important;"> 16889.87 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(122, 209, 81, 1) !important;"> -0.035 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(122, 209, 81, 1) !important;"> 0.001 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(122, 209, 81, 1) !important;"> 4.404 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(122, 209, 81, 1) !important;"> 4.383 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Raincloud (y-Achse) </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(65, 68, 135, 1) !important;"> 3.829 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(44, 115, 142, 1) !important;"> 20294.13 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;"> -0.101 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(44, 115, 142, 1) !important;"> 0.019 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(50, 101, 142, 1) !important;"> 4.042 </td>
+   <td style="text-align:right;color: white !important;background-color: rgba(51, 99, 141, 1) !important;"> 4.029 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Gardner-Altman - halfeye (.26 ≤ d ≤ 0.54) less <strong>difficult</strong>, more <strong>informative</strong> and <strong>valuable</strong><br>
+</li>
+<li>raincloud - halfeye (.25 ≤ d ≤ 0.43) less difficult</li>
+<li>halfeye <strong>Y</strong> - raincloud (d = .25) informativity, value (d = .24)</li>
+<li>halfeye - halfeye (vernachlässigbar) informativity, value</li>
+<li>halfeye and raincloud - Gardner-Altman plots (-.79 ≤ d ≤ -.69) faster dwell times</li>
+<li>halfeye - raincloud (-.14 ≤ d ≤ .15) similarly efficient</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="study-1-plot-types-results-accuracy" class="slide level2">
+<h2>Study 1 | plot types: Results accuracy</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
+<section id="study-2-enrichment-options-design" class="slide level2">
+<h2>Study 2 | Enrichment options: Design</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="blueTop">
+<strong>Studie 2</strong>
+</div>
+<div class="blueBottom">
+<br>Vergleich der Wirkung verschiedener <strong>Anreicherungs-optionen</strong> auf das Verständnis<br><br><em>konfirmativ</em>
+</div>
+</div><div class="column" style="width:4%;">
+
+</div><div class="column" style="width:65%;">
+<ul>
+<li><strong>Lehrpersonen</strong> (N = Bayesian updating)<br><br></li>
+<li><strong>2 RCTs</strong>
+<ul>
+<li>Faktor: visuelles Benchmarking (ja vs.&nbsp;nein)</li>
+<li>Faktor: signaling (Unterschied, Überlappung, kein signalling)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<aside class="notes">
+<p>How do plots with <strong>visual benchmarks</strong> affect the outcomes, compared to plots without benchmarks?<br>
+How do plots with <strong>signaling</strong> affect the outcomes compared to plots without signaling?</p>
+<ul>
+<li>In study 2 we investigate the enrichment options: …</li>
+<li>we will investigate these questions in 2 RCTs</li>
+<li>comparing visual benchmarking to no benchmarking</li>
+<li>and signaling difference, to signaling overlap, to no cues</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="study-2-enrichment-options-design-1" class="slide level2">
+<h2>Study 2 | Enrichment options: Design</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="../www/benchmarking2.jpg" style="width:100.0%"></p>
+</div><div class="column" style="width:60%;">
+<ul>
+<li>steigert Akkuratesse <span class="citation" data-cites="kimetal.2022">(<a href="#/section" role="doc-biblioref" onclick="">Kim et al., 2022</a>, Schmidt et al., 2023)</span></li>
+<li>steigert Aufgabenschwierigkeit <span class="citation" data-cites="baddeley.1992">(<a href="#/section" role="doc-biblioref" onclick="">Baddeley, 1992</a>)</span></li>
+<li>verringert Effzienz</li>
+<li>steigert Informativität</li>
+<li>steigert Wert</li>
+</ul>
+</div>
+</div>
+<aside class="notes">
+
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="study-2-enrichment-options-design-2" class="slide level2">
+<h2>Study 2 | Enrichment options: Design</h2>
+<div class="columns">
+<div class="column" style="width:34%;">
+<p><img data-src="../www/signaling_Overlap.jpg" style="width:100.0%"><br>
+<img data-src="../www/signaling_CohensU3.jpg" style="width:100.0%"></p>
+</div><div class="column" style="width:65%;">
+<ul>
+<li>steigert Akkuratesse (wenn kein Fehlkonzept)</li>
+<li>mindert Anzahl an Fehlkonzepten</li>
+<li>steigert Sensitivität</li>
+<li>steigert Aufgabenschwierigkeit</li>
+<li>steigert Effizienz</li>
+<li>steigert Informativität</li>
+<li>steigert Wert</li>
+</ul>
+</div>
+</div>
+<aside class="notes">
+<p>signaling Unterschied (bei Einschätzung einer Differenzmetrik):</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section>
+<section id="current-progress" class="title-slide slide level1 center">
+<h1>Current progress</h1>
+
+</section>
+<section id="current-progress-and-further-plans" class="slide level2">
+<h2>Current progress | and further plans</h2>
+<div class="box60l">
+<ul>
+<li><strong>Delphi-Study</strong> completed <svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"></path></svg><br><br><br></li>
+<li>Self-generated <strong>measures</strong> piloted <svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"></path></svg><br><br><br></li>
+<li><strong>Study 1</strong> completed <svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"></path></svg><br><br><br></li>
+<li>Registered Report:
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"></path></svg> structured abstract</li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"></path></svg> stage 1 report</li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M384 32C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H384zM384 80H64C55.16 80 48 87.16 48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80z"></path></svg> stage 2 report<br><br><br></li>
+</ul></li>
+<li>Planned: conceptual replication with <strong>student teachers</strong></li>
+</ul>
+</div>
+<div class="box-bg-r" style="padding-top:230px;">
+<p><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:230px;width:230px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M224 32H64C46.3 32 32 46.3 32 64v64c0 17.7 14.3 32 32 32H441.4c4.2 0 8.3-1.7 11.3-4.7l48-48c6.2-6.2 6.2-16.4 0-22.6l-48-48c-3-3-7.1-4.7-11.3-4.7H288c0-17.7-14.3-32-32-32s-32 14.3-32 32zM480 256c0-17.7-14.3-32-32-32H288V192H224v32H70.6c-4.2 0-8.3 1.7-11.3 4.7l-48 48c-6.2 6.2-6.2 16.4 0 22.6l48 48c3 3 7.1 4.7 11.3 4.7H448c17.7 0 32-14.3 32-32V256zM288 480V384H224v96c0 17.7 14.3 32 32 32s32-14.3 32-32z"></path></svg></p>
+</div>
+<aside class="notes">
+<p>so how far did we get?</p>
+<ul>
+<li>we completed the pilot study with the experts</li>
+<li>currently we are piloting the self-generated measures on sensitivity, accuracy, and practical implications</li>
+<li>writing stage 1 Registered Report</li>
+<li>future plans are a conceptual replication of this study with student teachers</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section id="thank-you" class="title-slide slide level1 center">
+<h1>Thank you</h1>
+<p><img data-src="../www/dipf-logo.png" style="width:20.0%"><br>
+<br>
+</p>
+<p><strong>Jürgen Schneider</strong><br>
+ju.schneider@dipf.de</p>
+<p><br>
+</p>
+<div style="position: absolute; top: 14%; left: 70%; width: 20%;">
+<p><strong>Cooperation</strong><br><br> <img data-src="../www/logo_weiss.png" style="width:100.0%"><br>
+<img data-src="../www/ph_logo.png" style="width:100.0%"></p>
+</div>
+</section>
+
+<section id="section" class="title-slide slide level1 unnumbered smaller scrollable">
+<h1></h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="doc-bibliography">
+<div id="ref-albersetal.2014" class="csl-entry" role="doc-biblioentry">
+Albers, D., Correll, M., &amp; Gleicher, M. (2014). Task-driven evaluation of aggregation in time series visualization. <em>Proceedings of the <span>SIGCHI Conference</span> on <span>Human Factors</span> in <span>Computing Systems</span></em>, 551–560. <a href="https://doi.org/10.1145/2556288.2557200">https://doi.org/10.1145/2556288.2557200</a>
+</div>
+<div id="ref-baddeley.1992" class="csl-entry" role="doc-biblioentry">
+Baddeley, A. (1992). Working memory. <em>Science</em>, <em>255</em>(5044), 556–559.
+</div>
+<div id="ref-bairdpane.2019" class="csl-entry" role="doc-biblioentry">
+Baird, M. D., &amp; Pane, J. F. (2019). Translating <span>Standardized Effects</span> of <span>Education Programs Into More Interpretable Metrics</span>. <em>Educational Researcher</em>, <em>48</em>(4), 217–228. <a href="https://doi.org/10.3102/0013189X19848729">https://doi.org/10.3102/0013189X19848729</a>
+</div>
+<div id="ref-brownetal.2017" class="csl-entry" role="doc-biblioentry">
+Brown, C., Schildkamp, K., &amp; Hubers, M. D. (2017). Combining the best of two worlds: A conceptual proposal for evidence-informed school improvement. <em>Educational Research</em>, <em>59</em>(2), 154–172. <a href="https://doi.org/10.1080/00131881.2017.1304327">https://doi.org/10.1080/00131881.2017.1304327</a>
+</div>
+<div id="ref-burnsetal.2011" class="csl-entry" role="doc-biblioentry">
+Burns, P. B., Rohrich, R. J., &amp; Chung, K. C. (2011). The levels of evidence and their role in evidence-based medicine. <em>Plastic and Reconstructive Surgery</em>, <em>128</em>(1), 305–310. <a href="https://doi.org/10.1097/PRS.0b013e318219c171">https://doi.org/10.1097/PRS.0b013e318219c171</a>
+</div>
+<div id="ref-cohen.1988" class="csl-entry" role="doc-biblioentry">
+Cohen, J. (1988). <em>Statistical <span>Power Analysis</span> for the <span>Behavioral Sciences</span></em> (2nd ed.). <span>Taylor and Francis</span>.
+</div>
+<div id="ref-farley-rippleetal.2020" class="csl-entry" role="doc-biblioentry">
+Farley-Ripple, E. N., Oliver, K., &amp; Boaz, A. (2020). Mapping the community: Use of research evidence in policy and practice. <em>Humanities and Social Sciences Communications</em>, <em>7</em>(1), 83. <a href="https://doi.org/10.1057/s41599-020-00571-2">https://doi.org/10.1057/s41599-020-00571-2</a>
+</div>
+<div id="ref-franconerietal.2021" class="csl-entry" role="doc-biblioentry">
+Franconeri, S. L., Padilla, L. M., Shah, P., Zacks, J. M., &amp; Hullman, J. (2021). The <span>Science</span> of <span>Visual Data Communication</span>: <span>What Works</span>. <em>Psychological Science in the Public Interest</em>, <em>22</em>(3), 110–161. <a href="https://doi.org/10.1177/15291006211051956">https://doi.org/10.1177/15291006211051956</a>
+</div>
+<div id="ref-haneletal.2019" class="csl-entry" role="doc-biblioentry">
+Hanel, P. H. P., Maio, G. R., &amp; Manstead, A. S. R. (2019). A new way to look at the data: <span>Similarities</span> between groups of people are large and important. <em>Journal of Personality and Social Psychology</em>, <em>116</em>(4), 541–562. <a href="https://doi.org/10.1037/pspi0000154">https://doi.org/10.1037/pspi0000154</a>
+</div>
+<div id="ref-hedges.2018" class="csl-entry" role="doc-biblioentry">
+Hedges, L. V. (2018). Challenges in <span>Building Usable Knowledge</span> in <span>Education</span>. <em>Journal of Research on Educational Effectiveness</em>, <em>11</em>(1), 1–21. <a href="https://doi.org/10.1080/19345747.2017.1375583">https://doi.org/10.1080/19345747.2017.1375583</a>
+</div>
+<div id="ref-jacowitzkahneman.1995" class="csl-entry" role="doc-biblioentry">
+Jacowitz, K. E., &amp; Kahneman, D. (1995). Measures of <span>Anchoring</span> in <span>Estimation Tasks</span>. <em>Personality and Social Psychology Bulletin</em>, <em>21</em>(11), 1161–1166. <a href="https://doi.org/10.1177/01461672952111004">https://doi.org/10.1177/01461672952111004</a>
+</div>
+<div id="ref-jensengerber.2020" class="csl-entry" role="doc-biblioentry">
+Jensen, E. A., &amp; Gerber, A. (2020). Evidence-<span>Based Science Communication</span>. <em>Frontiers in Communication</em>, <em>4</em>, 78. <a href="https://doi.org/10.3389/fcomm.2019.00078">https://doi.org/10.3389/fcomm.2019.00078</a>
+</div>
+<div id="ref-kaleetal.2020" class="csl-entry" role="doc-biblioentry">
+Kale, A., Kay, M., &amp; Hullman, J. (2020). <em>Visual <span>Reasoning Strategies</span> for <span>Effect Size Judgments</span> and <span>Decisions</span></em>. <a href="https://doi.org/10.48550/ARXIV.2007.14516">https://doi.org/10.48550/ARXIV.2007.14516</a>
+</div>
+<div id="ref-kimetal.2022" class="csl-entry" role="doc-biblioentry">
+Kim, Y.-S., Hofman, J. M., &amp; Goldstein, D. G. (2022). Putting scientific results in perspective: <span>Improving</span> the communication of standardized effect sizes. <em><span>CHI Conference</span> on <span>Human Factors</span> in <span>Computing Systems</span></em>, 1–14. <a href="https://doi.org/10.1145/3491102.3502053">https://doi.org/10.1145/3491102.3502053</a>
+</div>
+<div id="ref-knogleretal.2022" class="csl-entry" role="doc-biblioentry">
+Knogler, M., Hetmanek, A., &amp; Seidel, T. (2022). Determining an <span>Evidence Base</span> for <span>Particular Fields</span> of <span>Educational Practice</span>: <span>A Systematic Review</span> of <span>Meta-Analyses</span> on <span>Effective Mathematics</span> and <span>Science Teaching</span>. <em>Frontiers in Psychology</em>, <em>13</em>, 873995. <a href="https://doi.org/10.3389/fpsyg.2022.873995">https://doi.org/10.3389/fpsyg.2022.873995</a>
+</div>
+<div id="ref-korbachetal.2017" class="csl-entry" role="doc-biblioentry">
+Korbach, A., Brünken, R., &amp; Park, B. (2017). Measurement of cognitive load in multimedia learning: A comparison of different objective measures. <em>Instructional Science</em>, <em>45</em>(4), 515–536. <a href="https://doi.org/10.1007/s11251-017-9413-5">https://doi.org/10.1007/s11251-017-9413-5</a>
+</div>
+<div id="ref-lipseyetal.2012" class="csl-entry" role="doc-biblioentry">
+Lipsey, M. W., Puzio, K., Yun, C., Herbert, M. A., Steinka-Fry, K., Cole, M. W., Roberts, M., Anthony, K. S., &amp; Busick, M. D. (2012). <em>Translating the <span>Statistical Representation</span> of the <span>Effects</span> of <span>Education Interventions Into More Readily Interpretable Forms</span></em> (Institute of Education Sciences, Ed.).
+</div>
+<div id="ref-lortie-forguesetal.2021" class="csl-entry" role="doc-biblioentry">
+Lortie-Forgues, H., Sio, U. N., &amp; Inglis, M. (2021). How <span>Should Educational Effects Be Communicated</span> to <span>Teachers</span>? <em>Educational Researcher</em>, 0013189X2098785. <a href="https://doi.org/10.3102/0013189X20987856">https://doi.org/10.3102/0013189X20987856</a>
+</div>
+<div id="ref-marcusetal.1996" class="csl-entry" role="doc-biblioentry">
+Marcus, N., Cooper, M., &amp; Sweller, J. (1996). Understanding instructions. <em>Journal of Educational Psychology</em>, <em>88</em>(1), 49–63. <a href="https://doi.org/10.1037/0022-0663.88.1.49">https://doi.org/10.1037/0022-0663.88.1.49</a>
+</div>
+<div id="ref-mcphetrespennycook.2020" class="csl-entry" role="doc-biblioentry">
+McPhetres, J., &amp; Pennycook, G. (2020). <em>Lay people are unimpressed by the effect sizes typically reported in psychological science</em> [Preprint]. <span>PsyArXiv</span>. <a href="https://doi.org/10.31234/osf.io/qu9hn">https://doi.org/10.31234/osf.io/qu9hn</a>
+</div>
+<div id="ref-piercechick.2013" class="csl-entry" role="doc-biblioentry">
+Pierce, R., &amp; Chick, H. (2013). Workplace statistical literacy for teachers: Interpreting box plots. <em>Mathematics Education Research Journal</em>, <em>25</em>(2), 189–205. <a href="https://doi.org/10.1007/s13394-012-0046-3">https://doi.org/10.1007/s13394-012-0046-3</a>
+</div>
+<div id="ref-schneideretal.2018" class="csl-entry" role="doc-biblioentry">
+Schneider, S., Beege, M., Nebel, S., &amp; Rey, G. D. (2018). A meta-analysis of how signaling affects learning with media. <em>Educational Research Review</em>, <em>23</em>, 1–24. <a href="https://doi.org/10.1016/j.edurev.2017.11.001">https://doi.org/10.1016/j.edurev.2017.11.001</a>
+</div>
+<div id="ref-slavin.2020" class="csl-entry" role="doc-biblioentry">
+Slavin, R. E. (2020). How evidence-based reform will transform research and practice in education. <em>Educational Psychologist</em>, <em>55</em>(1), 21–31. <a href="https://doi.org/10.1080/00461520.2019.1611432">https://doi.org/10.1080/00461520.2019.1611432</a>
+</div>
+<div id="ref-thommetal.2021" class="csl-entry" role="doc-biblioentry">
+Thomm, E., Gold, B., Betsch, T., &amp; Bauer, J. (2021). When preservice teachers’ prior beliefs contradict evidence from educational research. <em>British Journal of Educational Psychology</em>. <a href="https://doi.org/10.1111/bjep.12407">https://doi.org/10.1111/bjep.12407</a>
+</div>
+</div>
+</section>
+
+<section>
+<section id="section-1" class="title-slide slide level1 center">
+<h1>&nbsp;</h1>
+<p><strong>Icons:</strong></p>
+<p><span style="font-size:.7em;"> Icons by Font Awesome CC BY 4.0</span></p>
+<p></p>
+</section>
+<section id="background-focus-what-we-know-about-visualizing-data-in-general" class="slide level2">
+<h2>Background &amp; Focus | What we know about visualizing data (in general)</h2>
+<div class="franconeri">
+
+</div>
+<aside class="notes">
+<ul>
+<li>there is quite some basic research on visualizing information</li>
+<li>for example using position (dot plot) it is easier estimating the mean than using areas</li>
+<li>these results give us first ideas of what to expect</li>
+<li>however, when plotting ES, several of these phenomena come together: most plots use position AND length AND area</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="study-1-plot-types-results-descriptives" class="slide level2">
+<h2>Study 1 | plot types: Results, Descriptives</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<section id="study-1-plot-types-results-efficiency" class="slide level2">
+<h2>Study 1 | plot types: Results efficiency</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"></section>
+<section id="study-1-plot-types-results-descriptives-1" class="slide level2">
+<h2>Study 1 | plot types: Results, Descriptives</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<section id="study-1-plot-types-results-descriptives-2" class="slide level2">
+<h2>Study 1 | plot types: Results, Descriptives</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"></section>
+<section id="study-1-plot-types-results-accuracy-1" class="slide level2">
+<h2>Study 1 | plot types: Results accuracy</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"></section>
+<section id="study-1-plot-types-results-accuracy-2" class="slide level2">
+<h2>Study 1 | plot types: Results accuracy</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<section id="study-1-plot-types-results-accuracy-3" class="slide level2">
+<h2>Study 1 | plot types: Results accuracy</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
+<section id="study-1-plot-types-results-accuracy-4" class="slide level2">
+<h2>Study 1 | plot types: Results accuracy</h2>
+
+<img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<section id="study-1-plot-types-results-accuracy-5" class="slide level2">
+<h2>Study 1 | plot types: Results accuracy</h2>
+<div class="cell">
+<div class="cell-output-display">
+<p><img data-src="ES-Vis_GEBF2023_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
+</div>
+</div>
+<p><br>without misconceptions</p>
+<p><img src="www/dipf-logo.png" class="slide-logo"></p>
+<div class="footer footer-default">
+<p>Slides: …</p>
+</div>
+</section></section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="ES-Vis_GEBF2023_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'smaller': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': true,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: false,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1500,
+
+        height: 850,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      });
+      function tippyHover(el, contentFn) {
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto-reveal',
+          placement: 'bottom-start'
+        };
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          return note.innerHTML;
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
