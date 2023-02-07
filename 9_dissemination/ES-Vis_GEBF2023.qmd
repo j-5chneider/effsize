@@ -7,12 +7,12 @@ title-slide-attributes:
   data-background-opacity: "0.3"
 author: "<b>Jürgen Schneider</b><br /><span style='font-size: .8em'>Kirstin Schmidt, Kristina Bohrer, Samuel Merk, Iris Backfisch, Salome Wagner</span>"
 date: last-modified # today
-date-format: "DD MMMM YYYY"
+date-format: "23 Feb 2023" # "DD MMMM YYYY"
 format: 
   revealjs:
       theme: [sky, www/custom.scss] # sky default
       logo: www/dipf-logo.png
-      footer: "Slides: ..."
+      footer: "Folien: [bit.ly/gebf23-v](https://bit.ly/gebf23-v) (view) | [bit.ly/gebf23-d](bit.ly/gebf23-d) (download)"
       smaller: true
       scrollable: true
       width: 1500
@@ -40,24 +40,10 @@ library(kableExtra)
 
 
 
-## Background & Focus | Why designing science communication?
 
 
-
-* Lehrpersonen: werden ermutigt, __Evidenz__ aus der Forschung zu berücksichtigen [@slavin.2020; @brownetal.2017]<br /><br /><br /><br />
-* Herausforderungen: stützen sich __nur selten__ auf Forschungsergebnisse in der täglichen PRaxis  [z. B. @thommetal.2021]<br /><br /><br /><br />
-* aktuelle: Ansätze für eine __Lehrpersonen-orientierte__ Wissenschaftskommunikation<br /> [@hedges.2018; @farley-rippleetal.2020]
-
-
-::: {.notes}
-* Teachers are encouraged to consider evidence in their professional practice
-* teachers rarely draw on research evidence in their daily practice
-* different strategies exist to increase / foster teachers’ engagement with evidence
-* current approaches: toward a more teacher-friendly science communication
-:::
-
-
-## Background & Focus | Why looking at effect sizes?
+## Theorie
+### Warum Effektgrößen?
 
 :::: {.columns}
 ::: {.column width="65%"}
@@ -90,12 +76,13 @@ library(kableExtra)
 
 
 
-## Background & Focus | Why looking at ES visualizations?
+## Theorie
+### Warum Visualisierungen?
 
 
 
 * diese haben für Lehrpersonen __wenig Aussagekraft__ [@haneletal.2019; @lipseyetal.2012]<br /><br /><br />
-* Alternative Metriken (z. B. Cohen's $U_3$) werden als weniger informativ wahrgenommen oder produzieren Fehlkonzepte [@lortie-forguesetal.2021, Schmidt et al., under review]
+* Alternative Metriken (z. B. Cohen's $U_3$) werden als weniger informativ wahrgenommen oder produzieren Fehlkonzepte [@lortie-forguesetal.2021, Schmidt et al., under review]<br /><br /><br />
 * Übersetzungen (z. B. Lernjahre) transportieren __unerwünschte Eigenschaften__ [@bairdpane.2019; @kimetal.2022]<br /><br /><br />
 * Alternative: Visualisierungen [@franconerietal.2021]
 
@@ -117,7 +104,8 @@ library(kableExtra)
 
 
 
-## Background & Focus | teacher-friendly communication of ES
+## Theorie
+### Lehrpersonen-orientierte Wissenschaftskommunikation
 
 :::: {.columns}  
 ::: {.column width="30%"}
@@ -146,7 +134,8 @@ library(kableExtra)
 * We are looking at __three aspects__ that we found to be relevant in the realm of science communication...
 :::
 
-## Background & Focus | teacher-friendly communication of ES
+## Theorie
+### Lehrpersonen-orientierte Wissenschaftskommunikation
 
 :::: {.columns}  
 ::: {.column width="30%"}
@@ -179,7 +168,8 @@ Drawing on current research from __ES communication__ and __visualization__, we 
 * ... are participants accurately estimating the size of the effect?
 :::
 
-## Background & Focus | teacher-friendly communication of ES
+## Theorie
+### Lehrpersonen-orientierte Wissenschaftskommunikation
 
 
 :::: {.columns}  
@@ -213,7 +203,8 @@ Drawing on current research from __ES communication__ and __visualization__, we 
 
 :::
 
-## Background & Focus | teacher-friendly communication of ES
+## Theorie
+### Lehrpersonen-orientierte Wissenschaftskommunikation
 
 :::: {.columns}  
 ::: {.column width="30%"}
@@ -256,7 +247,8 @@ concerning practical implications we look at
 
 
 
-## Background & Focus | What we know about visualizing data (for lay people)
+## Theorie
+### Forschungsstand zur Visualisierung statistischer Information (für Laien)
 
 __Akkuratesse__ der Einschätzung statistischer Informationen: __Visualisierungstyp__ spielt eine Rolle
 
@@ -289,20 +281,9 @@ __Unterstützung im Prozess__: __Anreicherungsoptionen__
 :::
 
 
-## Background & Focus | What we know about visualizing data (for lay people)
 
-* Laien sind __unbeeindruckt__ von grafisch dargestellten ES [@mcphetrespennycook.2020]<br /><br /><br />
-* Mittelwerte zu Plots hinzuzufügen erhöht die wahrgenommene ES [@kaleetal.2020]
-
-::: {.notes}
-* for d=.9: ~55% would say "Group A definitively has higher scores than Group B"
-  + they would call it something between "small" and "medium"
-* in a sense that it increases bias
-:::
-
-
-
-## Background & Focus | Research interests & Studies
+## Theorie
+### Forschungsinteresse & Studien
 
 
 :::: {.columns}  
@@ -372,7 +353,8 @@ __Ergebnisse: "Top ranked" Visualisierungen__
 :::
 
 
-## Study 1 | plot types: Design
+## Studie 1: Visualisierungstypen
+### Design
 
 :::: {.columns}  
 ::: {.column width="30%"}
@@ -395,7 +377,7 @@ __Ergebnisse: "Top ranked" Visualisierungen__
 \
 \
   
-Link zu Open Materials
+*Open Materials: [github.com/j-5chneider/effsize_public](https://github.com/j-5chneider/effsize_public)*
 :::
 ::::
 
@@ -406,7 +388,8 @@ Link zu Open Materials
 :::
 
 
-## Study 1 | plot types: Measures
+## Studie 1: Visualisierungstypen
+### Instrumente
 
 ```{r}
 options("kableExtra.html.bsTable" = T)
@@ -449,9 +432,7 @@ measures %>%
 ```
 
 
-\
-
-Demo: [es-vis-demo1.formr.org](https://es-vis-demo1.formr.org)
+*Demo: [es-vis-demo1.formr.org](https://es-vis-demo1.formr.org)*
 
 ::: {.notes}
 * I can't go into too much detail with the operationalizations of the 7 constructs
@@ -461,7 +442,8 @@ Demo: [es-vis-demo1.formr.org](https://es-vis-demo1.formr.org)
 
 
 
-## Study 1 | plot types: Results ICCs
+## Studie 1: Visualisierungstypen
+### Ergebnisse
 
 Bayesianische Mehrebenenanalyse: Dummycodierte Visualisierungstypen  
 
@@ -498,9 +480,10 @@ $(BF_{10} > 100)$
 
 \
 
-Link zu Open Data & Open Code
+*Open Data & Open Code: [github.com/j-5chneider/effsize_public](https://github.com/j-5chneider/effsize_public)*
 
-## Study 1 | plot types: Results
+## Studie 1: Visualisierungstypen
+### Ergebnisse
 
 ```{r}
 library(tidyverse)
@@ -725,7 +708,8 @@ results_overview %>%
 
 
 
-## Study 1 | plot types: Results accuracy
+## Studie 1: Visualisierungstypen
+### Ergebnisse
 
 ```{r}
 ggplot(study1_w %>% 
@@ -749,10 +733,11 @@ ggplot(study1_w %>%
 
 
 
-## Study 2 | Enrichment options: Design
+## Studie 2: Anreicherungsoptionen
+### Design
 
 :::: {.columns}  
-::: {.column width="30%"}
+::: {.column width="29%"}
  <div class="blueTop">__Studie 2__</div>
   <div class="blueBottom"><br />Vergleich der Wirkung verschiedener __Anreicherungs-optionen__ auf das Verständnis<br /><br />_konfirmativ_</div>
 :::
@@ -781,15 +766,16 @@ How do plots with __signaling__ affect the outcomes compared to plots without si
 
 
 
-## Study 2 | Enrichment options: Design
+## Studie 2: Anreicherungsoptionen
+### Design
 
 
 :::: {.columns}  
-::: {.column width="40%"}
+::: {.column width="37%"}
 ![](../www/benchmarking2.jpg){width=100%}
 :::
 
-::: {.column width="60%"}
+::: {.column width="62%"}
 * steigert Akkuratesse [@kimetal.2022, Schmidt et al., 2023]
 * steigert Aufgabenschwierigkeit [@baddeley.1992]
 * verringert Effzienz
@@ -802,15 +788,16 @@ How do plots with __signaling__ affect the outcomes compared to plots without si
 :::
   
 
-## Study 2 | Enrichment options: Design
+## Studie 2: Anreicherungsoptionen
+### Design
 
 :::: {.columns}  
-::: {.column width="34%"}
+::: {.column width="30%"}
 ![](../www/signaling_Overlap.jpg){width=100%}  
 ![](../www/signaling_CohensU3.jpg){width=100%}
 :::
   
-::: {.column width="65%"}
+::: {.column width="67%"}
 
 * steigert Akkuratesse (wenn kein Fehlkonzept)
 * mindert Anzahl an Fehlkonzepten
@@ -829,41 +816,15 @@ signaling Unterschied (bei Einschätzung einer Differenzmetrik):
 :::
   
 
+## Diskussion
+
+* Visualisierungstyp relevanter Prädiktor erfolgreicher Wissenschaftskommunikation<br /><br /><br />
+* Halfeye-Plot als vielversprechend<br /><br /><br />
+* nicht alleinstehend: Kontext Clearinghäuser und Aus-/Fortbildung von Lehrpersonen
 
 
-# Current progress
 
-## Current progress | and further plans
-
-<div class="box60l">
-
-
-* __Delphi-Study__ completed `r fa(name = "square-check")`<br /><br /><br />
-* Self-generated __measures__ piloted `r fa(name = "square-check")`<br /><br /><br />
-* __Study 1__ completed `r fa(name = "square-check")`<br /><br /><br />
-* Registered Report:
-  + `r fa(name = "square-check")` structured abstract
-  + `r fa(name = "square-check")` stage 1 report
-  + `r fa(name = "square")` stage 2 report<br /><br /><br />
-* Planned: conceptual replication with __student teachers__
-
-</div>
-
-<div class="box-bg-r" style="padding-top:230px;">
- `r fa(name = "signs-post", fill="white", width = "230px")`
-</div>
-
-::: {.notes}
-so how far did we get?
-
-* we completed the pilot study with the experts
-* currently we are piloting the self-generated measures on sensitivity, accuracy, and practical implications
-* writing stage 1 Registered Report
-* future plans are a conceptual replication of this study with student teachers
-:::
-
-
-# Thank you
+# Vielen Dank
 
 ![](../www/dipf-logo.png){width=20%}  
 \
@@ -874,8 +835,8 @@ ju.schneider@dipf.de
 \
 
 <div style="position: absolute; top: 14%; left: 70%; width: 20%;">
-__Cooperation__<br /><br />
-![](../www/logo_weiss.png){width=100%}  
+__Kooperation__<br /><br />
+![](../www/logo.gif){width=100%}  
 ![](../www/ph_logo.png){width=100%}  
 
 
@@ -892,16 +853,41 @@ __Cooperation__<br /><br />
 # &nbsp;
 __Icons:__  
 
-<span style="font-size:.7em;">
 Icons by Font Awesome CC BY 4.0
-  
-</span>
 
 
 
+## Theorie | Warum Wissenschaftskommunikation?
 
 
-## Background & Focus | What we know about visualizing data (in general)
+
+* Lehrpersonen: werden ermutigt, __Evidenz__ aus der Forschung zu berücksichtigen [@slavin.2020; @brownetal.2017]<br /><br /><br /><br />
+* Herausforderungen: stützen sich __nur selten__ auf Forschungsergebnisse in der täglichen Praxis  [z. B. @thommetal.2021]<br /><br /><br /><br />
+* aktuelle: Ansätze für eine __Lehrpersonen-orientierte__ Wissenschaftskommunikation<br /> [@hedges.2018; @farley-rippleetal.2020]
+
+
+::: {.notes}
+* Teachers are encouraged to consider evidence in their professional practice
+* teachers rarely draw on research evidence in their daily practice
+* different strategies exist to increase / foster teachers’ engagement with evidence
+* current approaches: toward a more teacher-friendly science communication
+:::
+
+
+## Theorie
+### Forschungsstand zur Visualisierung statistischer Information (für Laien)
+
+* Laien sind __unbeeindruckt__ von grafisch dargestellten ES [@mcphetrespennycook.2020]<br /><br /><br />
+* Mittelwerte zu Plots hinzuzufügen erhöht die wahrgenommene ES [@kaleetal.2020]
+
+::: {.notes}
+* for d=.9: ~55% would say "Group A definitively has higher scores than Group B"
+  + they would call it something between "small" and "medium"
+* in a sense that it increases bias
+:::
+
+
+## Theorie | What we know about visualizing data (in general)
 
 <div class="franconeri"></div>
 
