@@ -18,6 +18,7 @@ format:
       width: 1500
       height: 850
       hide-inactive-cursor: false
+      embed-resources: true
 bibliography: www/references.bib
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
 ---
