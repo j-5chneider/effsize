@@ -12,7 +12,7 @@ format:
   revealjs:
       theme: [sky, www/custom.scss] # sky default
       logo: www/dipf-logo.png
-      footer: "Folien: [bit.ly/gebf23-v](https://bit.ly/gebf23-v) (view) | [bit.ly/gebf23-d](bit.ly/gebf23-d) (download)"
+      footer: "Folien: [bit.ly/gebf23-v](https://bit.ly/gebf23-v) (view) | [bit.ly/gebf23-g](https://bit.ly/gebf23-g) (download from github)"
       smaller: true
       scrollable: true
       width: 1500
@@ -48,9 +48,9 @@ library(kableExtra)
 :::: {.columns}
 ::: {.column width="65%"}
 
-* "__Clearinghaus__" Ansätze<br />`r fa(name = "arrow-right")` Evidenzbasis systematischer Forschung bereitstellen [@knogleretal.2022]<br /><br /><br /><br />
+* "__Clearinghouse__" Ansätze<br />`r fa(name = "arrow-right")` Evidenzbasis systematischer Forschung bereitstellen [@knogleretal.2022]<br /><br /><br /><br />
 * Effektstärken (ES) als eine der __Schlüsselinformationen__ [@burnsetal.2011]<br /><br /><br /><br />
-* Wissenschaftler und "Clearinghäusern" verwenden in der Regel standardisierte __textuelle__ ES-Metriken [@cohen.1988]
+* Wissenschaftler und "Clearinghouses" verwenden in der Regel standardisierte __textuelle__ ES-Metriken [@cohen.1988]
 :::
 
 ::: {.column width="5%"}
@@ -82,7 +82,10 @@ library(kableExtra)
 
 
 * diese haben für Lehrpersonen __wenig Aussagekraft__ [@haneletal.2019; @lipseyetal.2012]<br /><br /><br />
-* Alternative Metriken (z. B. Cohen's $U_3$) werden als weniger informativ wahrgenommen oder produzieren Fehlkonzepte [@lortie-forguesetal.2021, Schmidt et al., under review]<br /><br /><br />
+* Alternative Metriken (z. B. Cohen's $U_3$)
+  - im Vergleich mit $d$ als informativer wahrgenommen [@hanelmehler.2019]
+  - im Verlgleich zu Übersetzungen (z. B. Lernjahre) weniger informativ wahrgenommen [@lortie-forguesetal.2021]
+  - produzieren evtl. Fehlkonzepte <span class="citation">(Schmidt et al., under review)</span><br /><br /><br />
 * Übersetzungen (z. B. Lernjahre) transportieren __unerwünschte Eigenschaften__ [@bairdpane.2019; @kimetal.2022]<br /><br /><br />
 * Alternative: Visualisierungen [@franconerietal.2021]
 
@@ -250,6 +253,8 @@ concerning practical implications we look at
 ## Theorie
 ### Forschungsstand zur Visualisierung statistischer Information (für Laien)
 
+\
+
 __Akkuratesse__ der Einschätzung statistischer Informationen: __Visualisierungstyp__ spielt eine Rolle
 
 * box plots: `r fa(name = "thumbs-up")` Streuung; `r fa(name = "thumbs-down")` Verteilung
@@ -308,7 +313,7 @@ __Unterstützung im Prozess__: __Anreicherungsoptionen__
 
 ## Delphi Studie
 
-* **4 Experten** der Datenvisualisierung, **4 Experten** der Wissenschaftskommunikation in Clearinghäusern & Transfer
+* **4 Experten** der Datenvisualisierung, **4 Experten** der Wissenschaftskommunikation in Clearinghouses & Transfer
 * Phase 1: Sammlung von **16 Visualisierungstypen ** <br />(für Gruppenwerte auf einer metrischen Variable)
 
 ![](../www/eff1.jpg){width=30%}
@@ -324,7 +329,7 @@ __Unterstützung im Prozess__: __Anreicherungsoptionen__
 ## Delphi Studie
 
   
-* **4 Experten** der Datenvisualisierung, **4 Experten** der Wissenschaftskommunikation in Clearinghäusern & Transfer
+* **4 Experten** der Datenvisualisierung, **4 Experten** der Wissenschaftskommunikation in Clearinghouses & Transfer
 * Phase 1: Sammlung von **16 Visualisierungstypen ** <br />(für Gruppenwerte auf einer metrischen Variable)
 * Phase 2: Rating und Ranking von **44 plots**
 
@@ -452,19 +457,19 @@ Bayesianische Mehrebenenanalyse: Dummycodierte Visualisierungstypen
 __Visualisierungstypen haben Einfluss auf...__
 
 :::: {.columns}  
-::: {.column width="50%"}
+::: {.column width="45%"}
 * Aufgabenschwierigkeit: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
 * Effizienz:  `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
 * Akkuratesse:
-  + Abstract metric: `r fa(name = "thumbs-down", fill = "#FF5A33")` 
+  + Abstract metric: `r fa(name = "thumbs-down", fill = "#FF5A33", height = "1.3em")` 
   + Overlap: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
   + Cohen's U3: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
-* Sensitivität: `r fa(name = "circle-question", fill = "#FF5A33")` 
+* Sensitivität: `r fa(name = "circle-question", fill = "#FF5A33", height = "1.3em")` 
 * Informativität: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
 * Wert: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
 :::
 
-::: {.column width="50%"}
+::: {.column width="20%"}
 $(BF_{10} > 100)$  
 $(BF_{10} > 100)$  
 <br /><br />
@@ -476,11 +481,13 @@ $(BF_{10} = 2.05)$
 $(BF_{10} > 100)$  
 $(BF_{10} > 100)$
 :::
+
+::: {.column width="35%"}
+*Open Data & Open Code:  
+[github.com/j-5chneider/effsize_public](https://github.com/j-5chneider/effsize_public)*
+:::
 ::::
 
-\
-
-*Open Data & Open Code: [github.com/j-5chneider/effsize_public](https://github.com/j-5chneider/effsize_public)*
 
 ## Studie 1: Visualisierungstypen
 ### Ergebnisse
@@ -820,7 +827,7 @@ signaling Unterschied (bei Einschätzung einer Differenzmetrik):
 
 * Visualisierungstyp relevanter Prädiktor erfolgreicher Wissenschaftskommunikation<br /><br /><br />
 * Halfeye-Plot als vielversprechend<br /><br /><br />
-* nicht alleinstehend: Kontext Clearinghäuser und Aus-/Fortbildung von Lehrpersonen
+* nicht alleinstehend: Kontext Clearinghouses und Aus-/Fortbildung von Lehrpersonen
 
 
 
