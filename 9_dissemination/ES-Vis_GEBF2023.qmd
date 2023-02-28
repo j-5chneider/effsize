@@ -69,10 +69,9 @@ library(kableExtra)
 ::::
 
 ::: {.notes}
-* from an evidence-informed practice perspective
-* so called "__clearing house__" approaches<br />`r fa(name = "arrow-right")` try to provide teachers with the “best available [...] evidence from systematic research” __accessible__ to ...
-* particularly evaluated according to the extent to which it allows to assess __treatment effectiveness__, i.e. the investigation of whether a treatment works<br />`r fa(name = "arrow-right")` so in our study we look at group differences
-* Meta-analyses = highest level of evidence<br />`r fa(name = "arrow-right")` ES = key information to be communicated
+* Clearinghäuser __ein__ Ansatz evidence-informed practice zu ermöglichen<br />`r fa(name = "arrow-right")` indem sie Evidenzbasis für Lehrpersonen/bildnerinnen __aufbereiten__
+* Wenn wir __Forschungssynthesen__ betrachten, die Evidenz kondensieren: ES = Schlüsselinformation
+* ...
 :::
 
 
@@ -83,11 +82,11 @@ library(kableExtra)
 
 
 * diese haben für Lehrpersonen __wenig Aussagekraft__ [@haneletal.2019; @lipseyetal.2012]<br /><br /><br />
-* Alternative Metriken (z. B. Cohen's $U_3$)
-  - im Vergleich mit $d$ als informativer wahrgenommen [@hanelmehler.2019]
-  - im Verlgleich zu Übersetzungen (z. B. Lernjahre) weniger informativ wahrgenommen [@lortie-forguesetal.2021]
-  - produzieren evtl. Fehlkonzepte <span class="citation">(Schmidt et al., under review)</span><br /><br /><br />
 * Übersetzungen (z. B. Lernjahre) transportieren __unerwünschte Eigenschaften__ [@bairdpane.2019; @kimetal.2022]<br /><br /><br />
+* Alternative Metriken (z. B. Cohen's $U_3$)
+  - im Vergleich zu $d$ als informativer wahrgenommen [@hanelmehler.2019]
+  - im Vergleich zu Übersetzungen als weniger informativ wahrgenommen [@lortie-forguesetal.2021]
+  - produzieren evtl. Fehlkonzepte <span class="citation">(Schmidt et al., under review)</span><br /><br /><br />
 * Alternative: Visualisierungen [@franconerietal.2021]
 
 
@@ -95,15 +94,14 @@ library(kableExtra)
 
 
 ::: {.notes}
-* How do we normally communicate ES? As scientists & some clearing houses  use __standardized__ and __textual__ representations
-* there is __compelling evidence__ that __textual__ representations of __standardized__ ES are __challenging__ for teachers' perception and understanding
-  + Cohen'S d / Percentile gain = rated as little informative
-  + depending on which metric we present: perceived treatment effectiveness differ
-* Some clearing houses use __Translations__ of ES (e.g. months of learning) often carry __undesired characteristics__
-  + although they are often perceived as more informative (Lortie-forgues)
-  + may produce little accuracy (Kim)
-  + may produce misconceptions (Schmid et al.)
-* Alternative: visualizations
+* Evidenz, dass für Lehrpersonen __herausfordernd__:
+  - Cohen's d & percentile gain (WWC): wenig __informativ__
+  - abhängig davon __welche Metrik__ wir präsentieren: wahrgenommene __treatment effectivenesss__ unterscheidet sich
+* Übersetzungen: transportieren unterwünschte Eigenschaften<br />`r fa(name = "arrow-right")` z.B. über Altersstufen hinweg schlecht vergleichbar
+* ...
+* Vorteil:
+  - statistische informationen __sehr schnell__ und __akkurat__ erfassbar
+  - abhängig von __Art__ der Visualisierung und __Anreicherung__<br />`r fa(name = "arrow-right")` box plots: `r fa(name = "thumbs-up")` Streuung; `r fa(name = "thumbs-down")` Verteilung
 :::
 
 
@@ -134,8 +132,8 @@ library(kableExtra)
 
 
 ::: {.notes}
-* I was talking a lot about "teacher-friendly" so far, but what do we mean by that?  
-* We are looking at __three aspects__ that we found to be relevant in the realm of science communication...
+* Woran bemessen wir eine __niederschwellige__, Lehrpersonen-orientierte Visualisierung?
+* Wir schauen uns __3 Aspekte__ an, die im __Rahmen von Wissenschaftskommunikation__ relevant sind
 :::
 
 ## Theorie
@@ -164,12 +162,10 @@ library(kableExtra)
 [@marcusetal.1996; @korbachetal.2017]
 
 ::: {.notes}
-Drawing on current research from __ES communication__ and __visualization__, we address:
+Basierend auf Forschung zur __Kommunikation__ und __Visualisierung__ von __ES__ betrachten wir:
 
-* ... which is a cognitive load measure
-* ... how quickly are they able to do it?
-* ... which reflects at what point the effect size between two groups in a plot are perceived as __difference__
-* ... are participants accurately estimating the size of the effect?
+* ... ein cognitive load measure
+* ... Verarbeitungsdauer
 :::
 
 ## Theorie
@@ -202,8 +198,8 @@ Drawing on current research from __ES communication__ and __visualization__, we 
  
 ::: {.notes}
 
-* ... are participants accurately estimating the size of the effect?
-* ... which reflects at what point the effect size between two groups in a plot are perceived as __difference__
+* ... schätzen Teilnehmende die Größe __richtig__ ein?
+* ... misst ab welcher __Größe__ eines Effekts die Teilnehmnden __Gruppen als unterschiedlich__ bezeichnen
 
 :::
 
@@ -240,50 +236,10 @@ Drawing on current research from __ES communication__ and __visualization__, we 
 
 ::: {.notes}
 
-concerning practical implications we look at
+Bezüglich der Relevanz für die Praxis, betrachten wir:
 
-* how informative and valuable the visualized information is for teaching practice
-* how high are the chances are participants will use the information in their practice
+* wie __wertvoll__ und __informativ__ die Teilnehmenden die Information für Ihre Praxis einschätzen
 
-:::
-
-
-
-
-
-## Theorie
-### Forschungsstand zur Visualisierung statistischer Information (für Laien)
-
-\
-
-__Akkuratesse__ der Einschätzung statistischer Informationen: __Visualisierungstyp__ spielt eine Rolle
-
-* box plots: `r fa(name = "thumbs-up")` Streuung; `r fa(name = "thumbs-down")` Verteilung
-* bar/line plot: `r fa(name = "thumbs-up")` Mittelwert
-* modified stock chart: `r fa(name = "thumbs-up")` Minima, Maxima; `r fa(name = "thumbs-down")` Streuung [@albersetal.2014; @piercechick.2013]
-
-. . .
-
-\
-\
-
-__Unterstützung im Prozess__: __Anreicherungsoptionen__
-
-* benchmarks (anchoring) [@cohen.1988; @jacowitzkahneman.1995]
-* cues (signaling) [@schneideretal.2018]
-
-::: {.notes}
-* there is a lot of basic research on visualizing statistical information
-* however, when plotting ES a lot of these phenomena we know about on a __small scale__ come together and interact
-* there is __first evidence__ that the __type of__ visualization we choose 
-* plays a role as to how __accurately__ lay people estimate statistical information
-
--
-
-* Enrichment options for these visualizations may further support the complex processes of sense-making
-* A common approach is to provide __standardized benchmarks__ against which also researchers typically anchor their interpretations
-* research on multimedia learning suggests that the use of __cues__ (e.g. arrows, labels) can direct observers' attention.
-* This so-called signaling effect can increase understanding and reduce cognitive load
 :::
 
 
@@ -310,6 +266,15 @@ __Unterstützung im Prozess__: __Anreicherungsoptionen__
 
 ::::
 
+::: {.notes}
+Im Rahmen des Projekts: 3 Studien
+
+1. __Ziel__ einer Delphi-Studie: Universum an möglichen Visualisierungstypen einzugrenzen<br />`r fa(name = "arrow-right")` vielversprechend für Lehrpersonen-orientierte Kommunikation
+2. __Ziel__ erste Studie: Effekte verschiedener Visualisierngstypen
+3. __Ziel__ zweite Studie: Effekte verschiedener Anreicherungsoptionen
+
+:::
+
 
 
 ## Delphi Studie
@@ -320,10 +285,8 @@ __Unterstützung im Prozess__: __Anreicherungsoptionen__
 ![](../www/eff1.jpg){width=30%}
 
 ::: {.notes}
-* now if we want to find out what are __promising plot types__ to communicate ES<br />`r fa(name = "arrow-right")`we face the challenge that there is a universe of potential plot types to investigate
-* so in a __pilot study__ we consulted experts in Data Visualization and Science Communication to help us collect and rank
-* "plot types that they gauge suitable for depicting effect sizes to teachers"
-* synthesizing these lists, resulted in 16 suitable plot types
+* für die Delphi-Studien haben wir 4 Experten der Datenvisualisierung befragt<br />`r fa(name = "arrow-right")` __welche Visualisierungstypen__ sie passend zur Kommunikation von __Gruppenscores auf einer metrischen Variable__ für Lehrpersonen empfinden
+* __Synthese__ der Listen ergaben 16 Visualisierungstypen
 :::
 
 
@@ -348,14 +311,14 @@ __Ergebnisse: "Top ranked" Visualisierungen__
 ![](../www/best_ranked.jpg){width=65%}  
 
 ::: {.notes}
-* for each plot type we created a plot distinguishing the groups on the y-axis; x-axis and by color
-* we then asked them to rate and rank these plots as to ...
+* für diese haben wir dann die Gruppen jeweils auf der x-Achse, der y-Achse und durch Farbe unterschieden
+* dann haben wir die Experten gefragt, die Visualisierungstypen zu raten und zu ranken
 
 -
 
-* the top 4 ranked plots are...
-* the rankings of both expert groups are __surprisingly similar__: top 4 plots in both groups
-* and with these 4 plots we will investigate the RQ mentioned before
+* die top 4 Visualisierungen sind...
+* wie in Delphi-Studien üblich haben wir das Ranking in mehreren Interationen hergestellt<br />`r fa(name = "arrow-right")` allerdings keine Beurteilerübereinstimmung berechnet
+* diese 4 Visualisierungen wurden dann in der anschließenden Studie untersucht
 :::
 
 
@@ -372,7 +335,7 @@ __Ergebnisse: "Top ranked" Visualisierungen__
 :::
 
 ::: {.column width="65%"}
-* __Lehrpersonen__ (N = 40)<br /><br />
+* __Lehrpersonen__ (N = 40; bayesian Updating)<br /><br />
 * __4 x 6__ within-design
   - 4 Visualisierungstypen
   - 6 ES (_d_= -.8 to .8)<br /><br />
@@ -388,9 +351,12 @@ __Ergebnisse: "Top ranked" Visualisierungen__
 ::::
 
 ::: {.notes}
-* as a reminder the first part of the RQ were: ...
-* we will try to answer these questions with __in-service__ teachers
-* who will evaluate all 4 plots depicting 6 different effect sizes from ...
+* in Studie 1 untersuchten wir den __Effekt dieser Visualisierungen__ auf unsere __3 Aspekte des Verständnisses__
+* hierzu __befragten__ wir 40 Lehrpersonen, 
+* die jeweils 24 Visualisierungen beurteilten
+  - diese entspreachen jeweils __1 von 4 Visualisierungstypen__
+  - die jeweils __1 von 6 Effektgrößen__ abbildeten
+* Die gezeigten __Daten__ der Visualisierungen wurden von uns durch __kurze Studienbeschreibungen__ __kontextualisiert__
 :::
 
 
@@ -441,8 +407,9 @@ measures %>%
 *Demo: [es-vis-demo1.formr.org](https://es-vis-demo1.formr.org)*
 
 ::: {.notes}
-* I can't go into too much detail with the operationalizations of the 7 constructs
-* but I can give you a glimpse of the survey structure
+* Bei den Instrumenten kann ich nicht allzu sehr ins Details gehen
+* Sie __erkennen__ die 6 Aspekte ... __wieder__
+* Wenn Sie sich den __Fragebogen anschauen__ möchten, dann ...
 :::
 
 
@@ -488,6 +455,11 @@ $(BF_{10} > 100)$
 [github.com/j-5chneider/effsize_public](https://github.com/j-5chneider/effsize_public)*
 :::
 ::::
+
+::: {.notes}
+* Zunächst zur Frage: Gibt es __Evidenz__, dass Visualisierungen __einen Unterschied__ machen?
+* Hier ist die Antwort: Ja, Visualisierungen machen einen Unterschied und zwar bzgl. ...
+:::
 
 
 ## Studie 1: Visualisierungstypen
@@ -706,12 +678,18 @@ results_overview %>%
 
 
 ::: {.notes}
+* __Welcher Visualisierungstyp__ performed bzgl. dieser Variablen am besten?
+* in dieser __Tabelle__ habe ich die Werte __vom schlechtesten__ wert (dunkel) bis __zum besten__ Wert (grün) eingefärbt<br />`r fa(name = "arrow-right")` man sieht schnell: Halfeye Plots mit Unterscheidung auf der y-Achse performt durchgehend am besten
+* Effekte:
+  - Halfeye vs. Gardner: klein bis mittel; bei Efficiency groß
+  - Halfeye vs. Raincloud: klein (informativity, value), mittel (difficulty)<br /><br /><br /><br />
+
 * Gardner-Altman - halfeye (.26 ≤ d ≤ 0.54) less __difficult__, more __informative__ and __valuable__  
-* raincloud - halfeye (.25 ≤ d ≤ 0.43) less difficult
-* halfeye __Y__ - raincloud (d = .25) informativity, value (d = .24)
-* halfeye - halfeye (vernachlässigbar) informativity, value
-* halfeye and raincloud - Gardner-Altman plots (-.79 ≤ d ≤ -.69) faster dwell times
-* halfeye - raincloud (-.14 ≤ d ≤ .15) similarly efficient
+* raincloud - halfeye (.25 ≤ d ≤ 0.43) less __difficult__
+* halfeye __Y__ - raincloud (d = .25) __informativity__, value (d = .24)
+* halfeye - halfeye (vernachlässigbar) __informativity__, value
+* halfeye and raincloud - Gardner-Altman plots (-.79 ≤ d ≤ -.69) faster __dwell times__
+* halfeye - raincloud (-.14 ≤ d ≤ .15) similarly __efficient__
 :::
 
 
@@ -737,7 +715,18 @@ ggplot(study1_w %>%
           strip.text = element_text(color = "white"))
 ```
 
-
+::: {.notes}
+* was wir ebenfalls __beobachten konnten__ waren - wie eingangs angerissen -Fehlkonzepte
+* Diese __zeigten__ sich sowohl 
+  - bei der Einschätzung des __Overlaps__ 
+  - als auch bei der Einschätzung des __als Cohen's__ U3 formulierten Items
+* In dieser Grafik sehen Sie 
+  - die Teilnehmenden als Zeilen auf der y-Achse
+  - und jeweils ihre __Einschätzung__ auf der x-Achse z.B. zur Frage _"Wie groß ist der Overlap zw. den Gruppen?"_
+* d=.8 
+  - Overlap: 69%
+  - U3: 21%
+:::
 
 
 
@@ -763,13 +752,12 @@ ggplot(study1_w %>%
   
 ::: {.notes}
 
-How do plots with __visual benchmarks__ affect the outcomes, compared to plots without benchmarks?  
-How do plots with __signaling__ affect the outcomes compared to plots without signaling?  
+In einer zweiten Studie wollen wir u.a. diese Fehlkonzepte verringern, indem wir
 
-* In study 2 we investigate the enrichment options: ...
-* we will investigate these questions in 2 RCTs
-* comparing visual benchmarking to no benchmarking
-* and signaling difference, to signaling overlap, to no cues
+* die Visualisierungen anreichern
+* z.B. durch visuelles Benchmarking
+* oder signalling
+
 :::
 
 
@@ -783,51 +771,24 @@ How do plots with __signaling__ affect the outcomes compared to plots without si
 ![](../www/benchmarking2.jpg){width=100%}
 :::
 
-::: {.column width="62%"}
-* steigert Akkuratesse [@kimetal.2022, Schmidt et al., 2023]
-* steigert Aufgabenschwierigkeit [@baddeley.1992]
-* verringert Effzienz
-* steigert Informativität
-* steigert Wert
+::: {.column width="5%"}
 :::
-::::
-  
-::: {.notes}
-:::
-  
 
-## Studie 2: Anreicherungsoptionen
-### Design
-
-:::: {.columns}  
 ::: {.column width="30%"}
 ![](../www/signaling_Overlap.jpg){width=100%}  
 ![](../www/signaling_CohensU3.jpg){width=100%}
 :::
-  
-::: {.column width="67%"}
-
-* steigert Akkuratesse (wenn kein Fehlkonzept)
-* mindert Anzahl an Fehlkonzepten
-* steigert Sensitivität
-* steigert Aufgabenschwierigkeit
-* steigert Effizienz
-* steigert Informativität
-* steigert Wert
-
-:::
 ::::
-
-
+  
 ::: {.notes}
-signaling Unterschied (bei Einschätzung einer Differenzmetrik):
 :::
   
 
 ## Diskussion
 
-* Visualisierungstyp relevanter Prädiktor erfolgreicher Wissenschaftskommunikation<br /><br /><br />
+* Visualisierungstyp __relevanter Prädiktor__ erfolgreicher Kommunikation von Effektstärken<br /><br /><br />
 * Halfeye-Plot als vielversprechend<br /><br /><br />
+* Durchaus Gefahr durch Fehlkonzepote<br /><br /><br />
 * nicht alleinstehend: Kontext Clearinghouses und Aus-/Fortbildung von Lehrpersonen
 
 
@@ -908,6 +869,41 @@ Icons by Font Awesome CC BY 4.0
 
 :::
 
+
+## Theorie
+### Forschungsstand zur Visualisierung statistischer Information (für Laien)
+
+\
+
+__Akkuratesse__ der Einschätzung statistischer Informationen: __Visualisierungstyp__ spielt eine Rolle
+
+* box plots: `r fa(name = "thumbs-up")` Streuung; `r fa(name = "thumbs-down")` Verteilung
+* bar/line plot: `r fa(name = "thumbs-up")` Mittelwert
+* modified stock chart: `r fa(name = "thumbs-up")` Minima, Maxima; `r fa(name = "thumbs-down")` Streuung [@albersetal.2014; @piercechick.2013]
+
+. . .
+
+\
+\
+
+__Unterstützung im Prozess__: __Anreicherungsoptionen__
+
+* benchmarks (anchoring) [@cohen.1988; @jacowitzkahneman.1995]
+* cues (signaling) [@schneideretal.2018]
+
+::: {.notes}
+* there is a lot of basic research on visualizing statistical information
+* however, when plotting ES a lot of these phenomena we know about on a __small scale__ come together and interact
+* there is __first evidence__ that the __type of__ visualization we choose 
+* plays a role as to how __accurately__ lay people estimate statistical information
+
+-
+
+* Enrichment options for these visualizations may further support the complex processes of sense-making
+* A common approach is to provide __standardized benchmarks__ against which also researchers typically anchor their interpretations
+* research on multimedia learning suggests that the use of __cues__ (e.g. arrows, labels) can direct observers' attention.
+* This so-called signaling effect can increase understanding and reduce cognitive load
+:::
 
 
 
@@ -1038,3 +1034,53 @@ study1_w %>%
           axis.text.x = element_blank())
 ```
 <br />without misconceptions
+
+
+## Studie 2: Anreicherungsoptionen
+### Design
+
+
+:::: {.columns}  
+::: {.column width="37%"}
+![](../www/benchmarking2.jpg){width=100%}
+:::
+
+::: {.column width="62%"}
+* steigert Akkuratesse [@kimetal.2022, Schmidt et al., 2023]
+* steigert Aufgabenschwierigkeit [@baddeley.1992]
+* verringert Effzienz
+* steigert Informativität
+* steigert Wert
+:::
+::::
+  
+::: {.notes}
+:::
+  
+
+## Studie 2: Anreicherungsoptionen
+### Design
+
+:::: {.columns}  
+::: {.column width="30%"}
+![](../www/signaling_Overlap.jpg){width=100%}  
+![](../www/signaling_CohensU3.jpg){width=100%}
+:::
+  
+::: {.column width="67%"}
+
+* steigert Akkuratesse (wenn kein Fehlkonzept)
+* mindert Anzahl an Fehlkonzepten
+* steigert Sensitivität
+* steigert Aufgabenschwierigkeit
+* steigert Effizienz
+* steigert Informativität
+* steigert Wert
+
+:::
+::::
+
+
+::: {.notes}
+signaling Unterschied (bei Einschätzung einer Differenzmetrik):
+:::
