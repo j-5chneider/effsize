@@ -51,7 +51,7 @@ library(kableExtra)
 
 * "__Clearinghouse__" Ansätze<br />`r fa(name = "arrow-right")` Evidenzbasis systematischer Forschung bereitstellen [@knogleretal.2022]<br /><br /><br /><br />
 * Effektstärken (ES) als eine der __Schlüsselinformationen__ [@burnsetal.2011]<br /><br /><br /><br />
-* Wissenschaftler und "Clearinghouses" verwenden in der Regel standardisierte __textuelle__ ES-Metriken [@cohen.1988]
+* Wissenschaftler*innen und "Clearinghouses" verwenden in der Regel standardisierte __textuelle__ ES-Metriken [@cohen.1988]
 :::
 
 ::: {.column width="5%"}
@@ -69,7 +69,8 @@ library(kableExtra)
 ::::
 
 ::: {.notes}
-* Clearinghäuser __ein__ Ansatz evidence-informed practice zu ermöglichen<br />`r fa(name = "arrow-right")` indem sie Evidenzbasis für Lehrpersonen/bildnerinnen __aufbereiten__
+* Projekt __entstand__ im Rahmen der __Erstellung eines Clearinghouses__
+* Clearinghäuser __ein__ Ansatz __evidence-informed__ practice zu ermöglichen<br />`r fa(name = "arrow-right")` indem sie Evidenzbasis für Lehrpersonen/bildnerinnen __aufbereiten__
 * Wenn wir __Forschungssynthesen__ betrachten, die Evidenz kondensieren: ES = Schlüsselinformation
 * ...
 :::
@@ -96,7 +97,6 @@ library(kableExtra)
 ::: {.notes}
 * Evidenz, dass für Lehrpersonen __herausfordernd__:
   - Cohen's d & percentile gain (WWC): wenig __informativ__
-  - abhängig davon __welche Metrik__ wir präsentieren: wahrgenommene __treatment effectivenesss__ unterscheidet sich
 * Übersetzungen: transportieren unterwünschte Eigenschaften<br />`r fa(name = "arrow-right")` z.B. über Altersstufen hinweg schlecht vergleichbar
 * ...
 * Vorteil:
@@ -316,7 +316,7 @@ __Ergebnisse: "Top ranked" Visualisierungen__
 
 -
 
-* die top 4 Visualisierungen sind...
+* __am besten__ wurden die Visualisierungen...
 * wie in Delphi-Studien üblich haben wir das Ranking in mehreren Interationen hergestellt<br />`r fa(name = "arrow-right")` allerdings keine Beurteilerübereinstimmung berechnet
 * diese 4 Visualisierungen wurden dann in der anschließenden Studie untersucht
 :::
@@ -354,8 +354,8 @@ __Ergebnisse: "Top ranked" Visualisierungen__
 * in Studie 1 untersuchten wir den __Effekt dieser Visualisierungen__ auf unsere __3 Aspekte des Verständnisses__
 * hierzu __befragten__ wir 40 Lehrpersonen, 
 * die jeweils 24 Visualisierungen beurteilten
-  - diese entspreachen jeweils __1 von 4 Visualisierungstypen__
-  - die jeweils __1 von 6 Effektgrößen__ abbildeten
+  - dabei durchliefen sie __alle 4 Visualisierungstypen__
+  - die wir jeweils __6x__ in __unterschiedlichen Effektgrößen__ abbildeten
 * Die gezeigten __Daten__ der Visualisierungen wurden von uns durch __kurze Studienbeschreibungen__ __kontextualisiert__
 :::
 
@@ -724,8 +724,8 @@ ggplot(study1_w %>%
   - die Teilnehmenden als Zeilen auf der y-Achse
   - und jeweils ihre __Einschätzung__ auf der x-Achse z.B. zur Frage _"Wie groß ist der Overlap zw. den Gruppen?"_
 * d=.8 
-  - Overlap: 69%
-  - U3: 21%
+  - Overlap: 69% (Anteil Fehlkonzepte: 20%)
+  - U3: 21% (Anteil Fehlkonzepte: 55%)
 :::
 
 
@@ -787,8 +787,8 @@ In einer zweiten Studie wollen wir u.a. diese Fehlkonzepte verringern, indem wir
 ## Diskussion
 
 * Visualisierungstyp __relevanter Prädiktor__ erfolgreicher Kommunikation von Effektstärken<br /><br /><br />
-* Halfeye-Plot als vielversprechend<br /><br /><br />
-* Durchaus Gefahr durch Fehlkonzepote<br /><br /><br />
+* __Halfeye-Plot__ als vielversprechend<br /><br /><br />
+* Durchaus Gefahr durch __Fehlkonzepote__<br /><br /><br />
 * nicht alleinstehend: Kontext Clearinghouses und Aus-/Fortbildung von Lehrpersonen
 
 
