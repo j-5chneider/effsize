@@ -47,7 +47,10 @@ library(viridis)
 library(ggdist)
 library(tidybayes)
 library(here)
+library(skimr)
 load(here("data/teachers_study1_N40.RData"))
+
+skim(study1)
 
 set.seed(25051982)
 ```
@@ -92,6 +95,8 @@ item_values <- study1 %>%
     pivot_wider(id_cols = c(session, plot), names_from = "variables", 
                 values_from = "values")
 
+skim(plot_info)
+skim(item_values)
 
 # join the two data sets
 study1_w <- full_join(plot_info, item_values, 
@@ -164,6 +169,59 @@ study1_w <- full_join(plot_info, item_values,
                                              TRUE ~ NA_character_),
            effsize_abs = abs(effsize))
 
+skim(study1_w)
+
+mean(study1_w$diffi)
+mean(study1_w$infor)
+mean(study1_w$value)
+mean(study1_w$rating_u3, na.rm=TRUE)
+sd(study1_w$rating_u3, na.rm=TRUE)
+mean(study1_w$rating_ov, na.rm=TRUE)
+sd(study1_w$rating_ov, na.rm=TRUE)
+mean(study1_w$rating_cl, na.rm=TRUE)
+sd(study1_w$rating_cl, na.rm=TRUE)
+
+skim(study1_w %>%
+         select(diffi,infor,value,rating_u3, rating_ov, rating_cl))
+
+study1_w_type <- study1_w %>%
+         select(diffi, infor,value,rating_u3, rating_ov, rating_cl, session, type, plot) %>%
+    gather(var, value, diffi, infor,value,rating_u3, rating_ov, rating_cl)%>%
+    mutate(variable = paste(var, type, sep = "_"))%>%
+    select(-type, -var)%>%
+    group_by(session, plot) %>%
+    spread(variable, value)
+
+# abstract metric
+mean(study1_w_type$rating_cl_gardneraltman_xaxis, na.rm=TRUE)
+sd(study1_w_type$rating_cl_gardneraltman_xaxis, na.rm=TRUE)
+mean(study1_w_type$rating_cl_halfeye_xaxis, na.rm=TRUE)
+sd(study1_w_type$rating_cl_halfeye_xaxis, na.rm=TRUE)
+mean(study1_w_type$rating_cl_halfeye_yaxis, na.rm=TRUE)
+sd(study1_w_type$rating_cl_halfeye_yaxis, na.rm=TRUE)
+mean(study1_w_type$rating_cl_raincloud_yaxis, na.rm=TRUE)
+sd(study1_w_type$rating_cl_raincloud_yaxis, na.rm=TRUE)
+
+#u3
+mean(study1_w_type$rating_u3_gardneraltman_xaxis, na.rm=TRUE)
+sd(study1_w_type$rating_u3_gardneraltman_xaxis, na.rm=TRUE)
+mean(study1_w_type$rating_u3_halfeye_xaxis, na.rm=TRUE)
+sd(study1_w_type$rating_u3_halfeye_xaxis, na.rm=TRUE)
+mean(study1_w_type$rating_u3_halfeye_yaxis, na.rm=TRUE)
+sd(study1_w_type$rating_u3_halfeye_yaxis, na.rm=TRUE)
+mean(study1_w_type$rating_u3_raincloud_yaxis, na.rm=TRUE)
+sd(study1_w_type$rating_u3_raincloud_yaxis, na.rm=TRUE)
+
+# overlap
+mean(study1_w_type$rating_ov_gardneraltman_xaxis, na.rm=TRUE)
+sd(study1_w_type$rating_ov_gardneraltman_xaxis, na.rm=TRUE)
+mean(study1_w_type$rating_ov_halfeye_xaxis, na.rm=TRUE)
+sd(study1_w_type$rating_ov_halfeye_xaxis, na.rm=TRUE)
+mean(study1_w_type$rating_ov_halfeye_yaxis, na.rm=TRUE)
+sd(study1_w_type$rating_ov_halfeye_yaxis, na.rm=TRUE)
+mean(study1_w_type$rating_ov_raincloud_yaxis, na.rm=TRUE)
+sd(study1_w_type$rating_ov_raincloud_yaxis, na.rm=TRUE)
+
 # create a list of u3_misconceptualizers
 u3_misconceptualizers <-
     study1_w %>% 
@@ -215,6 +273,29 @@ study1_w_timestamp <-
            plotNrWithin0 = plotNrWithin -1,
            plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
     ungroup()
+
+skim(study1_w_timestamp)
+
+mean(study1_w_timestamp$effic)
+sd(study1_w_timestamp$effic)
+
+study1_w_timestamp_type <- study1_w_timestamp %>%
+         select(sensi, effic, session, type, plot) %>%
+    gather(var, value, sensi, effic)%>%
+    mutate(variable = paste(var, type, sep = "_"))%>%
+    select(-type, -var)%>%
+    group_by(session, plot) %>%
+    spread(variable, value)
+
+# abstract metric
+mean(study1_w_timestamp_type$effic_gardneraltman_xaxis, na.rm=TRUE)
+sd(study1_w_timestamp_type$effic_gardneraltman_xaxis, na.rm=TRUE)
+mean(study1_w_timestamp_type$effic_halfeye_xaxis, na.rm=TRUE)
+sd(study1_w_timestamp_type$effic_halfeye_xaxis, na.rm=TRUE)
+mean(study1_w_timestamp_type$effic_halfeye_yaxis, na.rm=TRUE)
+sd(study1_w_timestamp_type$effic_halfeye_yaxis, na.rm=TRUE)
+mean(study1_w_timestamp_type$effic_raincloud_yaxis, na.rm=TRUE)
+sd(study1_w_timestamp_type$effic_raincloud_yaxis, na.rm=TRUE)
 ```
 
 ## Accuracy
