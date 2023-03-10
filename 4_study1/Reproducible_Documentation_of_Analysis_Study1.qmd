@@ -143,11 +143,25 @@ study1_w <- full_join(plot_info, item_values,
                                               "equal",
                                               "superior")),
            sensi_binary_filtered = case_when(sensi_ordinal == "equal" ~ 0, 
-                                              (sensi_ordinal == "inferior" & 
+                                             (sensi_ordinal == "inferior" & 
                                                   effsize < 0) | 
                                                   (sensi_ordinal == "superior" & 
                                                   effsize > 0) ~ as.numeric(NA),
-                                              TRUE ~ 1),
+                                             (sensi_ordinal == "inferior" & # was not there
+                                                  effsize > 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize < 0) ~ 1, 
+                                             TRUE ~ as.numeric(NA)), # was 1
+           sensi_correct = case_when(sensi_ordinal == "equal" ~ "judged equal", 
+                                     (sensi_ordinal == "inferior" & 
+                                                  effsize < 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize > 0) ~ "wrong direction",
+                                             (sensi_ordinal == "inferior" & # was not there
+                                                  effsize > 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize < 0) ~ "right direction", 
+                                             TRUE ~ NA_character_),
            effsize_abs = abs(effsize))
 
 # create a list of u3_misconceptualizers
@@ -369,7 +383,7 @@ study1_w %>%
 
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
-#| cache: true
+
 #| results: hide
 # Rating abstract metric
 mod0_rating_cl <- brm(rating_cl ~ + (1|session), 
@@ -392,7 +406,7 @@ mod2_rating_cl <- brm(rating_cl ~ type + effsize + (1|session),
 
 
 ```{r}
-#| cache: true
+
 bayes_factor(mod1_rating_cl, mod0_rating_cl)
 bayes_factor(mod2_rating_cl, mod1_rating_cl)
 ```
@@ -400,7 +414,7 @@ bayes_factor(mod2_rating_cl, mod1_rating_cl)
 ## Accuracy Cohen's U3
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
-#| cache: true
+
 #| results: hide
 # Rating Cohen's U3
 mod0_rating_u3 <- brm(rating_u3 ~ + (1|session), 
@@ -428,7 +442,7 @@ mod2_rating_u3 <- brm(rating_u3 ~ type + effsize + (1|session),
 
 
 ```{r}
-#| cache: true
+
 bayes_factor(mod1_rating_u3, mod0_rating_u3)
 bayes_factor(mod2_rating_u3, mod1_rating_u3)
 ```
@@ -436,7 +450,7 @@ bayes_factor(mod2_rating_u3, mod1_rating_u3)
 ## Accuracy overlap
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
-#| cache: true
+
 #| results: hide
 # Rating Overlap
 mod0_rating_ov <- brm(rating_ov ~ + (1|session), 
@@ -464,7 +478,7 @@ mod2_rating_ov <- brm(rating_ov ~ type + effsize + (1|session),
 
 
 ```{r}
-#| cache: true
+
 bayes_factor(mod1_rating_ov, mod0_rating_ov)
 bayes_factor(mod2_rating_ov, mod1_rating_ov)
 ```
@@ -490,7 +504,7 @@ study1_w %>%
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| results: hide
-#| cache: true
+
 # Perceived Difficulty
 mod0_diffi <- brm(diffi ~ + (1|session), 
                           data = study1_w,
@@ -514,7 +528,7 @@ mod2_diffi <- brm(diffi ~ type + effsize + (1|session),
 
 
 ```{r}
-#| cache: true
+
 bayes_factor(mod1_diffi, mod0_diffi)
 bayes_factor(mod2_diffi, mod1_diffi)
 ```
@@ -539,7 +553,7 @@ study1_w %>%
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| results: hide
-#| cache: true
+
 # Perceived Informativity
 mod0_infor <- brm(infor ~ + (1|session), 
                           data = study1_w,
@@ -563,7 +577,7 @@ mod2_infor <- brm(infor ~ type + effsize + (1|session),
 
 
 ```{r}
-#| cache: true
+
 bayes_factor(mod1_infor, mod0_infor)
 bayes_factor(mod2_infor, mod1_infor)
 ```
@@ -588,7 +602,7 @@ study1_w %>%
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
 #| results: hide
-#| cache: true
+
 # Perceived Value 
 mod0_value <- brm(value ~ + (1|session), 
                           data = study1_w,
@@ -612,14 +626,14 @@ mod2_value <- brm(value ~ type + effsize + (1|session),
 
 
 ```{r}
-#| cache: true
+
 bayes_factor(mod1_value, mod0_value)
 bayes_factor(mod2_value, mod1_value)
 ```
 
 ## Table all random intercept models
 ```{r}
-#| cache: true
+
 sjPlot::tab_model(
     mod0_rating_cl, mod0_rating_u3, mod0_rating_ov,
     mod0_diffi, mod0_infor, mod0_value,
@@ -663,15 +677,31 @@ ggplot(study1_w %>%
     ggtitle("Sensitivity", "without missconceptualizers")
 
 ggplot(study1_w %>% 
+           select(sensi_correct, type, session) %>%
+           dplyr::filter(!is.na(sensi_correct)),
+       aes(sensi_correct, 
+           color = sensi_correct,
+           fill = sensi_correct)) +
+    facet_wrap(~ type) +
+    geom_bar() +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"),
+          axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(color = "", fill = "") +
+    ggtitle("Binary Sensitivity", "without wrong decisions")
+    
+    
+ggplot(study1_w %>% 
            select(sensi_binary_filtered, type, session),
        aes(sensi_binary_filtered, 
-           color = sensi_binary_filtered,
-           fill = sensi_binary_filtered)) +
+           color = as.factor(sensi_binary_filtered),
+           fill = as.factor(sensi_binary_filtered))) +
     facet_wrap(~ type) +
     geom_bar() +
     theme_modern_rc() +
     theme(strip.text = element_text(color = "white")) +
-    ggtitle("Binary Sensitivity", "without wrong decisions")
+    labs(color = "", fill = "") +
+    ggtitle("Binary Sensitivity", "without wrong decisions (0=equal, 1=right direction)")
 ```
 
 ### Logistic Regressions With and Without Visualization Type
@@ -680,7 +710,7 @@ Fitting a series of logistic regressions with non-informative priors
 
 ```{r}
 #| label: sensi models
-#| cache: true
+
 #| results: hide
 
 logreg_mod0 <- brm(
@@ -789,7 +819,7 @@ ggplot(study1_w_timestamp,
 ### Modeling with `{brms}`
 #### Efficiency for First Plot
 ```{r}
-#| cache: true
+
 #| error: false
 #| warning: false
 #| results: hide
@@ -814,7 +844,7 @@ pp_check(plot01_mod0) +
 
 
 ```{r}
-#| cache: true
+
 #| error: false
 #| warning: false
 #| results: hide
@@ -835,7 +865,7 @@ pp_check(plot01_mod1) +
 
 
 ```{r}
-#| cache: true
+
 #| error: false
 #| warning: false
 #| results: hide
@@ -856,7 +886,7 @@ pp_check(plot01_mod2) +
 
 
 ```{r}
-#| cache: true
+
 #| error: false
 #| warning: false
 #| results: hide
@@ -867,7 +897,7 @@ bayes_factor(plot01_mod2, plot01_mod1)
 
 #### Efficiency for Last Three Plots
 ```{r}
-#| cache: true
+
 #| error: false
 #| warning: false
 #| results: hide
@@ -888,7 +918,7 @@ pp_check(plot0306_mod0) +
 
 
 ```{r}
-#| cache: true
+
 #| error: false
 #| warning: false
 #| results: hide
@@ -909,7 +939,7 @@ pp_check(plot0306_mod1) +
 
 
 ```{r}
-#| cache: true
+
 #| error: false
 #| warning: false
 #| results: hide
@@ -930,7 +960,7 @@ pp_check(plot0306_mod2) +
 
 
 ```{r}
-#| cache: true
+
 sjPlot::tab_model(plot0306_mod0, plot0306_mod1, plot0306_mod2)
 bayes_factor(plot0306_mod1, plot0306_mod0)
 bayes_factor(plot0306_mod2, plot0306_mod1)
@@ -943,7 +973,7 @@ bayes_factor(plot0306_mod2, plot0306_mod1)
 
 ### Graphical Overview
 ```{r}
-#| cache: true
+
 #| results: hide
 
 # preparing multilevel model with brms for graphical overview
@@ -979,7 +1009,7 @@ plot_ratingu3
 ```
 
 ```{r}
-#| cache: true
+
 #| results: hide
 # rating ov
 mod_plot_ratingov <- brm (
@@ -1015,7 +1045,7 @@ plot_ratingov
 
 
 ```{r}
-#| cache: true
+
 #| results: hide
 # difficulty
 mod_plot_diffi <- brm (
@@ -1051,7 +1081,7 @@ plot_diffi
 
 
 ```{r}
-#| cache: true
+
 #| results: hide
 # informativity
 mod_plot_infor <- brm (
@@ -1085,7 +1115,7 @@ plot_infor
 
 
 ```{r}
-#| cache: true
+
 #| results: hide
 # value 
 
@@ -1122,7 +1152,7 @@ plot_value
 
 ```{r}
 #| results: hide
-#| cache: true
+
 # efficiency for the first plot
 
 mod_plot_efficiency1 <-
@@ -1159,7 +1189,7 @@ plot_efficiency1
 
 
 ```{r}
-#| cache: true
+
 
 # plot_contrasteffects <- plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value + plot_efficiency1 + 
 #     plot_layout(ncol=3)
@@ -1174,7 +1204,7 @@ plot_efficiency1
 ### Model Contrast Effects with `{brms}`
 
 ```{r}
-#| cache: true
+
 # create dummy variables to compare visualization types for those measures that showed evidence for difference (accuracy U3, accuracy overlap, perceived task difficulty, perceived informativity, perceived value, efficiency)
 
 ## Gardner Altman Plot vs. Halfeye xaxis
@@ -1196,7 +1226,7 @@ gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
 
 
 ```{r}
-#| cache: true
+
 #| results: hide
 mod_accu3_gardneraltman_halfeye_x <- 
     brm(scale(rating_u3) ~ dummy_gardneraltman_halfeye_x + effsize + (1|session), 
@@ -1221,7 +1251,7 @@ mod_accov_gardneraltman_halfeye_x <-
 
 
 ```{r}
-#| cache: true
+
 #| results: hide
 mod_diffi_gardneraltman_halfeye_x <- 
     brm(scale(diffi) ~ dummy_gardneraltman_halfeye_x + effsize 
@@ -1247,7 +1277,7 @@ mod_infor_gardneraltman_halfeye_x <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_value_gardneraltman_halfeye_x <- 
     brm(scale(value) ~ dummy_gardneraltman_halfeye_x + effsize 
         + (1|session), 
@@ -1269,7 +1299,7 @@ mod_effic01_gardneraltman_halfeye_x <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_effic0306_gardneraltman_halfeye_x <- 
     brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_halfeye_x +
             effsize + (1|session),
@@ -1294,7 +1324,7 @@ gardneraltman_vs_halfeye_y <- study1_w %>%
 
 ```{r}
 #| results: hide
-#| cache: true
+
 gardneraltman_vs_halfeye_y_effic <- study1_w_timestamp %>%
     group_by(session) %>%
     mutate(dummy_gardneraltman_halfeye_y = 
@@ -1317,7 +1347,7 @@ mod_accu3_gardneraltman_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_accov_gardneraltman_halfeye_y <- 
     brm(scale(rating_ov) ~ dummy_gardneraltman_halfeye_y + effsize + (1|session), 
                           data = gardneraltman_vs_halfeye_y%>% 
@@ -1340,7 +1370,7 @@ mod_diffi_gardneraltman_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_infor_gardneraltman_halfeye_y <- 
     brm(scale(infor) ~ dummy_gardneraltman_halfeye_y + effsize 
         + (1|session), 
@@ -1363,7 +1393,7 @@ mod_value_gardneraltman_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_effic01_gardneraltman_halfeye_y <- 
     brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_halfeye_y +
             effsize + (1|session),
@@ -1389,7 +1419,7 @@ mod_effic0306_gardneraltman_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 ## Raincloud Plot vs. Halfeye x axis
 raincloud_vs_halfeye_x <- study1_w %>%
     group_by(session) %>%
@@ -1410,7 +1440,7 @@ raincloud_vs_halfeye_x_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_accu3_raincloud_halfeye_x <- 
     brm(scale(rating_u3) ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
                           data = raincloud_vs_halfeye_x %>% 
@@ -1433,7 +1463,7 @@ mod_accov_raincloud_halfeye_x <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_diffi_raincloud_halfeye_x <- 
     brm(scale(diffi) ~ dummy_raincloud_halfeye_x + 
             effsize + (1|session), 
@@ -1456,7 +1486,7 @@ mod_infor_raincloud_halfeye_x <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_value_raincloud_halfeye_x <- 
     brm(scale(value) ~ dummy_raincloud_halfeye_x + 
             effsize + (1|session), 
@@ -1481,7 +1511,7 @@ mod_effic01_raincloud_halfeye_x <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_effic0306_raincloud_halfeye_x <- 
     brm(scale(log_effic_05righttrunc) ~ dummy_raincloud_halfeye_x +
             effsize + (1|session),
@@ -1497,7 +1527,7 @@ mod_effic0306_raincloud_halfeye_x <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 ##  Raincloud Plot vs.Halfeye yaxis
 raincloud_vs_halfeye_y <- study1_w %>%
     group_by(session) %>%
@@ -1518,7 +1548,7 @@ raincloud_vs_halfeye_y_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_accu3_raincloud_halfeye_y <- 
     brm(scale(rating_u3) ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
                           data = raincloud_vs_halfeye_y %>% 
@@ -1541,7 +1571,7 @@ mod_accov_raincloud_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_diffi_raincloud_halfeye_y <- 
     brm(scale(diffi) ~ dummy_raincloud_halfeye_y + 
             effsize + (1|session), 
@@ -1564,7 +1594,7 @@ mod_infor_raincloud_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_value_raincloud_halfeye_y <- 
     brm(scale(value) ~ dummy_raincloud_halfeye_y + 
             effsize + (1|session), 
@@ -1619,7 +1649,7 @@ sjPlot::tab_model(mod_accu3_gardneraltman_halfeye_x,
 
 ```{r}
 #| results: hide
-#| cache: true
+
 ## Gardner Altman Plot vs. Raincloud Plot
 gardneraltman_vs_raincloud <- study1_w %>%
     group_by(session) %>%
@@ -1640,7 +1670,7 @@ gardneraltman_vs_raincloud_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_accu3_gardneraltman_raincloud <- 
     brm(scale(rating_u3) ~ dummy_gardneraltman_raincloud + effsize + (1|session), 
                           data = gardneraltman_vs_raincloud%>% 
@@ -1663,7 +1693,7 @@ mod_accov_gardneraltman_raincloud <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_diffi_gardneraltman_raincloud <- 
     brm(scale(diffi) ~ dummy_gardneraltman_raincloud + 
             effsize + (1|session), 
@@ -1686,7 +1716,7 @@ mod_infor_gardneraltman_raincloud <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_value_gardneraltman_raincloud <- 
     brm(scale(value) ~ dummy_gardneraltman_raincloud + 
             effsize + (1|session), 
@@ -1722,7 +1752,7 @@ mod_effic0306_gardneraltman_raincloud <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 ## Halfeye xaxis vs. Halfeye yaxis
 
 halfeye_x_vs_halfeye_y <- study1_w %>%
@@ -1744,7 +1774,7 @@ halfeye_x_vs_halfeye_y_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_accu3_halfeye_x_halfeye_y <- 
     brm(scale(rating_u3) ~ dummy_halfeye_x_halfeye_y + 
             effsize + (1|session), 
@@ -1772,7 +1802,7 @@ mod_accov_halfeye_x_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_diffi_halfeye_x_halfeye_y <- 
     brm(scale(diffi) ~ dummy_halfeye_x_halfeye_y +
             effsize + (1|session), 
@@ -1793,7 +1823,7 @@ mod_infor_halfeye_x_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_value_halfeye_x_halfeye_y <- 
     brm(scale(value) ~ dummy_halfeye_x_halfeye_y + 
             effsize + (1|session), 
@@ -1818,7 +1848,7 @@ mod_effic01_halfeye_x_halfeye_y <-
 
 ```{r}
 #| results: hide
-#| cache: true
+
 mod_effic0306_halfeye_x_halfeye_y <- 
     brm(scale(log_effic_05righttrunc) ~ dummy_halfeye_x_halfeye_y + 
             effsize + (1|session),
