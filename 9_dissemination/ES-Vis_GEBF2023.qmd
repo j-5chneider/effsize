@@ -287,6 +287,7 @@ Im Rahmen des Projekts: 3 Studien
 ::: {.notes}
 * für die Delphi-Studien haben wir 4 Experten der Datenvisualisierung befragt<br />`r fa(name = "arrow-right")` __welche Visualisierungstypen__ sie passend zur Kommunikation von __Gruppenscores auf einer metrischen Variable__ für Lehrpersonen empfinden
 * __Synthese__ der Listen ergaben 16 Visualisierungstypen
+* für diese haben wir dann die Gruppen jeweils auf der x-Achse, der y-Achse und durch Farbe unterschieden
 :::
 
 
@@ -311,8 +312,7 @@ __Ergebnisse: "Top ranked" Visualisierungen__
 ![](../www/best_ranked.jpg){width=65%}  
 
 ::: {.notes}
-* für diese haben wir dann die Gruppen jeweils auf der x-Achse, der y-Achse und durch Farbe unterschieden
-* dann haben wir die Experten gefragt, die Visualisierungstypen zu raten und zu ranken
+* dann haben wir in einem __iterativen Vorgehen__ die Experten gebeten, die Visualisierungstypen zu __raten__ und zu __ranken__
 
 -
 
@@ -755,8 +755,8 @@ ggplot(study1_w %>%
 In einer zweiten Studie wollen wir u.a. diese Fehlkonzepte verringern, indem wir
 
 * die Visualisierungen anreichern
-* z.B. durch visuelles Benchmarking
-* oder signalling
+* z.B. durch visuelles Benchmarking (__ziehen__ wir als Wissenschaflter*innen auch als __Interpretationshilfe__ heran)
+* oder signalling (__wissen__ aus der __Multimediaforschung__, dass Signaling Verständnis fördern kann)
 
 :::
 
