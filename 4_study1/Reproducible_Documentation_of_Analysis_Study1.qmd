@@ -171,26 +171,34 @@ study1_w <- full_join(plot_info, item_values,
 
 skim(study1_w)
 
-mean(study1_w$diffi)
-mean(study1_w$infor)
-mean(study1_w$value)
-mean(study1_w$rating_u3, na.rm=TRUE)
-sd(study1_w$rating_u3, na.rm=TRUE)
-mean(study1_w$rating_ov, na.rm=TRUE)
-sd(study1_w$rating_ov, na.rm=TRUE)
-mean(study1_w$rating_cl, na.rm=TRUE)
-sd(study1_w$rating_cl, na.rm=TRUE)
-
 skim(study1_w %>%
          select(diffi,infor,value,rating_u3, rating_ov, rating_cl))
 
+sociodemographics <- read_csv("data/teachers_study1a.csv") %>%
+    select(session, mcstu, texpe) %>% # mcsub
+    filter(!is.na(mcstu & texpe)) %>%
+    mutate(reply = session %in% c(study1_w$session)) %>%
+    filter(!reply == "FALSE") %>%
+    select(-reply) %>%
+    mutate(mcstu = as.factor(mcstu),
+    texpe = as.numeric(texpe))
+
+skim(sociodemographics) # n = 15 participants checked "others" when asked which school type they teach at
+
+study1_w_demo <- full_join(study1_w, sociodemographics, by = "session") %>%
+    mutate(schooltype_binary = ifelse(mcstu == 6, 1, 0)) # 6 = others 
+
 study1_w_type <- study1_w %>%
-         select(diffi, infor,value,rating_u3, rating_ov, rating_cl, session, type, plot) %>%
+         select(diffi, infor,value,rating_u3, rating_ov, rating_cl, session, 
+                type, plot) %>%
     gather(var, value, diffi, infor,value,rating_u3, rating_ov, rating_cl)%>%
     mutate(variable = paste(var, type, sep = "_"))%>%
     select(-type, -var)%>%
     group_by(session, plot) %>%
-    spread(variable, value)
+    spread(variable, value) %>%
+    ungroup()
+ 
+skim(study1_w_type)
 
 # abstract metric
 mean(study1_w_type$rating_cl_gardneraltman_xaxis, na.rm=TRUE)
@@ -202,7 +210,7 @@ sd(study1_w_type$rating_cl_halfeye_yaxis, na.rm=TRUE)
 mean(study1_w_type$rating_cl_raincloud_yaxis, na.rm=TRUE)
 sd(study1_w_type$rating_cl_raincloud_yaxis, na.rm=TRUE)
 
-#u3
+# u3
 mean(study1_w_type$rating_u3_gardneraltman_xaxis, na.rm=TRUE)
 sd(study1_w_type$rating_u3_gardneraltman_xaxis, na.rm=TRUE)
 mean(study1_w_type$rating_u3_halfeye_xaxis, na.rm=TRUE)
@@ -280,14 +288,17 @@ mean(study1_w_timestamp$effic)
 sd(study1_w_timestamp$effic)
 
 study1_w_timestamp_type <- study1_w_timestamp %>%
-         select(sensi, effic, session, type, plot) %>%
+    select(sensi, effic, session, type, plot) %>%
     gather(var, value, sensi, effic)%>%
     mutate(variable = paste(var, type, sep = "_"))%>%
     select(-type, -var)%>%
     group_by(session, plot) %>%
-    spread(variable, value)
+    spread(variable, value) %>%
+    ungroup()
 
-# abstract metric
+skim(study1_w_timestamp_type)
+
+# efficacy
 mean(study1_w_timestamp_type$effic_gardneraltman_xaxis, na.rm=TRUE)
 sd(study1_w_timestamp_type$effic_gardneraltman_xaxis, na.rm=TRUE)
 mean(study1_w_timestamp_type$effic_halfeye_xaxis, na.rm=TRUE)
@@ -324,6 +335,181 @@ study1_w %>%
 ```
 
 Somewhat disturbing is the first mode in `rating_ov`. Maybe some users confused `overlap` and `non-overlap`? Another artifact seems to be the first mode in `rating_u3`.
+
+
+### Are there Differences between particpants that indicated a specific school type and those that indicated "others"?
+
+#### Graphical Overview
+```{r}
+study1_w_demo %>% 
+    ggplot(., aes(effsize, rating_cl, color = as.factor(schooltype_binary))) +
+    geom_jitter() +
+    stat_smooth() +
+    ylab("Abstract metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Schooltype") +
+    theme_modern_rc()
+
+study1_w_demo%>% 
+    ggplot(., aes(effsize, rating_u3, color = as.factor(schooltype_binary))) +
+    geom_jitter() +
+    stat_smooth() +
+    ylab("Cohen's U3 metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Schooltype") +
+    theme_modern_rc()
+
+study1_w_demo %>% 
+    ggplot(., aes(abs(effsize), rating_ov, color = as.factor(schooltype_binary))) +
+    geom_jitter() +
+    stat_smooth(method = "lm") +
+    ylab("Overlap metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Schooltype") +
+    theme_modern_rc()
+
+study1_w_demo %>% 
+ggplot(., aes(as.factor(schooltype_binary), infor)) +
+    geom_jitter()+
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult =1),
+                 color = "white") +
+    ylab("Perceived Informativity") +
+    xlab("School Type 1") +
+    theme_modern_rc()
+
+study1_w_demo %>%
+ggplot(., aes(as.factor(schooltype_binary), diffi)) +
+    geom_jitter()+
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult =1),
+                 color = "white") +
+    ylab("Perceived Difficulty") +
+    xlab("School Type") +
+    theme_modern_rc()
+
+study1_w_demo %>%
+ggplot(., aes(as.factor(schooltype_binary), value)) +
+    geom_jitter()+
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult =1),
+                 color = "white") +
+    ylab("Perceived Value") +
+    xlab("School Type 1=others") +
+    theme_modern_rc()
+```
+
+
+#### Compute Kendall's $\tau$ for `rating_cl`, `rating_u3` and `rating_ov`
+
+```{r}
+## accuracy U3 
+### overall 
+study1_w_demo %>% 
+    do(tau_u3 = unlist(cor(.$effsize, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_u3)
+
+### grouped by plot type 
+study1_w_demo %>% 
+    group_by(type) %>% 
+    do(tau_u3 = unlist(cor(.$effsize, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_u3)
+
+### grouped by school type
+study1_w_demo %>% 
+    group_by(schooltype_binary) %>% 
+    do(tau_u3a = unlist(cor(.$effsize, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_u3a)
+
+### grouped by school type and plot type
+study1_w_demo %>% 
+    group_by(schooltype_binary, type) %>% 
+    do(tau_u3 = unlist(cor(abs(.$effsize), .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_u3)
+
+
+## overlap 
+
+### overall 
+study1_w_demo %>% 
+    do(tau_ov = unlist(cor(abs(.$effsize), .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+### grouped by plot type 
+study1_w_demo %>% 
+    group_by(type) %>% 
+    do(tau_ov = unlist(cor(abs(.$effsize), .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+### grouped by school type
+study1_w_demo %>% 
+    group_by(schooltype_binary) %>% 
+    do(tau_ov = unlist(cor(abs(.$effsize), .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+### grouped by school type and plot type 
+study1_w_demo %>% 
+    group_by(schooltype_binary, type) %>% 
+    do(tau_ov = unlist(cor(abs(.$effsize), .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+
+## Abstract Metric
+
+### overall
+study1_w_demo %>% 
+    do(tau_cl = unlist(cor(.$effsize, .$rating_cl, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_cl)
+
+### grouped by plot type
+study1_w_demo %>% 
+    group_by(type) %>% 
+    do(tau_cl = unlist(cor(.$effsize, .$rating_cl, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_cl)
+
+
+### grouped by school type
+study1_w_demo %>% 
+    group_by(schooltype_binary) %>% 
+    do(tau_cl = unlist(cor(.$effsize, .$rating_cl, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_cl)
+
+### grouped by school type and plot type
+study1_w_demo %>% 
+    group_by(schooltype_binary, type) %>% 
+    do(tau_cl = unlist(cor(.$effsize, .$rating_cl, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_cl)
+
+
+study1_w_demo_vda <- study1_w_demo %>%
+    select(session, plot, rating_ov, rating_cl, rating_u3, schooltype_binary) %>%
+    pivot_longer(rating_ov:rating_u3, names_to = "variables", 
+                 values_to = "values") %>%
+    mutate(var = paste(variables, schooltype_binary, sep = "_")) %>%
+    select(-variables, values) %>%
+    group_by(session, plot) %>%
+    pivot_wider(names_from = "var", values_from = "values")
+
+
+effsize::VD.A(na.omit(study1_w_demo_vda$rating_cl_1), na.omit(study1_w_demo_vda$rating_cl_0))
+
+effsize::VD.A(na.omit(study1_w_demo_vda$rating_u3_1), na.omit(study1_w_demo_vda$rating_u3_0))
+
+effsize::VD.A(na.omit(study1_w_demo_vda$rating_ov_1), na.omit(study1_w_demo_vda$rating_ov_0))
+
+```
 
 ### Are there Constant Misconceptions per Persons?
 
@@ -406,6 +592,23 @@ study1_w %>%
     do(tau_u3 = cor(.$effsize, .$rating_u3, method = "kendall", 
                            use = "pairwise.complete")) %>% 
     unnest(tau_u3)
+```
+
+
+### How many misconceptualizers can be found among the participants who checked "others" for school type?
+
+```{r}
+u3_misconcept_schooltype <- study1_w_demo %>%
+    select(session, rating_u3_missconcept, schooltype_binary) %>%
+    unique() 
+
+count(u3_misconcept_schooltype, rating_u3_missconcept, schooltype_binary)
+
+ov_misconcept_schooltype <- study1_w_demo %>%
+    select(session, rating_ov_missconcept, schooltype_binary) %>%
+    unique() 
+
+count(ov_misconcept_schooltype, rating_ov_missconcept, schooltype_binary)
 ```
 
 
