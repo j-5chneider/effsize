@@ -174,14 +174,19 @@ skim(study1_w)
 skim(study1_w %>%
          select(diffi,infor,value,rating_u3, rating_ov, rating_cl))
 
-sociodemographics <- read_csv("data/teachers_study1a.csv") %>%
-    select(session, mcstu, texpe) %>% # mcsub
-    filter(!is.na(mcstu & texpe)) %>%
+sociodemographics <- read_delim("4_study1/data/teachers_study1a.csv", delim = ";") %>%
+    select(session, mcstu, texpe, mcsub) %>% 
+    # filter(!is.na(mcstu & texpe)) %>%
     mutate(reply = session %in% c(study1_w$session)) %>%
     filter(!reply == "FALSE") %>%
     select(-reply) %>%
     mutate(mcstu = as.factor(mcstu),
-    texpe = as.numeric(texpe))
+    texpe = as.numeric(texpe),
+    mcsub = as.factor(mcsub),
+    subject_stem = grepl("1", mcsub),
+    subject_languages = grepl("2", mcsub),
+    subject_humanities_socialscience = grepl("3", mcsub),
+    subject_asthetic = grepl("4", mcsub)) 
 
 skim(sociodemographics) # n = 15 participants checked "others" when asked which school type they teach at
 
