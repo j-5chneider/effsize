@@ -29,7 +29,9 @@ R.Version()
 
 # Import of the Data
 
-The data was assessed with the `formr` survey framework [@arslan2020]. The raw data was imported via the following code. Please note that the results of the Bayesian Analayses may slightly vary due to the estimation approach.
+The data was assessed with the `formr` survey framework [@arslan2020]. The raw data was imported via the following code. 
+
+__Please note that the results of the Bayesian analyses may slightly vary due to the estimation approach.__
 
 ```{r}
 #| label: libraries and data import
@@ -248,19 +250,25 @@ study1_w_demo <- full_join(study1_w, sociodemographics, by = "session") %>%
     mutate(schooltype_binary = ifelse(mcstu == 6, 1, 0)) # 6 = other
 
 ```
-N = 15 participants checked "other" when asked which school type they teach at. This might be problematic as we cannot guarantee that these participants are actual school teachers. Hence, we decided to explore difference between those participants who checked a specific school type and those that checked "other (see section Are there Differences between particpants that indicated a specific school type and those that indicated "other"?).
+N = 15 participants checked "other" when asked which school type they teach at. This might be problematic as we cannot guarantee that these participants are actual school teachers. Hence, we decided to explore differences between those participants who indicated to work at a a specific school type and those that indicated "other" (see section Are there Differences Between Particpants That Indicated a Specific School Type and Those That Indicated "other"?).
 
 
 ## Descriptives of the Dependent Variables
-### Descriptives of accuracy and perceived variables across all visualization types
+### Descriptives of Accuracy and Perceived Variables Across all Visualization Types
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 skim(study1_w %>%
          select(diffi,infor,value,rating_u3, rating_ov, rating_cl))
 ```
 
 
-### Descriptives of accuracy and perceived variables grouped by visualization types
+### Descriptives of Accuracy and Perceived Variables Grouped by Visualization Types
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 skim(study1_w %>%
          select(diffi, infor,value,rating_u3, rating_ov, rating_cl, session, type, plot) %>%
     gather(var, value, diffi, infor,value,rating_u3, rating_ov, rating_cl)%>%
@@ -273,17 +281,23 @@ skim(study1_w %>%
 ```
 
 
-### Descriptives of efficiency across visualization types
+### Descriptives of Efficiency Across Visualization Types
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 skim(study1_w_timestamp %>%
     select(effic, session))
 ```
 
-### Descriptives of efficiency grouped by visualization types
+### Descriptives of Efficiency Grouped by Visualization Types
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 skim(study1_w_timestamp %>%
-    select(sensi, effic, session, type, plot) %>%
-    gather(var, value, sensi, effic)%>%
+    select(effic, session, type, plot) %>%
+    gather(var, value, effic)%>%
     mutate(variable = paste(var, type, sep = "_"))%>%
     select(-type, -var)%>%
     group_by(session, plot) %>%
@@ -292,7 +306,7 @@ skim(study1_w_timestamp %>%
 ```
 
 
-## Are there Differences between particpants that indicated a specific school type and those that indicated "other"?
+## Are there Differences Between Particpants That Indicated a Specific School Type and Those That Indicated "other"?
 
 ### Graphical Overview
 ```{r}
@@ -553,6 +567,9 @@ The correlations underpin the interpretation of the misconceptions. Therefore, w
 
 ```{r}
 #| label: kendalls tau
+#| code-fold: true
+#| code-summary: "Show the code"
+
 study1_w %>% 
     group_by(type) %>% 
     do(tau_cl = unlist(cor(.$effsize, .$rating_cl, method = "kendall", 
@@ -623,7 +640,7 @@ study1_w %>%
 
 # Research Question 1
 
-## Accuracy abstract metric
+## Accuracy Abstract Metric
 
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
@@ -875,7 +892,7 @@ bayes_factor(mod1_value, mod0_value)
 bayes_factor(mod2_value, mod1_value)
 ```
 
-## Table all random intercept models
+## Table of All Random Intercept Models
 ```{r}
 
 sjPlot::tab_model(
@@ -1007,7 +1024,7 @@ pp_check(logreg_mod2) +
 
 ## Efficiency
 ### Visualisation
-#### Raw data
+#### Raw Data
 ```{r}
 ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
     geom_boxplot(alpha = .2, color = "lightgrey") +
@@ -1060,7 +1077,7 @@ ggplot(study1_w_timestamp,
     theme(strip.text = element_text(color = "white"))
 ```
 
-### Modeling with `{brms}`
+### Modeling With `{brms}`
 #### Efficiency for First Plot
 ```{r}
 
