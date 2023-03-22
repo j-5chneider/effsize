@@ -29,7 +29,7 @@ R.Version()
 
 # Import of the Data
 
-The data was assessed with the `formr` survey framework [@arslan2020]. The raw data was imported via the following code.
+The data was assessed with the `formr` survey framework [@arslan2020]. The raw data was imported via the following code. Please note that the results of the Bayesian Analayses may slightly vary due to the estimation approach.
 
 ```{r}
 #| label: libraries and data import
@@ -94,9 +94,6 @@ item_values <- study1 %>%
     # with one line per participant per page
     pivot_wider(id_cols = c(session, plot), names_from = "variables", 
                 values_from = "values")
-
-skim(plot_info)
-skim(item_values)
 
 # join the two data sets
 study1_w <- full_join(plot_info, item_values, 
@@ -171,70 +168,6 @@ study1_w <- full_join(plot_info, item_values,
 
 skim(study1_w)
 
-skim(study1_w %>%
-         select(diffi,infor,value,rating_u3, rating_ov, rating_cl))
-
-sociodemographics <- read_delim("data/teachers_study1a.csv", delim = ";") %>%
-    select(session, mcstu, texpe, mcsub) %>% 
-    # filter(!is.na(mcstu & texpe)) %>%
-    mutate(reply = session %in% c(study1_w$session)) %>%
-    filter(!reply == "FALSE") %>%
-    select(-reply) %>%
-    mutate(mcstu = as.factor(mcstu),
-    texpe = as.numeric(texpe),
-    mcsub = as.factor(mcsub),
-    subject_stem = grepl("1", mcsub),
-    subject_languages = grepl("2", mcsub),
-    subject_humanities_socialscience = grepl("3", mcsub),
-    subject_asthetic = grepl("4", mcsub)) 
-
-skim(sociodemographics) # n = 15 participants checked "others" when asked which school type they teach at
-
-study1_w_demo <- full_join(study1_w, sociodemographics, by = "session") %>%
-    mutate(schooltype_binary = ifelse(mcstu == 6, 1, 0)) # 6 = others 
-
-study1_w_type <- study1_w %>%
-         select(diffi, infor,value,rating_u3, rating_ov, rating_cl, session, 
-                type, plot) %>%
-    gather(var, value, diffi, infor,value,rating_u3, rating_ov, rating_cl)%>%
-    mutate(variable = paste(var, type, sep = "_"))%>%
-    select(-type, -var)%>%
-    group_by(session, plot) %>%
-    spread(variable, value) %>%
-    ungroup()
- 
-skim(study1_w_type)
-
-# abstract metric
-mean(study1_w_type$rating_cl_gardneraltman_xaxis, na.rm=TRUE)
-sd(study1_w_type$rating_cl_gardneraltman_xaxis, na.rm=TRUE)
-mean(study1_w_type$rating_cl_halfeye_xaxis, na.rm=TRUE)
-sd(study1_w_type$rating_cl_halfeye_xaxis, na.rm=TRUE)
-mean(study1_w_type$rating_cl_halfeye_yaxis, na.rm=TRUE)
-sd(study1_w_type$rating_cl_halfeye_yaxis, na.rm=TRUE)
-mean(study1_w_type$rating_cl_raincloud_yaxis, na.rm=TRUE)
-sd(study1_w_type$rating_cl_raincloud_yaxis, na.rm=TRUE)
-
-# u3
-mean(study1_w_type$rating_u3_gardneraltman_xaxis, na.rm=TRUE)
-sd(study1_w_type$rating_u3_gardneraltman_xaxis, na.rm=TRUE)
-mean(study1_w_type$rating_u3_halfeye_xaxis, na.rm=TRUE)
-sd(study1_w_type$rating_u3_halfeye_xaxis, na.rm=TRUE)
-mean(study1_w_type$rating_u3_halfeye_yaxis, na.rm=TRUE)
-sd(study1_w_type$rating_u3_halfeye_yaxis, na.rm=TRUE)
-mean(study1_w_type$rating_u3_raincloud_yaxis, na.rm=TRUE)
-sd(study1_w_type$rating_u3_raincloud_yaxis, na.rm=TRUE)
-
-# overlap
-mean(study1_w_type$rating_ov_gardneraltman_xaxis, na.rm=TRUE)
-sd(study1_w_type$rating_ov_gardneraltman_xaxis, na.rm=TRUE)
-mean(study1_w_type$rating_ov_halfeye_xaxis, na.rm=TRUE)
-sd(study1_w_type$rating_ov_halfeye_xaxis, na.rm=TRUE)
-mean(study1_w_type$rating_ov_halfeye_yaxis, na.rm=TRUE)
-sd(study1_w_type$rating_ov_halfeye_yaxis, na.rm=TRUE)
-mean(study1_w_type$rating_ov_raincloud_yaxis, na.rm=TRUE)
-sd(study1_w_type$rating_ov_raincloud_yaxis, na.rm=TRUE)
-
 # create a list of u3_misconceptualizers
 u3_misconceptualizers <-
     study1_w %>% 
@@ -288,63 +221,80 @@ study1_w_timestamp <-
     ungroup()
 
 skim(study1_w_timestamp)
+```
 
-mean(study1_w_timestamp$effic)
-sd(study1_w_timestamp$effic)
+# Sample Description
 
-study1_w_timestamp_type <- study1_w_timestamp %>%
+## Sociodemographics
+```{r}
+# socio demographics 
+sociodemographics <- read_delim("data/teachers_study1a.csv", delim = ";") %>%
+    select(session, mcstu, texpe, mcsub) %>% 
+    # filter(!is.na(mcstu & texpe)) %>%
+    mutate(reply = session %in% c(study1_w$session)) %>%
+    filter(!reply == "FALSE") %>%
+    select(-reply) %>%
+    mutate(mcstu = as.factor(mcstu),
+    texpe = as.numeric(texpe),
+    mcsub = as.factor(mcsub),
+    subject_stem = grepl("1", mcsub),
+    subject_languages = grepl("2", mcsub),
+    subject_humanities_socialscience = grepl("3", mcsub),
+    subject_asthetic = grepl("4", mcsub)) 
+
+skim(sociodemographics) 
+
+study1_w_demo <- full_join(study1_w, sociodemographics, by = "session") %>%
+    mutate(schooltype_binary = ifelse(mcstu == 6, 1, 0)) # 6 = other
+
+```
+N = 15 participants checked "other" when asked which school type they teach at. This might be problematic as we cannot guarantee that these participants are actual school teachers. Hence, we decided to explore difference between those participants who checked a specific school type and those that checked "other (see section Are there Differences between particpants that indicated a specific school type and those that indicated "other"?).
+
+
+## Descriptives of the Dependent Variables
+### Descriptives of accuracy and perceived variables across all visualization types
+```{r}
+skim(study1_w %>%
+         select(diffi,infor,value,rating_u3, rating_ov, rating_cl))
+```
+
+
+### Descriptives of accuracy and perceived variables grouped by visualization types
+```{r}
+skim(study1_w %>%
+         select(diffi, infor,value,rating_u3, rating_ov, rating_cl, session, type, plot) %>%
+    gather(var, value, diffi, infor,value,rating_u3, rating_ov, rating_cl)%>%
+    mutate(variable = paste(var, type, sep = "_"))%>%
+    select(-type, -var)%>%
+    group_by(session, plot) %>%
+    spread(variable, value) %>%
+    ungroup())
+ 
+```
+
+
+### Descriptives of efficiency across visualization types
+```{r}
+skim(study1_w_timestamp %>%
+    select(effic, session))
+```
+
+### Descriptives of efficiency grouped by visualization types
+```{r}
+skim(study1_w_timestamp %>%
     select(sensi, effic, session, type, plot) %>%
     gather(var, value, sensi, effic)%>%
     mutate(variable = paste(var, type, sep = "_"))%>%
     select(-type, -var)%>%
     group_by(session, plot) %>%
     spread(variable, value) %>%
-    ungroup()
-
-skim(study1_w_timestamp_type)
-
-# efficacy
-mean(study1_w_timestamp_type$effic_gardneraltman_xaxis, na.rm=TRUE)
-sd(study1_w_timestamp_type$effic_gardneraltman_xaxis, na.rm=TRUE)
-mean(study1_w_timestamp_type$effic_halfeye_xaxis, na.rm=TRUE)
-sd(study1_w_timestamp_type$effic_halfeye_xaxis, na.rm=TRUE)
-mean(study1_w_timestamp_type$effic_halfeye_yaxis, na.rm=TRUE)
-sd(study1_w_timestamp_type$effic_halfeye_yaxis, na.rm=TRUE)
-mean(study1_w_timestamp_type$effic_raincloud_yaxis, na.rm=TRUE)
-sd(study1_w_timestamp_type$effic_raincloud_yaxis, na.rm=TRUE)
+    ungroup())
 ```
 
-## Accuracy
 
-### Distribution of the Dependent Variables
+## Are there Differences between particpants that indicated a specific school type and those that indicated "other"?
 
-```{r}
-#| label: distribution acc dvs
-
-study1_w %>% 
-    select(rating_cl, rating_u3, rating_ov) %>% 
-    pivot_longer(
-        c(rating_cl, rating_u3, rating_ov),
-        names_to = "dependent_variable", 
-        values_to = "rated_effectsize"
-        ) %>% 
-    ggplot(., aes(rated_effectsize)) +
-    geom_histogram() +
-    xlab("Rated effect size") +
-    facet_wrap(~dependent_variable, scales = "free_x", 
-                labeller = as_labeller(c("rating_cl" = "Abstract metric",
-                                         "rating_ov" = "Overlap metric",
-                                         "rating_u3" = "Cohen's U3 metric"))) +
-    theme_modern_rc() +
-    theme(strip.text = element_text(color = "white"))
-```
-
-Somewhat disturbing is the first mode in `rating_ov`. Maybe some users confused `overlap` and `non-overlap`? Another artifact seems to be the first mode in `rating_u3`.
-
-
-### Are there Differences between particpants that indicated a specific school type and those that indicated "others"?
-
-#### Graphical Overview
+### Graphical Overview
 ```{r}
 study1_w_demo %>% 
     ggplot(., aes(effsize, rating_cl, color = as.factor(schooltype_binary))) +
@@ -405,9 +355,12 @@ ggplot(., aes(as.factor(schooltype_binary), value)) +
 ```
 
 
-#### Compute Kendall's $\tau$ for `rating_cl`, `rating_u3` and `rating_ov`
+### Compute Kendall's $\tau$ for `rating_cl`, `rating_u3` and `rating_ov`
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 ## accuracy U3 
 ### overall 
 study1_w_demo %>% 
@@ -506,15 +459,35 @@ study1_w_demo_vda <- study1_w_demo %>%
     select(-variables, values) %>%
     group_by(session, plot) %>%
     pivot_wider(names_from = "var", values_from = "values")
-
-
-effsize::VD.A(na.omit(study1_w_demo_vda$rating_cl_1), na.omit(study1_w_demo_vda$rating_cl_0))
-
-effsize::VD.A(na.omit(study1_w_demo_vda$rating_u3_1), na.omit(study1_w_demo_vda$rating_u3_0))
-
-effsize::VD.A(na.omit(study1_w_demo_vda$rating_ov_1), na.omit(study1_w_demo_vda$rating_ov_0))
-
 ```
+The results do not substantially differ between the two groups. Hence, we will include the participants indicated "other" school types in the following analyses.
+
+# Accuracy
+
+## Distribution of the Accuracy Variables
+
+```{r}
+#| label: distribution acc dvs
+
+study1_w %>% 
+    select(rating_cl, rating_u3, rating_ov) %>% 
+    pivot_longer(
+        c(rating_cl, rating_u3, rating_ov),
+        names_to = "dependent_variable", 
+        values_to = "rated_effectsize"
+        ) %>% 
+    ggplot(., aes(rated_effectsize)) +
+    geom_histogram() +
+    xlab("Rated effect size") +
+    facet_wrap(~dependent_variable, scales = "free_x", 
+                labeller = as_labeller(c("rating_cl" = "Abstract metric",
+                                         "rating_ov" = "Overlap metric",
+                                         "rating_u3" = "Cohen's U3 metric"))) +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"))
+```
+
+Somewhat disturbing is the first mode in `rating_ov`. Maybe some users confused `overlap` and `non-overlap`? Another artifact seems to be the first mode in `rating_u3`.
 
 ### Are there Constant Misconceptions per Persons?
 
@@ -599,24 +572,6 @@ study1_w %>%
     unnest(tau_u3)
 ```
 
-
-### How many misconceptualizers can be found among the participants who checked "others" for school type?
-
-```{r}
-u3_misconcept_schooltype <- study1_w_demo %>%
-    select(session, rating_u3_missconcept, schooltype_binary) %>%
-    unique() 
-
-count(u3_misconcept_schooltype, rating_u3_missconcept, schooltype_binary)
-
-ov_misconcept_schooltype <- study1_w_demo %>%
-    select(session, rating_ov_missconcept, schooltype_binary) %>%
-    unique() 
-
-count(ov_misconcept_schooltype, rating_ov_missconcept, schooltype_binary)
-```
-
-
 ### Associations of the Dependent Variables
 
 ```{r}
@@ -665,8 +620,8 @@ study1_w %>%
           axis.text.x = element_blank())
 ```
 
-# Research Question 1
 
+# Research Question 1
 
 ## Accuracy abstract metric
 
@@ -1293,9 +1248,6 @@ plot_ratingu3 <- mod_plot_ratingu3 %>%
     ggtitle("Accuracy in Cohen's U3 Metric")
 ```
 
-```{r}
-plot_ratingu3
-```
 
 ```{r}
 
@@ -1325,11 +1277,6 @@ plot_ratingov <- mod_plot_ratingov %>%
           axis.title.y = element_blank()) +
     #scale_x_continuous(limits=c(-0.6, 0.6)) +
     ggtitle('Accuracy in Overlap Metric')
-```
-
-
-```{r}
-plot_ratingov
 ```
 
 
@@ -1365,11 +1312,6 @@ plot_diffi <- mod_plot_diffi %>%
 
 
 ```{r}
-plot_diffi
-```
-
-
-```{r}
 
 #| results: hide
 # informativity
@@ -1396,12 +1338,6 @@ plot_infor <- mod_plot_infor %>%
     #scale_x_continuous(limits=c(-0.6, 0.6)) +
     ggtitle('Perceived Informativity')
 ```
-
-
-```{r}
-plot_infor
-```
-
 
 ```{r}
 
@@ -1431,11 +1367,6 @@ plot_value <- mod_plot_value %>%
           axis.title.y = element_blank()) +
     #scale_x_continuous(limits=c(-0.6, 0.6)) +
     ggtitle('Perceived Value')
-```
-
-
-```{r}
-plot_value
 ```
 
 
@@ -1473,15 +1404,10 @@ plot_efficiency1 <- mod_plot_efficiency1 %>%
 
 
 ```{r}
-plot_efficiency1
-```
+plot_contrasteffects <- plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value + plot_efficiency1 + 
+    plot_layout(ncol=3)
 
-
-```{r}
-
-
-# plot_contrasteffects <- plot_ratingu3 + plot_ratingov + plot_diffi + plot_infor + plot_value + plot_efficiency1 + 
-#     plot_layout(ncol=3)
+plot_contrasteffects 
 
 # ggsave("www/plot_contrasteffects.png", 
 #        plot_contrasteffects,
