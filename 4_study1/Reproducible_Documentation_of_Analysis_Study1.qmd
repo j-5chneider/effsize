@@ -174,7 +174,7 @@ skim(study1_w)
 skim(study1_w %>%
          select(diffi,infor,value,rating_u3, rating_ov, rating_cl))
 
-sociodemographics <- read_delim("4_study1/data/teachers_study1a.csv", delim = ";") %>%
+sociodemographics <- read_delim("data/teachers_study1a.csv", delim = ";") %>%
     select(session, mcstu, texpe, mcsub) %>% 
     # filter(!is.na(mcstu & texpe)) %>%
     mutate(reply = session %in% c(study1_w$session)) %>%
