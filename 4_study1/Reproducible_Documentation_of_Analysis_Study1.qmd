@@ -1750,6 +1750,8 @@ mod_sensi_gardneraltman_halfeye_x <-
         refresh = 0,
         cores = 4
     )
+
+exp(1.73) # equivalent to d = 0.5 (Chen et al., 2019)
 ```
 
 
@@ -1869,6 +1871,8 @@ mod_sensi_gardneraltman_halfeye_y <-
         refresh = 0,
         cores = 4
     )
+
+exp(1.86) # equivalent to d = 0.5 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -1989,6 +1993,9 @@ mod_sensi_raincloud_halfeye_x <-
         refresh = 0,
         cores = 4
     )
+
+
+exp(2.37) # equivalent to d = 0.8 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -2111,6 +2118,8 @@ mod_sensi_raincloud_halfeye_y <-
         refresh = 0,
         cores = 4
     )
+
+exp(2.50) # equivalent to d = 0.8 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -2254,6 +2263,8 @@ mod_sensi_gardneraltman_raincloud <-
         refresh = 0,
         cores = 4
     )
+
+exp(0.85) # equivalent to d = 0.2 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -2376,6 +2387,8 @@ mod_sensi_halfeye_x_halfeye_y <-
         refresh = 0,
         cores = 4
     )
+
+exp(1.10) # equivalent to d = 0.2 (Chen et al., 2019)
 ```
 
 ```{r}
