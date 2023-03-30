@@ -134,10 +134,7 @@ study1_w <- full_join(plot_info, item_values,
                   # actual difference of rating relative to depicted effectsize
                   diff_u3 = (rating_u3/100) - effsize_u3,
                   # actual difference of rating relative to depicted effectsize 
-                  diff_ov = (rating_ov/100) - effsize_ov) %>%#,
-                  #diffi_normed = ((diffi - 1)  / 3) - 1, # transform item to -1 to 1
-                  #infor_normed = ((infor - 1)  / 3) - 1, # transform item to -1 to 1
-                  #value_normed = ((value - 1)  / 3) - 1) %>%  # transform item to -1 to 1
+                  diff_ov = (rating_ov/100) - effsize_ov) %>%
     group_by(session) %>% 
     mutate(rating_ov_missconcept = median(rating_ov, na.rm = T) < 68.9,
            rating_u3_missconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
@@ -350,15 +347,6 @@ study1_w_demo %>%
     labs(color = "Schooltype") +
     theme_modern_rc()
 
-#study1_w_demo %>% 
-#    ggplot(., aes(effsize_am, rating_am, color = as.factor(schooltype_binary))) +
-#    geom_jitter() +
-#    stat_smooth() +
-#    ylab("Abstract metric") +
-#    xlab("Plotted effect size") +
-#    labs(color = "Schooltype") +
-#    theme_modern_rc()
-
 
 study1_w_demo%>% 
     ggplot(., aes(effsize_u3, rating_u3, color = as.factor(schooltype_binary))) +
@@ -378,15 +366,6 @@ study1_w_demo %>%
     labs(color = "Schooltype") +
     theme_modern_rc()
 
-# study1_w_demo %>% 
-#     ggplot(., aes(effsize_ov, rating_ov, color = as.factor(schooltype_binary))) +
-#     geom_jitter() +
-#     stat_smooth(method = "lm") +
-#     ylab("Overlap metric") +
-#     xlab("Plotted effect size") +
-#     labs(color = "Schooltype") +
-#     theme_modern_rc()
-
 
 study1_w_demo %>% 
 ggplot(., aes(as.factor(schooltype_binary), infor)) +
@@ -398,6 +377,7 @@ ggplot(., aes(as.factor(schooltype_binary), infor)) +
     xlab("School Type 1") +
     theme_modern_rc()
 
+
 study1_w_demo %>%
 ggplot(., aes(as.factor(schooltype_binary), diffi)) +
     geom_jitter()+
@@ -407,6 +387,7 @@ ggplot(., aes(as.factor(schooltype_binary), diffi)) +
     ylab("Perceived Difficulty") +
     xlab("School Type") +
     theme_modern_rc()
+
 
 study1_w_demo %>%
 ggplot(., aes(as.factor(schooltype_binary), value)) +
@@ -463,10 +444,6 @@ study1_w_demo %>%
                            use = "pairwise.complete"))) %>% 
     unnest(tau_ov)
 
-# study1_w_demo %>% 
-#     do(tau_ov = unlist(cor(.$effsize_ov, .$rating_ov, method = "kendall", 
-#                            use = "pairwise.complete"))) %>% 
-#     unnest(tau_ov)
 
 ### grouped by plot type 
 study1_w_demo %>% 
@@ -475,11 +452,6 @@ study1_w_demo %>%
                            use = "pairwise.complete"))) %>% 
     unnest(tau_ov)
 
-#study1_w_demo %>% 
-#    group_by(type) %>% 
-#    do(tau_ov = unlist(cor(.$effsize_ov, .$rating_ov, method = "kendall", 
-#                           use = "pairwise.complete"))) %>% 
-#    unnest(tau_ov)
 
 ### grouped by school type
 study1_w_demo %>% 
@@ -488,11 +460,6 @@ study1_w_demo %>%
                            use = "pairwise.complete"))) %>% 
     unnest(tau_ov)
 
-#study1_w_demo %>% 
-#    group_by(schooltype_binary) %>% 
-#    do(tau_ov = unlist(cor(.$effsize_ov, .$rating_ov, method = "kendall", 
-#                           use = "pairwise.complete"))) %>% 
-#    unnest(tau_ov)
 
 ### grouped by school type and plot type 
 study1_w_demo %>% 
@@ -500,12 +467,6 @@ study1_w_demo %>%
     do(tau_ov = unlist(cor(.$effsize_abs, .$rating_ov, method = "kendall", 
                            use = "pairwise.complete"))) %>% 
     unnest(tau_ov)
-
-#study1_w_demo %>% 
-#    group_by(schooltype_binary, type) %>% 
-#    do(tau_ov = unlist(cor(.$effsize_ov, .$rating_ov, method = "kendall", 
-#                           use = "pairwise.complete"))) %>% 
-#    unnest(tau_ov)
 
 
 ## Abstract Metric
@@ -516,10 +477,6 @@ study1_w_demo %>%
                            use = "pairwise.complete"))) %>% 
     unnest(tau_am)
 
-#study1_w_demo %>% 
-#    do(tau_am = unlist(cor(.$effsize_am, .$rating_am, method = "kendall", 
-#                           use = "pairwise.complete"))) %>% 
-#    unnest(tau_am)
 
 ### grouped by plot type
 study1_w_demo %>% 
@@ -528,11 +485,6 @@ study1_w_demo %>%
                            use = "pairwise.complete"))) %>% 
     unnest(tau_am)
 
-#study1_w_demo %>% 
-#    group_by(type) %>% 
-#    do(tau_am = unlist(cor(.$effsize_am, .$rating_am, method = "kendall", 
-#                           use = "pairwise.complete"))) %>% 
-#    unnest(tau_am)
 
 ### grouped by school type
 study1_w_demo %>% 
@@ -541,11 +493,6 @@ study1_w_demo %>%
                            use = "pairwise.complete"))) %>% 
     unnest(tau_am)
 
-#study1_w_demo %>% 
-#    group_by(schooltype_binary) %>% 
-#    do(tau_am = unlist(cor(.$effsize_am, .$rating_am, method = "kendall", 
-#                           use = "pairwise.complete"))) %>% 
-#    unnest(tau_am)
 
 ### grouped by school type and plot type
 study1_w_demo %>% 
@@ -553,12 +500,6 @@ study1_w_demo %>%
     do(tau_am = unlist(cor(.$effsize, .$rating_am, method = "kendall", 
                            use = "pairwise.complete"))) %>% 
     unnest(tau_am)
-
-#study1_w_demo %>% 
-#    group_by(schooltype_binary, type) %>% 
-#    do(tau_am = unlist(cor(.$effsize_am, .$rating_am, method = "kendall", 
-#                           use = "pairwise.complete"))) %>% 
-#    unnest(tau_am)
 
 study1_w_demo_vda <- study1_w_demo %>%
     select(session, plot, rating_ov, rating_am, rating_u3, schooltype_binary) %>%
@@ -637,13 +578,6 @@ study1_w %>%
     xlab("Plotted effect size") +
     theme_modern_rc()
 
-# study1_w %>% 
-#     ggplot(., aes(effsize_am, rating_am)) +
-#     geom_jitter() +
-#     stat_smooth() +
-#     ylab("Abstract metric") +
-#     xlab("Plotted effect size") +
-#     theme_modern_rc()
 
 study1_w %>% 
     ggplot(., aes(effsize_u3, rating_u3, color = rating_u3_missconcept)) +
@@ -663,14 +597,6 @@ study1_w %>%
     labs(color = "Misconcept") +
     theme_modern_rc()
 
-#study1_w %>% 
-#    ggplot(., aes(effsize_ov, rating_ov, color = rating_ov_missconcept)) +
-#    geom_jitter() +
-#    stat_smooth(method = "lm") +
-#    ylab("Overlap metric") +
-#    xlab("Plotted effect size (transformed to overlap)") +
-#    labs(color = "Misconcept") +
-#    theme_modern_rc()
 ```
 
 The correlations underpin the interpretation of the misconceptions. Therefore, we will look at the intercorrelations of the dependent variables.
@@ -688,11 +614,6 @@ study1_w %>%
                            use = "pairwise.complete"))) %>% 
     unnest(tau_am)
 
-# study1_w %>% 
-#     group_by(type) %>% 
-#     do(tau_am = unlist(cor(.$effsize_am, .$rating_am, method = "kendall", 
-#                            use = "pairwise.complete"))) %>% 
-#     unnest(tau_am)
 
 study1_w %>% 
     group_by(rating_ov_missconcept, type) %>% 
@@ -700,11 +621,6 @@ study1_w %>%
                            use = "pairwise.complete"))) %>% 
     unnest(tau_ov)
 
-#study1_w %>% 
-#    group_by(rating_ov_missconcept, type) %>% 
-#    do(tau_ov = unlist(cor(.$effsize_ov, .$rating_ov, method = "kendall", 
-#                           use = "pairwise.complete"))) %>% 
-#    unnest(tau_ov)
 
 study1_w %>% 
     group_by(rating_u3_missconcept, type) %>% 
@@ -776,25 +692,7 @@ We generally compare
 ```{r}
 #| results: hide
 
-# Rating abstract metric
-mod0_rating_am <- brm(rating_am ~ + (1|session), 
-                          data = study1_w,
-                          iter = 20000,
-                          save_pars = save_pars(all = TRUE),
-                          cores = 4)
-mod1_rating_am <- brm(rating_am ~ effsize + (1|session), 
-                          data = study1_w,
-                          iter = 20000,
-                          save_pars = save_pars(all = TRUE),
-                          cores = 4)
-mod2_rating_am <- brm(rating_am ~ type + effsize + (1|session), 
-                          data = study1_w,
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE),
-                          cores = 4
-                          )
-
-# difference variable 
+# Difference variable 
 mod0_diff_am <- brm(diff_am ~ + (1|session), 
                           data = study1_w,
                           iter = 20000,
@@ -815,9 +713,6 @@ mod2_diff_am <- brm(diff_am ~ type + effsize + (1|session),
 
 
 ```{r}
-bayes_factor(mod1_rating_am, mod0_rating_am)
-bayes_factor(mod2_rating_am, mod1_rating_am)
-
 bayes_factor(mod1_diff_am, mod0_diff_am)
 bayes_factor(mod2_diff_am, mod1_diff_am)
 ```
@@ -834,32 +729,7 @@ We generally compare
 ```{r}
 #| results: hide
 
-# Rating Cohen's U3
-mod0_rating_u3 <- brm(rating_u3 ~ + (1|session), 
-                          data = study1_w%>% 
-                              filter(rating_u3_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE),
-                          cores = 4
-                          )
-
-mod1_rating_u3 <- brm(rating_u3 ~ effsize_u3 + (1|session), 
-                          data = study1_w%>% 
-                              filter(rating_u3_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE),
-                          cores = 4
-                          )
-
-mod2_rating_u3 <- brm(rating_u3 ~ type + effsize_u3 + (1|session), 
-                       data = study1_w %>% 
-                           filter(rating_u3_missconcept == F),
-                       iter = 10000,
-                       save_pars = save_pars(all = TRUE),
-                       cores = 4
-                       )
-
-# difference variable 
+# Difference Variable 
 mod0_diff_u3 <- brm(diff_u3 ~ + (1|session), 
                           data = study1_w%>% 
                               filter(rating_u3_missconcept == F),
@@ -887,14 +757,8 @@ mod2_diff_u3 <- brm(diff_u3 ~ type + effsize_u3 + (1|session),
 
 
 ```{r}
-
-bayes_factor(mod1_rating_u3, mod0_rating_u3)
-bayes_factor(mod2_rating_u3, mod1_rating_u3)
-## bf spricht für Mod2
-
 bayes_factor(mod1_diff_u3, mod0_diff_u3)
 bayes_factor(mod2_diff_u3, mod1_diff_u3)
-## bf spricht für Mod0
 ```
 
 ## Accuracy overlap
@@ -909,30 +773,7 @@ We generally compare
 ```{r}
 #| results: hide
 
-# Rating Overlap
-mod0_rating_ov <- brm(rating_ov ~ + (1|session), 
-                          data = study1_w%>% 
-                              filter(rating_ov_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE),
-                          cores = 4
-                          )
-mod1_rating_ov <- brm(rating_ov ~ effsize + (1|session), 
-                          data = study1_w%>% 
-                              filter(rating_ov_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE),
-                          cores = 4
-                          )
-mod2_rating_ov <- brm(rating_ov ~ type + effsize + (1|session), 
-                          data = study1_w %>% 
-                              filter(rating_ov_missconcept == F),
-                          iter = 10000,
-                          save_pars = save_pars(all = TRUE),
-                          cores = 4
-                          )
-
-# difference variable
+# Difference Variable
 mod0_diff_ov <- brm(diff_ov ~ + (1|session), 
                           data = study1_w%>% 
                               filter(rating_ov_missconcept == F),
@@ -960,10 +801,6 @@ mod2_diff_ov <- brm(diff_ov ~ type + effsize_abs + (1|session),
 
 
 ```{r}
-
-bayes_factor(mod1_rating_ov, mod0_rating_ov)
-bayes_factor(mod2_rating_ov, mod1_rating_ov)
-
 bayes_factor(mod1_diff_ov, mod0_diff_ov)
 bayes_factor(mod2_diff_ov, mod1_diff_ov)
 ```
@@ -1137,13 +974,10 @@ bayes_factor(mod2_value, mod1_value)
 ## Table of All Random Intercept Models
 ```{r}
 sjPlot::tab_model(
-    mod0_rating_am, mod0_rating_u3, mod0_rating_ov,
     mod0_diff_am, mod0_diff_u3, mod0_diff_ov,
     mod0_diffi, mod0_infor, mod0_value,
-    mod1_rating_am, mod1_rating_u3, mod1_rating_ov,
     mod1_diff_am, mod1_diff_u3, mod1_diff_ov,
     mod1_diffi, mod1_infor, mod1_value,
-    mod2_rating_am, mod2_rating_u3, mod2_rating_ov,
     mod2_diff_am, mod2_diff_u3, mod2_diff_ov,
     mod2_diffi, mod2_infor, mod2_value
     )
@@ -1488,48 +1322,11 @@ bayes_factor(plot0306_mod2, plot0306_mod1)
 ## Contrast Effects 
 
 ### Graphical Overview
+
 ```{r}
 #| results: hide
 
 # preparing multilevel model with brms for graphical overview
-
-# rating u3  
-mod_plot_diffu3 <- brm(
-    diff_u3 ~ (1 | type),
-    data = study1_w %>% 
-        filter(rating_u3_missconcept == F),
-    control = list(adapt_delta = .999),
-    cores = 4,
-    iter = 10000
-    
-) 
-
-#mod_plot_ratingu3 <- brm(
-#    scale(rating_u3) ~ (1 | type),
-#    data = study1_w,
-#    control = list(adapt_delta = .999),
-#    cores = 4,
-#    iter = 10000
-#    
-#) 
-
-plot_diffu3 <- mod_plot_diffu3 %>%
-  spread_draws(b_Intercept, r_type[type,]) %>%
- # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
-  mutate(type_mean = b_Intercept + r_type) %>%
-  ggplot(aes(y = type, x = type_mean
-             #xmin = .lower, xmax = .upper
-             )) +
-    stat_halfeye() +
-    theme_ipsum_rc() + 
-    theme(#axis.title.x = element_blank(),
-          axis.text.y = element_text(hjust = 0)) +
-    ggtitle("Accuracy in Cohen's U3 Metric")
-```
-
-
-```{r}
-#| results: hide
 
 # rating ov
 mod_plot_diffov <- brm (
@@ -1543,40 +1340,26 @@ mod_plot_diffov <- brm (
 )
 
 
-#mod_plot_ratingov <- brm (
-#    scale(rating_ov) ~ (1 | type),
-#    data = study1_w,
-#    control = list(adapt_delta = .999),
-#    cores = 4,
-#    iter = 10000
-#    
-#)
-
 plot_diffov <- mod_plot_diffov %>%
   spread_draws(b_Intercept, r_type[type,]) %>%
- # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
   mutate(type_mean = b_Intercept + r_type) %>%
   ggplot(aes(y = type, x = type_mean
-             #xmin = .lower, xmax = .upper
              )) +
     stat_halfeye() + 
     theme_ipsum_rc()+
     theme(axis.title.x = element_blank(),
-          axis.text.y = element_blank(), 
-          axis.title.y = element_blank()) +
+          axis.text.y = element_text(hjust = 0)) +
     ggtitle('Accuracy in Overlap Metric')
 ```
 
 ```{r}
 
-plot_contrasteffects_accuracy <- plot_diffu3 + plot_diffov
+plot_diffov
 
-plot_contrasteffects_accuracy
-
-# ggsave("4_study1/plot_contrasteffects_accuracy.png", 
-#        plot_contrasteffects_accuracy,
-#        width = 25*.55,
-#        height = 16*.55)
+ggsave("4_study1/plot_diffov.png", 
+    plot_diffov,
+    width = 25*.55,
+    height = 16*.55)
 
 ```
 
@@ -1596,17 +1379,13 @@ mod_plot_diffi <- brm (
 
 plot_diffi <- mod_plot_diffi %>%
   spread_draws(b_Intercept, r_type[type,]) %>%
- # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
   mutate(type_mean = b_Intercept + r_type) %>%
   ggplot(aes(y = type, x = type_mean
-             #xmin = .lower, xmax = .upper
              )) +
-#  geom_pointinterval() +
     stat_halfeye() +
     theme_ipsum_rc() +
     theme(axis.title.x = element_blank(),
           axis.text.y = element_text(hjust = 0)) +
-    #scale_x_continuous(limits=c(-0.6, 0.6)) +
     ggtitle('Perceived Task Difficulty')
 ```
 
@@ -1626,18 +1405,16 @@ mod_plot_infor <- brm (
 
 plot_infor <- mod_plot_infor %>%
   spread_draws(b_Intercept, r_type[type,]) %>%
- # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
   mutate(type_mean = b_Intercept + r_type) %>%
-  ggplot(aes(y = type, x = type_mean #xmin = .lower, xmax = .upper
+  ggplot(aes(y = type, x = type_mean
              )) +
-#  geom_pointinterval() +
   stat_halfeye() +
     theme_ipsum_rc() +
     theme(axis.title.x = element_blank(),
           axis.text.y = element_blank()) +
-    #scale_x_continuous(limits=c(-0.6, 0.6)) +
     ggtitle('Perceived Informativity')
 ```
+
 
 ```{r}
 #| results: hide
@@ -1654,16 +1431,13 @@ mod_plot_value <- brm (
 
 plot_value <- mod_plot_value %>%
   spread_draws(b_Intercept, r_type[type,]) %>%
- # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
   mutate(type_mean = b_Intercept + r_type) %>%
-  ggplot(aes(y = type, x = type_mean #xmin = .lower, xmax = .upper
+  ggplot(aes(y = type, x = type_mean 
              )) +
-#  geom_pointinterval() +
   stat_halfeye() +
     theme_ipsum_rc() +
     theme(axis.title.x = element_blank(),
           axis.text.y = element_text(hjust = 0)) +
-    #scale_x_continuous(limits=c(-0.6, 0.6)) +
     ggtitle('Perceived Value')
 ```
 
@@ -1686,17 +1460,14 @@ mod_plot_efficiency1 <-
 
 plot_efficiency1 <- mod_plot_efficiency1 %>%
   spread_draws(b_Intercept, r_type[type,]) %>%
- # median_qi(type_mean = b_Intercept + r_type, .width = c(.95, .66)) %>%
   mutate(type_mean = b_Intercept + r_type) %>%
-  ggplot(aes(y = type, x = type_mean #xmin = .lower, xmax = .upper
+  ggplot(aes(y = type, x = type_mean 
              )) +
-#  geom_pointinterval() +
   stat_halfeye() +
     theme_ipsum_rc() +
     theme(axis.title.x = element_blank(),
           axis.text.y = element_blank(), 
           axis.title.y = element_blank()) +
-    #scale_x_continuous(limits=c(-0.6, 0.6)) +
     ggtitle('Efficiency for the First Plot')
 ```
 
@@ -1707,10 +1478,10 @@ plot_contrasteffects <- plot_diffi + plot_infor + plot_value + plot_efficiency1 
 
 plot_contrasteffects 
 
-# ggsave("4_study1/plot_contrasteffects.png", 
-#        plot_contrasteffects,
-#        width = 25*.55,
-#        height = 16*.55)
+ggsave("4_study1/plot_contrasteffects.png", 
+    plot_contrasteffects,
+    width = 25*.55,
+    height = 16*.55)
 ```
 
 
@@ -1719,9 +1490,8 @@ plot_contrasteffects
 ```{r}
 #| results: hide
 
-# create dummy variables to compare visualization types for those measures that showed evidence for difference (perceived task difficulty, perceived informativity, perceived value, sensitivity, efficiency)
+# create dummy variables to compare visualization types for those measures that showed evidence for difference (accuracy overlap, perceived task difficulty, perceived informativity, perceived value, sensitivity, efficiency)
 
-## KS accuracy U3, accuracy overlap,
 
 ## Gardner Altman Plot vs. Halfeye xaxis
 gardneraltman_vs_halfeye_x <- study1_w %>%
@@ -1744,16 +1514,6 @@ gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 
-mod_diffu3_gardneraltman_halfeye_x <- 
-     brm(diff_u3 ~ dummy_gardneraltman_halfeye_x + effsize_u3 + (1|session),
-                           data = gardneraltman_vs_halfeye_x%>% 
-                               filter(rating_u3_missconcept == F),
-                           save_pars = save_pars(all = TRUE),
-     silent = 2,
-     refresh = 0,
-     cores = 4,
-     iter = 10000)
-
 mod_diffov_gardneraltman_halfeye_x <- 
     brm(diff_ov ~ dummy_gardneraltman_halfeye_x +  effsize_abs + (1|session), 
                           data = gardneraltman_vs_halfeye_x%>% 
@@ -1764,25 +1524,6 @@ mod_diffov_gardneraltman_halfeye_x <-
     cores = 4,
     iter = 10000)
 
-#mod_accu3_gardneraltman_halfeye_x <- 
-#     brm(scale(rating_u3) ~ dummy_gardneraltman_halfeye_x + effsize_u3 + (1|session),
-#                           data = gardneraltman_vs_halfeye_x%>% 
-#                               filter(rating_u3_missconcept == F),
-#                           save_pars = save_pars(all = TRUE),
-#     silent = 2,
-#     refresh = 0,
-#     cores = 4,
-#     iter = 10000)
-#
-#mod_accov_gardneraltman_halfeye_x <- 
-#    brm(scale(rating_ov) ~ dummy_gardneraltman_halfeye_x + effsize + (1|session), 
-#                          data = gardneraltman_vs_halfeye_x%>% 
-#                              filter(rating_ov_missconcept == F),
-#                          save_pars = save_pars(all = TRUE),
-#    silent = 2,
-#    refresh = 0,
-#    cores = 4,
-#    iter = 10000)
 ```
 
 
@@ -1831,7 +1572,6 @@ mod_sensi_gardneraltman_halfeye_x <-
         cores = 4
     )
 
-exp(1.73) # equivalent to d = 0.5 (Chen et al., 2019)
 ```
 
 
@@ -1884,15 +1624,6 @@ gardneraltman_vs_halfeye_y_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-
-mod_diffu3_gardneraltman_halfeye_y <- 
-    brm(diff_u3 ~ dummy_gardneraltman_halfeye_y +  effsize_u3 + (1|session), 
-                          data = gardneraltman_vs_halfeye_y %>% 
-                              filter(rating_u3_missconcept == F),
-                          save_pars = save_pars(all = TRUE),
-    silent = 2,
-    refresh = 0,
-    cores = 4)
 
 mod_diffov_gardneraltman_halfeye_y <- 
     brm(diff_ov ~ dummy_gardneraltman_halfeye_y + effsize_abs + (1|session), 
@@ -1952,7 +1683,6 @@ mod_sensi_gardneraltman_halfeye_y <-
         cores = 4
     )
 
-exp(1.86) # equivalent to d = 0.5 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -2003,16 +1733,6 @@ raincloud_vs_halfeye_x_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-
-mod_diffu3_raincloud_halfeye_x <- 
-     brm(diff_u3 ~ dummy_raincloud_halfeye_x + effsize_u3 + (1|session), 
-                           data = raincloud_vs_halfeye_x %>% 
-                               filter(rating_u3_missconcept == F),
-                           save_pars = save_pars(all = TRUE),
-     silent = 2,
-     refresh = 0,
-     cores = 4)
-
 mod_diffov_raincloud_halfeye_x <- 
     brm(diff_ov ~ dummy_raincloud_halfeye_x + effsize_abs + (1|session), 
                           data = raincloud_vs_halfeye_x %>% 
@@ -2074,8 +1794,6 @@ mod_sensi_raincloud_halfeye_x <-
         cores = 4
     )
 
-
-exp(2.37) # equivalent to d = 0.8 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -2128,15 +1846,6 @@ raincloud_vs_halfeye_y_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-
-mod_diffu3_raincloud_halfeye_y <- 
-    brm(diff_u3 ~ dummy_raincloud_halfeye_y + effsize_u3 + (1|session), 
-                          data = raincloud_vs_halfeye_y %>% 
-                              filter(rating_u3_missconcept == F),
-                          save_pars = save_pars(all = TRUE),
-    silent = 2,
-    refresh = 0,
-    cores = 4)
 
 mod_diffov_raincloud_halfeye_y <- 
     brm(diff_ov ~ dummy_raincloud_halfeye_y + effsize_abs + (1|session), 
@@ -2199,7 +1908,6 @@ mod_sensi_raincloud_halfeye_y <-
         cores = 4
     )
 
-exp(2.50) # equivalent to d = 0.8 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -2230,21 +1938,21 @@ mod_effic0306_raincloud_halfeye_y <-
 
 
 ```{r}
-sjPlot::tab_model(mod_diffu3_gardneraltman_halfeye_x, 
-        mod_diffov_gardneraltman_halfeye_x, mod_diffi_gardneraltman_halfeye_x, 
+sjPlot::tab_model(
+        mod_diffov_gardneraltman_halfeye_x, 
+        mod_diffi_gardneraltman_halfeye_x, 
         mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
         mod_sensi_gardneraltman_halfeye_x,
         mod_effic01_gardneraltman_halfeye_x, mod_effic0306_gardneraltman_halfeye_x,
-        mod_diffu3_gardneraltman_halfeye_y, mod_diffov_gardneraltman_halfeye_y, 
+        mod_diffov_gardneraltman_halfeye_y, 
         mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, 
         mod_value_gardneraltman_halfeye_y, mod_sensi_gardneraltman_halfeye_y,
         mod_effic01_gardneraltman_halfeye_y, mod_effic0306_gardneraltman_halfeye_y,
-        mod_diffu3_raincloud_halfeye_x,
         mod_diffov_raincloud_halfeye_x, mod_diffi_raincloud_halfeye_x, 
         mod_infor_raincloud_halfeye_x, mod_value_raincloud_halfeye_x,
         mod_sensi_raincloud_halfeye_x,
         mod_effic01_raincloud_halfeye_x, mod_effic0306_raincloud_halfeye_x,
-        mod_diffu3_raincloud_halfeye_y, mod_diffov_raincloud_halfeye_y, 
+        mod_diffov_raincloud_halfeye_y, 
         mod_diffi_raincloud_halfeye_y, mod_infor_raincloud_halfeye_y, 
         mod_value_raincloud_halfeye_y, mod_sensi_raincloud_halfeye_y,
         mod_effic01_raincloud_halfeye_y, mod_effic0306_raincloud_halfeye_y)
@@ -2274,15 +1982,6 @@ gardneraltman_vs_raincloud_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-
-mod_diffu3_gardneraltman_raincloud <- 
-    brm(diff_u3 ~ dummy_gardneraltman_raincloud + effsize_u3 + (1|session), 
-                          data = gardneraltman_vs_raincloud%>% 
-                              filter(rating_u3_missconcept == F),
-                          save_pars = save_pars(all = TRUE),
-    silent = 2,
-    refresh = 0,
-    cores = 4)
 
 mod_diffov_gardneraltman_raincloud <- 
     brm(diff_ov ~ dummy_gardneraltman_raincloud + effsize_abs + (1|session), 
@@ -2344,7 +2043,6 @@ mod_sensi_gardneraltman_raincloud <-
         cores = 4
     )
 
-exp(0.85) # equivalent to d = 0.2 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -2398,16 +2096,6 @@ halfeye_x_vs_halfeye_y_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-
-mod_diffu3_halfeye_x_halfeye_y <- 
-    brm(diff_u3 ~ dummy_halfeye_x_halfeye_y + effsize_u3 + (1|session), 
-                          data = halfeye_x_vs_halfeye_y %>% 
-                              filter(rating_u3_missconcept == F),
-                          save_pars = save_pars(all = TRUE),
-        
-    silent = 2,
-    refresh = 0,
-    cores = 4)
 
 mod_diffov_halfeye_x_halfeye_y <- 
     brm(diff_ov ~ dummy_halfeye_x_halfeye_y + effsize_abs + (1|session), 
@@ -2468,7 +2156,6 @@ mod_sensi_halfeye_x_halfeye_y <-
         cores = 4
     )
 
-exp(1.10) # equivalent to d = 0.2 (Chen et al., 2019)
 ```
 
 ```{r}
@@ -2497,8 +2184,7 @@ mod_effic0306_halfeye_x_halfeye_y <-
 ```
 
 ```{r}
-sjPlot::tab_model(mod_diffu3_gardneraltman_raincloud, 
-                  mod_diffov_gardneraltman_raincloud, 
+sjPlot::tab_model(mod_diffov_gardneraltman_raincloud, 
                   mod_diffi_gardneraltman_raincloud,
                   mod_infor_gardneraltman_raincloud, 
                   mod_value_gardneraltman_raincloud,
@@ -2509,10 +2195,12 @@ sjPlot::tab_model(mod_diffu3_gardneraltman_raincloud,
 
 
 ```{r}
-sjPlot::tab_model(mod_diffu3_halfeye_x_halfeye_y, mod_diffov_halfeye_x_halfeye_y, 
-                  mod_diffi_halfeye_x_halfeye_y, mod_infor_halfeye_x_halfeye_y, 
+sjPlot::tab_model(mod_diffov_halfeye_x_halfeye_y, 
+                  mod_diffi_halfeye_x_halfeye_y, 
+                  mod_infor_halfeye_x_halfeye_y, 
                   mod_value_halfeye_x_halfeye_y,
                   mod_sensi_halfeye_x_halfeye_y,
-                  mod_effic01_halfeye_x_halfeye_y,mod_effic0306_halfeye_x_halfeye_y)
+                  mod_effic01_halfeye_x_halfeye_y,
+                  mod_effic0306_halfeye_x_halfeye_y)
 ```
 
