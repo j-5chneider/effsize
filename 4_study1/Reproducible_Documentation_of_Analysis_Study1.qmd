@@ -8,6 +8,8 @@ format:
     toc-location: left
     toc-depth: 4
     embed-resources: true
+    code-fold: true
+    code-tools: true
 editor: source
 bibliography: references.bib
 editor_options: 
@@ -58,6 +60,11 @@ set.seed(25051982)
 ```
 
 # Data Wrangling
+
+## Data Set 1
+
+__(without efficiency and accuracy transformed)__
+
 ```{r}
 #| label: data wrangling
 
@@ -166,13 +173,25 @@ study1_w <- full_join(plot_info, item_values,
                                                   (sensi_ordinal == "superior" & 
                                                   effsize < 0) ~ "right direction", 
                                              TRUE ~ NA_character_),
-           effsize_abs = abs(effsize)) 
+           effsize_abs = abs(effsize))
+```
 
-skim(study1_w) 
+\
 
-test <- study1_w %>%
-    select(rating_am, effsize_ov, effsize_abs, effsize)
+__Basic Information on data set__
 
+
+```{r}
+skim(study1_w)
+```
+\
+\
+
+## Data Set 2
+
+__(with efficiency and accuracy transformed)__
+
+```{r}
 # create a list of u3_misconceptualizers
 u3_misconceptualizers <-
     study1_w %>% 
@@ -224,9 +243,17 @@ study1_w_timestamp <-
            plotNrWithin0 = plotNrWithin -1,
            plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
     ungroup()
+```
+\
 
+
+__Basic information on data set__
+
+```{r}
 skim(study1_w_timestamp)
 ```
+\
+\
 
 # Sample Description
 
@@ -307,7 +334,8 @@ skim(study1_w_timestamp %>%
     spread(variable, value) %>%
     ungroup())
 ```
-
+\
+\
 
 ## Are there Differences Between Particpants That Indicated a Specific School Type and Those That Indicated "other"?
 
@@ -543,7 +571,7 @@ study1_w_demo_vda <- study1_w_demo %>%
 ```
 The results do not substantially differ between the two groups. Hence, we will include the participants indicated "other" school types in the following analyses.
 
-# Accuracy
+# Accuracy: Misconceptions
 
 ## Distribution of the Accuracy Variables
 
@@ -738,10 +766,16 @@ study1_w %>%
 
 ## Accuracy Abstract Metric
 
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
-
 #| results: hide
+
 # Rating abstract metric
 mod0_rating_am <- brm(rating_am ~ + (1|session), 
                           data = study1_w,
@@ -789,10 +823,17 @@ bayes_factor(mod2_diff_am, mod1_diff_am)
 ```
 
 ## Accuracy Cohen's U3
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
-
 #| results: hide
+
 # Rating Cohen's U3
 mod0_rating_u3 <- brm(rating_u3 ~ + (1|session), 
                           data = study1_w%>% 
@@ -857,10 +898,17 @@ bayes_factor(mod2_diff_u3, mod1_diff_u3)
 ```
 
 ## Accuracy overlap
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
 ### Random Intercept Models With and Without Visualization Type
 ```{r}
-
 #| results: hide
+
 # Rating Overlap
 mod0_rating_ov <- brm(rating_ov ~ + (1|session), 
                           data = study1_w%>% 
@@ -939,6 +987,13 @@ study1_w %>%
 ```
 
 ### Random Intercept Models With and Without Visualization Type
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
 ```{r}
 #| results: hide
 
@@ -987,6 +1042,13 @@ study1_w %>%
 ```
 
 ### Random Intercept Models With and Without Visualization Type
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
 ```{r}
 #| results: hide
 
@@ -1035,6 +1097,13 @@ study1_w %>%
 ```
 
 ### Random Intercept Models With and Without Visualization Type
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
 ```{r}
 #| results: hide
 
@@ -1142,11 +1211,16 @@ ggplot(study1_w %>%
 
 ### Logistic Regressions With and Without Visualization Type
 
-Fitting a series of logistic regressions with non-informative priors
+Fitting a series of logistic regressions with non-informative priors  
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
 
 ```{r}
 #| label: sensi models
-
 #| results: hide
 
 logreg_mod0 <- brm(
@@ -1253,9 +1327,15 @@ ggplot(study1_w_timestamp,
 ```
 
 ### Modeling With `{brms}`
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
 #### Efficiency for First Plot
 ```{r}
-
 #| error: false
 #| warning: false
 #| results: hide
@@ -1280,10 +1360,10 @@ pp_check(plot01_mod0) +
 
 
 ```{r}
-
 #| error: false
 #| warning: false
 #| results: hide
+
 plot01_mod1 <-
     brm(log_effic_05righttrunc~ 1 + effsize + (1 | session),
         data = study1_w_timestamp_effsize %>%
@@ -1301,10 +1381,10 @@ pp_check(plot01_mod1) +
 
 
 ```{r}
-
 #| error: false
 #| warning: false
 #| results: hide
+
 plot01_mod2 <-
     brm(log_effic_05righttrunc ~ 1 + effsize + type + (1 | session),
         data = study1_w_timestamp_effsize %>%
@@ -1322,10 +1402,10 @@ pp_check(plot01_mod2) +
 
 
 ```{r}
-
 #| error: false
 #| warning: false
 #| results: hide
+
 sjPlot::tab_model(plot01_mod0, plot01_mod1, plot01_mod2)
 bayes_factor(plot01_mod1, plot01_mod0)
 bayes_factor(plot01_mod2, plot01_mod1)
@@ -1333,10 +1413,10 @@ bayes_factor(plot01_mod2, plot01_mod1)
 
 #### Efficiency for Last Three Plots
 ```{r}
-
 #| error: false
 #| warning: false
 #| results: hide
+
 plot0306_mod0 <-
     brm(log_effic_05righttrunc ~ 1 + plotNrWithin_factor + (1 | session),
         data = study1_w_timestamp_effsize %>%
@@ -1354,10 +1434,10 @@ pp_check(plot0306_mod0) +
 
 
 ```{r}
-
 #| error: false
 #| warning: false
 #| results: hide
+
 plot0306_mod1 <-
     brm(log_effic_05righttrunc ~ 1 + plotNrWithin_factor + effsize +
             (1 | session),
@@ -1375,10 +1455,10 @@ pp_check(plot0306_mod1) +
 
 
 ```{r}
-
 #| error: false
 #| warning: false
 #| results: hide
+
 plot0306_mod2 <-
     brm(log_effic_05righttrunc ~ 1 + plotNrWithin_factor + effsize +
             type + (1 | session),
@@ -1409,7 +1489,6 @@ bayes_factor(plot0306_mod2, plot0306_mod1)
 
 ### Graphical Overview
 ```{r}
-
 #| results: hide
 
 # preparing multilevel model with brms for graphical overview
@@ -1450,8 +1529,8 @@ plot_diffu3 <- mod_plot_diffu3 %>%
 
 
 ```{r}
-
 #| results: hide
+
 # rating ov
 mod_plot_diffov <- brm (
     diff_ov ~ (1 | type),
@@ -1503,8 +1582,8 @@ plot_contrasteffects_accuracy
 
 
 ```{r}
-
 #| results: hide
+
 # difficulty
 mod_plot_diffi <- brm (
     scale(diffi) ~ (1 | type),
@@ -1533,8 +1612,8 @@ plot_diffi <- mod_plot_diffi %>%
 
 
 ```{r}
-
 #| results: hide
+
 # informativity
 mod_plot_infor <- brm (
     scale(infor) ~ (1 | type),
@@ -1561,10 +1640,9 @@ plot_infor <- mod_plot_infor %>%
 ```
 
 ```{r}
-
 #| results: hide
-# value 
 
+# value 
 mod_plot_value <- brm (
     scale(value) ~ (1 | type),
     data = study1_w,
@@ -1640,6 +1718,7 @@ plot_contrasteffects
 
 ```{r}
 #| results: hide
+
 # create dummy variables to compare visualization types for those measures that showed evidence for difference (perceived task difficulty, perceived informativity, perceived value, sensitivity, efficiency)
 
 ## KS accuracy U3, accuracy overlap,
@@ -1664,6 +1743,7 @@ gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
+
 mod_diffu3_gardneraltman_halfeye_x <- 
      brm(diff_u3 ~ dummy_gardneraltman_halfeye_x + effsize_u3 + (1|session),
                            data = gardneraltman_vs_halfeye_x%>% 
@@ -1802,7 +1882,7 @@ gardneraltman_vs_halfeye_y_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-#|
+
 mod_diffu3_gardneraltman_halfeye_y <- 
     brm(diff_u3 ~ dummy_gardneraltman_halfeye_y +  effsize_u3 + (1|session), 
                           data = gardneraltman_vs_halfeye_y %>% 
