@@ -126,10 +126,10 @@ for (i1 in group_names) {# all group names (vignettes)
 
 ## basic characteristics of the data ##########################################
 # generate list of group names
-group_names <- list(c("reading\non tablet", "reading\non paper"),
-                    c("live\nlesson", "video recorded\nlesson"),
-                    c("computer\nsimulation", "real\nlaboratory"),
-                    c("with\nsubtitles", "without\nsubtitles"))
+group_names <- list(c("reading on paper\nand highlighting text", "reading\non paper"),
+                    c("online\nlesson", "video recorded\nlesson"),
+                    c("virtual reality\nlaboratory", "real\nlaboratory"),
+                    c("subtitles with\nhighlighted keywords", "without\nsubtitles"))
 
 # Effect sizes. Based on thresholds of Cohen's d (Cohen, 1988)
 es <- c(-.2, .2)
