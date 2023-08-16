@@ -1,0 +1,1090 @@
+---
+title: 'Visualizing Effect Sizes for Science Communication' 
+subtitle: 'Which Plot Types and Enrichment Options Support Sense-Making?'
+title-slide-attributes:
+  data-background-image: www/title-bg.jpg
+  data-background-size: cover
+  data-background-opacity: "0.3"
+author: "<b>Jürgen Schneider</b><br /><span style='font-size: .8em'>Kirstin Schmidt, Kristina Bohrer, Samuel Merk, Iris Backfisch, Salome Wagner</span>"
+date: last-modified # today
+date-format: "23 Feb 2023" # "DD MMMM YYYY"
+format: 
+  revealjs:
+      theme: [sky, www/custom.scss] # sky default
+      logo: www/dipf-logo.png
+      footer: "Folien: [bit.ly/gebf23-v](https://bit.ly/gebf23-v) (view) | [bit.ly/gebf23-g](https://bit.ly/gebf23-g) (download from github)"
+      smaller: true
+      scrollable: true
+      width: 1500
+      height: 850
+      hide-inactive-cursor: false
+      embed-resources: true
+bibliography: www/references.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+---
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message=FALSE, 
+                      warning=FALSE)
+### DOWNLOAD NEWEST SOURCES
+# download.file("https://drive.google.com/uc?export=download&id=1ASV99YHMHSNChSNzqbZwvz2SiqYvmqO_", # befindet sich im DIPF Ordner
+#               "www/references.bib", overwrite = T)
+
+
+library(fontawesome)
+library(kableExtra)
+```
+
+
+
+
+
+## Theory
+### Why effect sizes?
+
+:::: {.columns}
+::: {.column width="65%"}
+
+* "__Clearinghouse__" approaches<br />`r fa(name = "arrow-right")` Provide evidence base of systematic research [@knogleretal.2022]<br /><br /><br /><br />
+* Effect sizes (ES) as one of the __key information__ [@burnsetal.2011]<br /><br /><br /><br />
+* Scientists and clearinghouses usually use standardized __textual__ ES metrics [@cohen.1988]
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+ <img src="../www/eef_es1.jpg" style="border: 1px solid #000; width: 95%; margin: 5px;" />  
+ <img src="../www/eef_es2.jpg" style="width: 95%; margin: 5px;" />  
+ <span style="font-size: .7em">[educationendowmentfoundation.org.uk](https://educationendowmentfoundation.org.uk)</span>   
+<img src="../www/chu_es1.jpg" style="border: 1px solid #000; width: 95%; margin: 5px;" />  
+<span style="font-size: .7em">[clearinghouse.edu.tum.de](https://www.clearinghouse.edu.tum.de)</span>  
+:::
+
+::::
+
+::: {.notes}
+* Projekt __emerged__ as part of the __creation of a clearinghouse__.
+* Clearinghouses __an__ approach to enable __evidence-informed__ practice<br />`r fa(name = "arrow-right")` by __preparing__ evidence base for teachers/educators.
+* If we look at __research syntheses__ that condense evidence: ES = key information
+* ...
+:::
+
+
+
+## Theory
+### Why visualizations?
+
+
+
+* these have __little information value__ for teachers.  [@haneletal.2019; @lipseyetal.2012]<br /><br /><br />
+* Translations (e.g. years of learning) transport __undesirable characteristics__ [@bairdpane.2019; @kimetal.2022]<br /><br /><br />
+* alternative metrics (e.g. Cohen's $U_3$)
+  - perceived as more informative compared to $d$. [@hanelmehler.2019]
+  - Perceived as less informative compared to translations [@lortie-forguesetal.2021]
+  - produce possible misconceptions <span class="citation">(Schmidt et al., under review)</span><br /><br /><br />
+* Alternative: Visualizations [@franconerietal.2021]
+
+
+
+
+
+::: {.notes}
+* Evidence that for teachers __challenging__:
+    - Cohen's d & percentile gain (WWC): wenig __informativ__
+* Translations: transport undesirable characteristics<br />`r fa(name = "arrow-right")` e.g., poorly comparable across age levels.
+* ...
+* Advantage:
+    - statistical information __very quickly__ and __accurately__ ascertainable.
+    - depending on __type__ of visualization and __enrichment__<br />`r fa(name = "arrow-right")` box plots: `r fa(name = "thumbs-up")` dispersion; `r fa(name = "thumbs-down")` distribution.
+:::
+
+
+
+## Theory
+### Teacher-oriented science communication
+
+:::: {.columns}  
+::: {.column width="30%"}
+<br />
+![](www/eff1.jpg)
+:::
+
+::: {.column width="5%"}
+<br /><br /><br /><br />
+`r fa(name = "arrow-right", width = "40px")`
+:::
+
+::: {.column width="60%"}
+<div class="flowchart2a">__information processing__<br /><br /><br /></div>
+<div class="flowchart2b">__comprehension__<br /><br /><br /></div>
+<div class="flowchart2c">__derivation of practical implications__<br /><br /><br /></div>
+:::
+::::
+
+
+[@jensengerber.2020]
+
+
+::: {.notes}
+* What do we measure a __low-threshold__, teacher-oriented visualization by?
+* We look at __3 aspects__ that are relevant in the __framework of science communication__.
+:::
+
+## Theory
+### Teacher-oriented science communication
+
+:::: {.columns}  
+::: {.column width="30%"}
+<br />
+![](www/eff1.jpg)
+:::
+
+::: {.column width="5%"}
+<br /><br /><br /><br />
+`r fa(name = "arrow-right", width = "40px")`
+:::
+
+::: {.column width="60%"}
+<div class="flowchart2a">__information processing__  
+- task difficulty  
+- efficiency</div>
+<div class="flowchart2b">__comprehension__<br /><br /><br /></div>
+<div class="flowchart2c">__derivation of practical implications__<br /><br /><br /></div>
+:::
+::::
+
+[@marcusetal.1996; @korbachetal.2017]
+
+::: {.notes}
+Based on research on __communication__ and __visualization__ of __ES__, we consider:
+
+* ... a cognitive load measure
+* ... Processing time
+:::
+
+## Theory
+### Teacher-oriented science communication
+
+
+:::: {.columns}  
+::: {.column width="30%"}
+<br />
+![](www/eff1.jpg)
+:::
+
+::: {.column width="5%"}
+<br /><br /><br /><br />
+`r fa(name = "arrow-right", width = "40px")`
+:::
+
+::: {.column width="60%"}
+<div class="flowchart2a">__information processing__  
+- task difficulty  
+- efficiency</div>
+<div class="flowchart2b">__comprehension__  
+- Accuracy  
+- Sensitivity</div>
+<div class="flowchart2c">__derivation of practical implications__<br /><br /><br /></div>
+:::
+::::
+
+<div class="citation myref">(Merk et al., in press)</div>
+ 
+::: {.notes}
+
+* ... do participants estimate the size __correctly__?
+* ... measures from which __size__ of an effect the participants describe __groups as different__.
+
+:::
+
+## Theory
+### Teacher-oriented science communication
+
+:::: {.columns}  
+::: {.column width="30%"}
+<br />
+![](www/eff1.jpg)
+:::
+
+::: {.column width="5%"}
+<br /><br /><br /><br />
+`r fa(name = "arrow-right", width = "40px")`
+:::
+
+::: {.column width="60%"}
+<div class="flowchart2a">__information processing__  
+- task difficulty  
+- efficiency</div>
+<div class="flowchart2b">__comprehension__  
+- Accuracy  
+- Sensitivity</div>
+<div class="flowchart2c">__derivation of practical implications__  
+- Perceived informativity  
+- Perceived value</div>
+:::
+::::
+
+
+[@lortie-forguesetal.2021]
+
+
+::: {.notes}
+
+In terms of relevance to practice, we look at:
+
+* how __valuable__ and __informative__ the participants consider the information to be for their practice.
+
+:::
+
+
+
+## Theory
+### Research interest & studies
+
+
+:::: {.columns}  
+::: {.column width="30%"}
+  <div class="blueTop">__Delphi-Study__</div>
+  <div class="blueBottom"><br />__Expert judgment__ on teacher-oriented visualizations<br /><br /><br />_exploratory_</div>
+:::
+
+::: {.column width="30%"}
+ <div class="blueTop">__Study 1__</div>
+  <div class="blueBottom"><br />Comparison of the effect of different __visualization types__ on comprehension<br /><br />_exploratory_</div>
+:::
+
+::: {.column width="30%"}
+ <div class="blueTop">__Study 2__</div>
+  <div class="blueBottom"><br />Comparison of the effect of different __enrichment__ options on understanding.<br /><br />_confirmatory_</div>
+:::
+
+::::
+
+::: {.notes}
+In the context of the project: 3 studies
+
+1. __goal__ of a Delphi study: to narrow down the universe of possible visualization types<br />`r fa(name = "arrow-right")` promising for teacher-oriented communication
+2. __goal__ first study: effects of different visualization types.
+3. __goal__ second study: effects of different enrichment options.
+
+:::
+
+
+
+## Delphi study
+
+* **4 experts** in data visualization, **4 experts** in science communication in clearinghouses & transfer
+* phase 1: collection of **16 visualization types ** <br />(for group values on a metric variable)
+
+![](../www/eff1.jpg){width=30%}
+
+::: {.notes}
+* for the Delphi studies, we surveyed 4 experts in data visualization<br />`r fa(name = "arrow-right")` __which visualization types__ they felt were appropriate for communicating __group scores on a metric variable__ to teachers.
+* __synthesis__ of the lists yielded 16 visualization types.
+* for these, we then distinguished the groups respectively on the x-axis, the y-axis, and by color
+:::
+
+
+## Delphi study
+
+  
+* **4 experts** in data visualization, **4 experts** in science communication in clearinghouses & transfer
+* phase 1: collection of **16 visualization types ** <br />(for group values on a metric variable)
+* phase 2: Rating and Ranking of **44 plots**
+
+
+_"How accurately might teachers assess the ES depicted in the plot above?"_  
+(7-stufige Likert Skala; totally random - totally accurate)
+
+. . .
+
+\
+\
+
+__Results: "Top ranked" visualizations__
+
+![](../www/best_ranked.jpg){width=65%}  
+
+::: {.notes}
+* then, in an __iterative procedure__, we asked the experts to __guess__ and __rank__ the visualization types.
+
+-
+
+* __best ranked__ were the visualizations....
+* as is common in Delphi studies, we produced the ranking in several interations<br />`r fa(name = "arrow-right")` however, we did not compute an assessor match.
+* these 4 visualizations were then examined in the subsequent study.
+:::
+
+
+## Study 1: Visualization types
+### Design
+
+:::: {.columns}  
+::: {.column width="30%"}
+ <div class="blueTop">__Study 1__</div>
+  <div class="blueBottom"><br />Comparison of the effect of different __visualization types__ on comprehension<br /><br />_exploratory_</div>
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="65%"}
+* __teachers__ (N = 40; bayesian updating)<br /><br />
+* __4 x 6__ within-design
+    - 4 visualization types
+    - 6 ES (_d_= -.8 to .8)<br /><br />
+* __randomizations__
+    - order of conditions
+    - vignettes (1 of 4 between randomized)
+
+\
+\
+  
+*Open Materials: [github.com/j-5chneider/effsize_public](https://github.com/j-5chneider/effsize_public)*
+:::
+::::
+
+::: {.notes}
+* in study 1 we investigated the __effect of these visualizations__ on our __3 aspects of comprehension__.
+* to do this, we __surveyed__ 40 teachers, 
+* each of whom assessed 24 visualizations
+  - they went through __all 4 visualization types__
+  - which we depicted __6x__ each in __different effect sizes__
+* We __contextualized__ the shown __data__ of the visualizations by __short study descriptions__.
+:::
+
+
+## Study 1: Visualization types
+### Measures
+
+```{r}
+options("kableExtra.html.bsTable" = T)
+
+measures <- data.frame(construct = c(
+                         "Perceived task difficulty",
+                         "Efficiency",
+                         "Sensitivity",
+                         "Accuracy \n...abstract metric",
+                         "...Cohen's U₃",
+                         "...overlap",
+                         "Perceived informativity",
+                         "Perceived value"),
+                       example_item = c(
+                         "How difficult was it for you to understand the figure?",
+                         "[time taken to answer sensitivity and accuracy]",
+                         "Is one group superior to the other or are they approximately the same?",
+                         "The group that reads on... tablet is entirely superior to the one with paper - paper is entirely superior to the one with tablet",
+                         "Look at the mean test score of the group reading on paper: What percentage of the group that reads on tablet has a higher test score than this value?",
+                         "How much percent of the groups will overlap on the test score?",
+                         "How informative do you perceive the way the information is presented in the figure?",
+                         "To what extent are these results relevant for your future teaching?"
+                       ),
+                       source = c(
+                         "(Marcus et al., 1996)",
+                         "own creation",
+                         "(Merk et al., in press)",
+                         "own creation",
+                         "oriented at (Grice & Barrett, 2014)",
+                         "own creation",
+                         "(Lortie-Forgues et al., 2021)",
+                         "own creation"
+                       ))
+
+measures %>%
+  kbl() %>%
+  kable_styling(font_size = 24) %>%
+  row_spec(1:2, background = "#efefef") %>%
+  row_spec(7:8, background = "#efefef")
+```
+
+
+*Demo: [es-vis-demo1.formr.org](https://es-vis-demo1.formr.org)*
+
+::: {.notes}
+* I can't go into too much detail about the instruments.
+* You __recognize__ the 6 aspects ... __again__
+* If you want to look at the __questionnaire__, then ...
+:::
+
+
+
+
+## Study 1: Visualization types
+### Results
+
+Bayesian multilevel analysis: dummy-coded visualization types  
+
+\
+
+__Visualization types have influence on...__
+
+:::: {.columns}  
+::: {.column width="45%"}
+* Task difficulty: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
+* Efficiency:  `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
+* Accuracy:
+  + Abstract metric: `r fa(name = "thumbs-down", fill = "#FF5A33", height = "1.3em")` 
+  + Overlap: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
+  + Cohen's U3: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
+* Sensitivity: `r fa(name = "circle-question", fill = "#FF5A33", height = "1.3em")` 
+* Informativeness: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
+* Value: `r fa(name = "thumbs-up", fill = "#B4CF66", height = "1.3em")` 
+:::
+
+::: {.column width="20%"}
+$(BF_{10} > 100)$  
+$(BF_{10} > 100)$  
+<br /><br />
+$(BF_{10} < 1/100)$  
+$(BF_{10} > 100)$  
+$(BF_{10} > 100)$  
+<br />
+$(BF_{10} = 2.05)$  
+$(BF_{10} > 100)$  
+$(BF_{10} > 100)$
+:::
+
+::: {.column width="35%"}
+*Open Data & Open Code:  
+[github.com/j-5chneider/effsize_public](https://github.com/j-5chneider/effsize_public)*
+:::
+::::
+
+::: {.notes}
+* First to the question: Is there __evidence__ that visualizations __make a difference__?
+* Here is the answer: Yes, visualizations do make a difference, and they do so with respect to ...
+:::
+
+
+## Study 1: Visualization types
+### Results
+
+```{r}
+#| output: false
+
+library(tidyverse)
+library(ggforce)
+library(lme4)
+library(BFpack)
+library(hrbrthemes)
+library(patchwork)
+library(brms)
+library(viridis)
+library(here)
+library(labelled)
+load(here("data/teachers_study1_N40.RData"))
+unlabelled(study1)
+set.seed(25051982)
+
+# wrangle information on the plot type, ES, ...
+plot_info <- study1 %>%
+    pivot_longer(2:195, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::filter(str_detect(variables, "plot")) %>% 
+    # we only need the rows with info on plots
+    tidyr::separate(col = values, into = c("type", "axis", "effsize"), 
+                    # separate the info into three columns
+                    sep = "_", remove = F) %>%
+    dplyr::mutate(plot = variables,       # rename variables for later join
+                  type = paste(type, axis, sep = "_")) %>%
+    dplyr::select(-variables, -axis)
+
+# wrangle answers to items on each page
+item_values <- study1 %>%
+    dplyr::select(-c(topic:itemo)) %>%
+    pivot_longer(2:169, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::mutate(variables = case_when(      # recode variable names that have
+        variables == "sensi_6" ~ "sensi_06",  # accidentally been labeled
+        variables == "acccl_6" ~ "acccl_06",  # without zero
+        variables == "accu3_6" ~ "accu3_06",
+        variables == "accov_6" ~ "accov_06",
+        variables == "diffi_6" ~ "diffi_06",
+        variables == "infor_6" ~ "infor_06",
+        variables == "value_6" ~ "value_06",
+        TRUE ~ variables 
+    )) %>%
+    dplyr::mutate(plot = paste0("plotx_", str_sub(variables, -2, -1)), 
+                  # create variable for later join
+                  variables = str_sub(variables, 1, -4)) %>%    
+    # rename variable names to get a data set 
+    # with one line per participant per page
+    pivot_wider(id_cols = c(session, plot), names_from = "variables", 
+                values_from = "values")
+
+
+# join the two data sets
+study1_w <- full_join(plot_info, item_values, 
+                               by = c("session", "plot")) %>% 
+    # by participant and page (plot)
+    dplyr::select(-values) %>%
+    dplyr::mutate(rating_cl = as.numeric(acccl), # some var need to be defined as
+                  rating_u3 = as.numeric(accu3), # numeric again
+                  rating_ov = as.numeric(accov),
+                  diffi = as.numeric(diffi),
+                  infor = as.numeric(infor),
+                  value = as.numeric(value),
+                  effsize = as.numeric(effsize),
+                  effsize_cl = case_when( 
+                  # there is no negative Cliff's Delta, so we have to compute 
+                  # two transformations
+                      effsize > 0 ~   (((2*pnorm(effsize/2))-1)/pnorm(effsize/2)),
+                  # transform the actual effect size Cohen's d to Cliff's Delta
+                      effsize < 0 ~ (- (((2*pnorm(abs(effsize)/2))-1)/pnorm(abs(effsize)/2))) 
+                  # transform the actual effect size Cohen's d to Cliff's Delta 
+                  # and make it negative as in the item
+                  ),
+                  effsize_u3 = 1-pnorm(effsize), # reverse so that it fits the direction of the U3 item
+                  # transform the actual effect size Cohen's d to Cohen's U3
+                  effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
+                  # transform the actual effect size Cohen's d to overlap
+                  # actual difference of rating relative to depicted effectsize 
+                  diff_cl = (rating_cl - effsize_cl)/2,
+                  # actual difference of rating relative to depicted effectsize
+                  diff_u3 = (rating_u3/100) - effsize_u3,
+                  # actual difference of rating relative to depicted effectsize 
+                  diff_ov = (rating_ov/100) - effsize_ov,
+                  diffi_normed = ((diffi - 1)  / 3) - 1, # transform item to -1 to 1
+                  infor_normed = ((infor - 1)  / 3) - 1, # transform item to -1 to 1
+                  value_normed = ((value - 1)  / 3) - 1) %>%  # transform item to -1 to 1
+    group_by(session) %>% 
+    mutate(rating_ov_missconcept = median(rating_ov, na.rm = T) < 68.9,
+           rating_u3_missconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
+    ungroup() %>% 
+    mutate(rating_u3_filtered = ifelse(rating_u3_missconcept == T, NA, rating_u3),
+           rating_ov_filtered = ifelse(rating_ov_missconcept == T, NA, rating_ov),
+           diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
+           diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
+           sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
+                                        NA,
+                                        as.numeric(!grepl("equal", sensi))),
+           sensi_ordinal = ordered(factor(substr(sensi, 55, 100)),
+                                   levels = c("inferior",
+                                              "equal",
+                                              "superior")),
+           sensi_binary_filtered = case_when(sensi_ordinal == "equal" ~ 0, 
+                                              (sensi_ordinal == "inferior" & 
+                                                  effsize < 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize > 0) ~ as.numeric(NA),
+                                              TRUE ~ 1),
+           effsize_abs = abs(effsize))
+
+# create a list of u3_misconceptualizers
+u3_misconceptualizers <-
+    study1_w %>% 
+    filter(rating_u3_missconcept == T) %>% 
+    pull(session) %>% 
+    unique()
+
+# create a list of ov_misconceptualizers
+ov_misconceptualizers <-
+    study1_w %>% 
+    filter(rating_ov_missconcept == T) %>% 
+    pull(session) %>% 
+    unique()    
+
+### wrangle time stamp data ####################################################
+study1_w_timestamp <- 
+    read_csv(here("data/teachers_study1_N40_detailed.csv")) %>% 
+    # filter participants from study1_w only
+    filter(session %in% study1_w$session) %>% 
+    # we only need vars sensitivity or accuracy
+    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>%  
+    # create var with plot number
+    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1)),
+           # recode wrong item labelling
+           plot = ifelse(plot == "plotx__6", "plotx_06", plot)) %>% 
+    relocate(session, plot) %>% 
+    # delete the page number in item name
+    mutate(item_name = str_sub(item_name, 1, 5)) %>%  
+    pivot_wider(id_cols = c(session, plot), names_from = item_name, 
+                values_from = answered_relative) %>% 
+    rowwise() %>%
+    # what was the time of the first item to be clicked?
+    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>%
+    ungroup() %>% 
+    dplyr::select(session, plot, effic, sensi, acccl, accu3, accov) %>% 
+    left_join(., study1_w %>% 
+                  select(session, plot, type), by=c("session", "plot")) %>% 
+    # generate data set so that the six plots from the same type are ordered
+    # one after the other (and not 1-24)
+    group_by(session, type) %>% 
+    arrange(plot) %>% 
+    mutate(plotNrWithin = 1:n()) %>%
+    ungroup() %>% 
+    group_by(plotNrWithin, type) %>% 
+    mutate(effic_10righttrunc = ifelse(effic > quantile(effic, .9), NA, effic),
+           effic_05righttrunc = ifelse(effic > quantile(effic, .95), NA, effic),
+           log_effic_05righttrunc =log(effic_05righttrunc),
+           log_effic_10righttrunc = log(effic_10righttrunc),
+           plotNrWithin0 = plotNrWithin -1,
+           plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
+    ungroup()
+```
+
+
+```{r}
+results_overview1 <- study1_w %>%
+    group_by(type) %>%
+    dplyr::summarize(across(c(diffi:value, diff_cl, diff_u3_filtered, diff_ov_filtered), mean ,na.rm=T)) 
+
+results_overview2 <- study1_w_timestamp %>%
+    group_by(type) %>%
+    summarize(efficiency = mean(effic_05righttrunc, na.rm=T))
+
+results_overview <- full_join(results_overview1, results_overview2, by = "type")
+
+results_overview <- results_overview[c("type",
+                                       "diffi",
+                                       "efficiency",
+                                       "diff_u3_filtered",
+                                       "diff_ov_filtered",
+                                       "infor",
+                                       "value")]
+
+names(results_overview) <- c("Type",
+                             "Task Difficulty",
+                             "Efficiency",
+                             "Accuracy U3",
+                             "Accuracy overlap",
+                             "Informativity",
+                             "Value")
+
+results_overview$Type <- c("Gardner-Altman (x-Achse)",
+                           "Halfeye (x-Achse)",
+                           "Halfeye (y-Achse)",
+                           "Raincloud (y-Achse)")
+results_overview %>%
+  kbl(digits = 3) %>%
+  kable_paper(full_width = T) %>%
+  kable_styling(font_size = 24) %>%
+  column_spec(2, color = "white",
+              background = spec_color(results_overview$`Task Difficulty`, end = .8)) %>%
+  column_spec(3, color = "white",
+              background = spec_color(results_overview$Efficiency, begin = .8, end = 0)) %>%
+  column_spec(4, color = "white",
+                background = spec_color(abs(results_overview$`Accuracy U3`), begin = .8, end = 0)) %>%
+  column_spec(5, color = "white",
+                background = spec_color(abs(results_overview$`Accuracy overlap`), begin = .8, end = 0)) %>%
+  column_spec(6, color = "white",
+                background = spec_color(abs(results_overview$Informativity), end = .8)) %>%
+  column_spec(7, color = "white",
+                background = spec_color(results_overview$Value, end = .8))
+```
+
+
+::: {.notes}
+* __Which visualization type__ performed best regarding this variable?
+* in this __table__ I have colored the values __from the worst__ value (dark) to __the best__ value (green)<br />`r fa(name = "arrow-right")` you can quickly see: half-eye plots with distinction on the y-axis consistently perform best.
+* Effects:
+  - Halfeye vs. Gardner: small to moderate; large with efficiency
+  - Halfeye vs. Raincloud: small (informativity, value), moderate (difficulty)<br /><br /><br /><br />
+
+* Gardner-Altman - halfeye (.26 ≤ d ≤ 0.54) less __difficult__, more __informative__ and __valuable__  
+* raincloud - halfeye (.25 ≤ d ≤ 0.43) less __difficult__
+* halfeye __Y__ - raincloud (d = .25) __informativity__, value (d = .24)
+* halfeye - halfeye (vernachlässigbar) __informativity__, value
+* halfeye and raincloud - Gardner-Altman plots (-.79 ≤ d ≤ -.69) faster __dwell times__
+* halfeye - raincloud (-.14 ≤ d ≤ .15) similarly __efficient__
+:::
+
+
+
+## Study 1: Visualization types
+### Results
+
+```{r}
+ggplot(study1_w %>% 
+    select(rating_cl, rating_u3, rating_ov, effsize, effsize_cl, session) %>% 
+    pivot_longer(
+        c(rating_cl, rating_u3, rating_ov),
+        names_to = "operationalization", 
+        values_to = "judged_effectsize"
+        ),
+    aes(judged_effectsize, as.numeric(as.factor(session)),
+        color = session)
+        ) +
+    geom_jitter(height = 0) +
+    facet_wrap(~ operationalization, scales = "free_x") +
+    theme_modern_rc() +
+    theme(legend.position = "none",
+          strip.text = element_text(color = "white"))
+```
+
+::: {.notes}
+* What we could also __observe__ were - as mentioned above - misconceptions.
+* These __showed__ themselves both 
+  - in the assessment of the __overlap__ 
+  - as well as in the assessment of the __item formulated as Cohen's__ U3.
+* In this graph you see 
+  - the participants as lines on the y-axis
+  - and in each case their __estimation__ on the x-axis, e.g., for the question _"How large is the overlap between the groups?"_
+* d=.8 
+  - Overlap: 69% (proportion of misconceptions: 20%)
+  - U3: 21% (proportion of misconceptions: 55%)
+:::
+
+
+
+## Study 2: Enrichment options
+### Design
+
+:::: {.columns}  
+::: {.column width="29%"}
+  <div class="blueTop">__Study 2__</div>
+  <div class="blueBottom"><br />Comparison of the effect of different __enrichment__ options on understanding.<br /><br />_confirmatory_</div>
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="65%"}
+* __Teachers__ (N = Bayesian updating)<br /><br />
+* __2 RCTs__
+  - Factor: visual benchmarking (yes vs. no)
+  - Factor: signaling (difference, overlap, no signaling)
+:::
+::::
+  
+::: {.notes}
+
+In a second study, we aim to reduce these misconceptions by, among other things.
+
+* enriching the visualizations
+* e.g. by visual benchmarking (__we as scientists__ also use this as an __interpretation aid__)
+* or signalling (__know__ from __multimedia research__ that signalling can promote understanding).
+
+:::
+
+
+
+## Study 2: Enrichment options
+### Design
+
+
+:::: {.columns}  
+::: {.column width="37%"}
+![](www/benchmarking.jpg){width=100%}
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](www/signaling_overlap.jpg){width=100%}  
+![](www/signaling_cohensU3.jpg){width=100%}
+:::
+::::
+  
+::: {.notes}
+:::
+  
+
+## Discussion
+
+* Visualization type __relevant predictor__ of successful communication of effect sizes<br /><br /><br />
+* __Halfeye plot__ as promising visualization type<br /><br /><br />
+* Evidence of danger from __misconceptions__<br /><br /><br />
+* Not stand-alone: context clearinghouses and teacher education/training. 
+
+
+
+# Thank you!
+
+![](../www/dipf-logo.png){width=20%}  
+\
+
+__Jürgen Schneider__  
+ju.schneider@dipf.de  
+  
+\
+
+<div style="position: absolute; top: 14%; left: 70%; width: 20%;">
+__Cooperation__<br /><br />
+![](../www/logo.gif){width=100%}  
+![](../www/ph_logo.png){width=100%}  
+
+
+</div>
+
+
+# {-}
+
+
+<div id="refs"></div>
+
+
+
+# &nbsp;
+__Icons:__  
+
+Icons by Font Awesome CC BY 4.0
+
+
+
+## Theory
+### Why science communication?
+
+
+
+* Teachers: are encouraged to consider __evidence__ from research [@slavin.2020; @brownetal.2017]<br /><br /><br /><br />
+* Challenges: are __seldom__ based on research findings in daily practice  [e.g., @thommetal.2021]<br /><br /><br /><br />
+* Current approaches for __teacher-oriented__ science communication.<br /> [@hedges.2018; @farley-rippleetal.2020]
+
+
+::: {.notes}
+* Teachers are encouraged to consider evidence in their professional practice
+* teachers rarely draw on research evidence in their daily practice
+* different strategies exist to increase / foster teachers’ engagement with evidence
+* current approaches: toward a more teacher-friendly science communication
+:::
+
+
+## Theory
+### State of research on visualization of statistical information (for laypeople)
+
+* Laypersons are __unimpressed__ by graphically represented ES [@mcphetrespennycook.2020]<br /><br /><br />
+* Adding mean values to plots increases perceived ES [@kaleetal.2020]
+
+::: {.notes}
+* for d=.9: ~55% would say "Group A definitively has higher scores than Group B"
+  + they would call it something between "small" and "medium"
+* in a sense that it increases bias
+:::
+
+
+## Theory
+### What we know about visualizing data (in general)
+
+<div class="franconeri"></div>
+
+::: {.notes}
+
+* there is quite some basic research on visualizing information
+* for example using position (dot plot) it is easier estimating the mean than using areas
+* these results give us first ideas of what to expect
+* however, when plotting ES, several of these phenomena come together: most plots use position AND length AND area
+
+:::
+
+
+## Theory
+### State of research on visualization of statistical information (for laypeople)
+
+\
+
+__Accuracy__ of estimation of statistical information: __visualization type__ plays a role
+
+* box plots: `r fa(name = "thumbs-up")` Dispersion; `r fa(name = "thumbs-down")` distribution
+* bar/line plot: `r fa(name = "thumbs-up")` Mean
+* modified stock chart: `r fa(name = "thumbs-up")` Minima, Maxima; `r fa(name = "thumbs-down")` dispersion [@albersetal.2014; @piercechick.2013]
+
+. . .
+
+\
+\
+
+__Support in process__: __enrichment options__
+
+* benchmarks (anchoring) [@cohen.1988; @jacowitzkahneman.1995]
+* cues (signaling) [@schneideretal.2018]
+
+::: {.notes}
+* there is a lot of basic research on visualizing statistical information
+* however, when plotting ES a lot of these phenomena we know about on a __small scale__ come together and interact
+* there is __first evidence__ that the __type of__ visualization we choose 
+* plays a role as to how __accurately__ lay people estimate statistical information
+
+-
+
+* Enrichment options for these visualizations may further support the complex processes of sense-making
+* A common approach is to provide __standardized benchmarks__ against which also researchers typically anchor their interpretations
+* research on multimedia learning suggests that the use of __cues__ (e.g. arrows, labels) can direct observers' attention.
+* This so-called signaling effect can increase understanding and reduce cognitive load
+:::
+
+
+
+## Study 1 | plot types: Results, Descriptives
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, diffi)) +
+    geom_jitter(alpha=.5) +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white",
+                 size=1.2) +
+    theme_modern_rc() +
+    labs(title = "Difficulty",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+## Study 1 | plot types: Results efficiency
+
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_05righttrunc)) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    coord_cartesian(ylim = c(0,85000)) + 
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="5% Truncated Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+## Study 1 | plot types: Results, Descriptives
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, infor)) +
+    geom_jitter(alpha=.5) +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white",
+                 size=1.2) +
+    theme_modern_rc() +
+    labs(title = "Informativity",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+## Study 1 | plot types: Results, Descriptives
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, value)) +
+    geom_jitter(alpha=.5) +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white",
+                 size=1.2) +
+    theme_modern_rc() +
+    labs(title = "Perceived Value",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+
+## Study 1 | plot types: Results accuracy
+
+```{r}
+study1_w %>% 
+    select(rating_cl, rating_u3, rating_ov) %>% 
+    pivot_longer(
+        c(rating_cl, rating_u3, rating_ov),
+        names_to = "dependent_variable", 
+        values_to = "rated_effectsize"
+        ) %>% 
+    ggplot(., aes(rated_effectsize)) +
+    geom_histogram() +
+    facet_wrap(~dependent_variable, scales = "free_x") +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"))
+```
+
+
+## Study 1 | plot types: Results accuracy
+
+```{r}
+study1_w %>% 
+    ggplot(., aes(effsize_cl, rating_cl)) +
+    geom_jitter() +
+    stat_smooth() +
+    theme_modern_rc()
+```
+
+
+## Study 1 | plot types: Results accuracy
+```{r}
+study1_w %>% 
+    ggplot(., aes(effsize_u3*100, rating_u3, color = rating_u3_missconcept)) +
+    geom_jitter() +
+    stat_smooth() +
+    theme_modern_rc()
+```
+
+## Study 1 | plot types: Results accuracy
+
+```{r}
+study1_w %>% 
+    ggplot(., aes(effsize_ov*100, rating_ov, color = rating_ov_missconcept)) +
+    geom_jitter() +
+    stat_smooth() +
+    theme_modern_rc()
+```
+
+## Study 1 | plot types: Results accuracy
+
+```{r}
+study1_w %>% 
+    dplyr::select(diff_cl, diff_u3_filtered, diff_ov_filtered, session, type) %>% 
+    gather(dependent_variable, difference_to_true_effsize, 
+           diff_cl, diff_u3_filtered, diff_ov_filtered) %>% 
+    ggplot(., aes(type, difference_to_true_effsize)) +
+    facet_wrap(~dependent_variable) +
+    geom_jitter(aes(color = type)) +
+    geom_boxplot(alpha = .7) +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"),
+          axis.text.x = element_blank())
+```
+<br />without misconceptions
+
+
+## Study 2: Enrichment options
+### Design
+
+
+:::: {.columns}  
+::: {.column width="37%"}
+![](www/benchmarking.jpg){width=100%}
+:::
+
+::: {.column width="62%"}
+* increases accuracy [@kimetal.2022, Schmidt et al., 2023].
+* increases task difficulty [@baddeley.1992]
+* decreases effciency
+* increases informativeness
+* increases value
+:::
+::::
+  
+::: {.notes}
+:::
+  
+
+## Studie 2: Anreicherungsoptionen
+### Design
+
+:::: {.columns}  
+::: {.column width="30%"}
+![](www/signaling_overlap.jpg){width=100%}  
+![](www/signaling_cohensU3.jpg){width=100%}
+:::
+  
+::: {.column width="67%"}
+
+* increases accuracy (if no misconception)
+* reduces number of misconceptions
+* increases sensitivity
+* increases task difficulty
+* increases efficiency
+* increases informativeness
+* increases value
+
+:::
+::::
+
+
+::: {.notes}
+signaling difference (when estimating a difference metric):
+:::
