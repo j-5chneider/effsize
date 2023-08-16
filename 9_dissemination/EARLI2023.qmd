@@ -5,14 +5,14 @@ title-slide-attributes:
   data-background-image: www/title-bg.jpg
   data-background-size: cover
   data-background-opacity: "0.3"
-author: "<b>Jürgen Schneider</b><br /><span style='font-size: .8em'>Kirstin Schmidt, Kristina Bohrer, Samuel Merk, Iris Backfisch, Salome Wagner</span>"
+author: "<b>Jürgen Schneider</b><br /><span style='font-size: .8em'>Kirstin Schmidt, Kristina Bohrer, Samuel Merk</span>"
 date: last-modified # today
 date-format: "23 Feb 2023" # "DD MMMM YYYY"
 format: 
   revealjs:
       theme: [sky, www/custom.scss] # sky default
       logo: www/dipf-logo.png
-      footer: "Folien: [bit.ly/gebf23-v](https://bit.ly/gebf23-v) (view) | [bit.ly/gebf23-g](https://bit.ly/gebf23-g) (download from github)"
+      footer: "Slides: [bit.ly/earli23-v](https://bit.ly/earli23-v) (view) | [bit.ly/earli23-d](https://bit.ly/earli23-d) (download from github)"
       smaller: true
       scrollable: true
       width: 1500
