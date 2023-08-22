@@ -6,8 +6,8 @@ title-slide-attributes:
   data-background-size: cover
   data-background-opacity: "0.3"
 author: "<b>Jürgen Schneider</b><br /><span style='font-size: .8em'>Kirstin Schmidt, Kristina Bohrer, Samuel Merk</span>"
-date: last-modified # today
-date-format: "23 Feb 2023" # "DD MMMM YYYY"
+date: "26 Aug 2023" #last-modified # today
+date-format: "DD MMMM YYYY"
 format: 
   revealjs:
       theme: [sky, www/custom.scss] # sky default
