@@ -109,13 +109,13 @@ library(kableExtra)
 
 
 ::: {.notes}
-* Evidence that for teachers __challenging__:
-    - Cohen's d & percentile gain (WWC): wenig __informativ__
-* Translations: transport undesirable characteristics<br />`r fa(name = "arrow-right")` e.g., poorly comparable across age levels.
+* Evidence: is __challenging__ for teachers:
+    - Cohen's d & percentile gain (WWC): little __information value__
+* Translations: transport undesirable characteristics<br />`r fa(name = "arrow-right")` e.g., poorly comparable across age levels
 * ...
 * Advantage:
-    - statistical information __very quickly__ and __accurately__ ascertainable.
-    - depending on __type__ of visualization and __enrichment__<br />`r fa(name = "arrow-right")` box plots: `r fa(name = "thumbs-up")` dispersion; `r fa(name = "thumbs-down")` distribution.
+    - specific statistical information grasped __very quickly__ and __accurately__
+    - depending on __type__ of visualization and __enrichment__<br />`r fa(name = "arrow-right")` box plots: `r fa(name = "thumbs-up")` dispersion; `r fa(name = "thumbs-down")` distribution
 :::
 
 
@@ -146,8 +146,8 @@ library(kableExtra)
 
 
 ::: {.notes}
-* What do we measure a __low-threshold__, teacher-oriented visualization by?
-* We look at __3 aspects__ that are relevant in the __framework of science communication__.
+* How do we conceptualize visualizations that are __accessible__ and teacher-oriented ?
+* We look at __3 aspects__ that are relevant in a __framework of science communication__
 :::
 
 ## Theory
@@ -250,7 +250,7 @@ Based on research on __communication__ and __visualization__ of __ES__, we consi
 
 ::: {.notes}
 
-In terms of relevance to practice, we look at:
+In terms of perceived practical relevance, we look at:
 
 * how __valuable__ and __informative__ the participants consider the information to be for their practice.
 
@@ -270,12 +270,12 @@ In terms of relevance to practice, we look at:
 
 ::: {.column width="30%"}
  <div class="blueTop">__Study 1__</div>
-  <div class="blueBottom"><br />Comparison of the effect of different __visualization types__ on comprehension<br /><br />_exploratory_</div>
+  <div class="blueBottom"><br />Comparison of the effect of different __visualization types__ on sense-making<br /><br />_exploratory_</div>
 :::
 
 ::: {.column width="30%"}
  <div class="blueTop">__Study 2__</div>
-  <div class="blueBottom"><br />Comparison of the effect of different __enrichment__ options on understanding.<br /><br />_confirmatory_</div>
+  <div class="blueBottom"><br />Comparison of the effect of different __enrichment__ options on sense-making<br /><br />_confirmatory_</div>
 :::
 
 ::::
@@ -314,7 +314,7 @@ In the context of the project: 3 studies
 
 
 _"How accurately might teachers assess the ES depicted in the plot above?"_  
-(7-stufige Likert Skala; totally random - totally accurate)
+(7-point Likert scale; totally random - totally accurate)
 
 . . .
 
@@ -326,7 +326,7 @@ __Results: "Top ranked" visualizations__
 ![](../www/best_ranked.jpg){width=65%}  
 
 ::: {.notes}
-* then, in an __iterative procedure__, we asked the experts to __guess__ and __rank__ the visualization types.
+* we then asked the experts to __rate__ and __rank__ the visualization types
 
 -
 
@@ -342,7 +342,7 @@ __Results: "Top ranked" visualizations__
 :::: {.columns}  
 ::: {.column width="30%"}
  <div class="blueTop">__Study 1__</div>
-  <div class="blueBottom"><br />Comparison of the effect of different __visualization types__ on comprehension<br /><br />_exploratory_</div>
+  <div class="blueBottom"><br />Comparison of the effect of different __visualization types__ on senst-making<br /><br />_exploratory_</div>
 :::
 
 ::: {.column width="4%"}
@@ -655,7 +655,9 @@ study1_w_timestamp <-
            plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
     ungroup()
 ```
-
+\
+\
+\
 
 ```{r}
 results_overview1 <- study1_w %>%
@@ -809,97 +811,6 @@ ggarrange(p1, p2, p3 + rremove("y.text"),
 
 
 
-## Study 2: Enrichment options
-### Design
-
-:::: {.columns}  
-::: {.column width="29%"}
-  <div class="blueTop">__Study 2__</div>
-  <div class="blueBottom"><br />Comparison of the effect of different __enrichment__ options on understanding.<br /><br />_confirmatory_</div>
-:::
-
-::: {.column width="4%"}
-:::
-
-::: {.column width="60%"}
-* __Teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: signaling (difference, overlap, no signaling)
-:::
-::::
-  
-::: {.notes}
-
-In a second study, we aim to reduce these misconceptions by, among other things.
-
-* enriching the visualizations
-* e.g. by visual benchmarking (__we as scientists__ also use this as an __interpretation aid__)
-* or signalling (__know__ from __multimedia research__ that signalling can promote understanding).
-
-:::
-
-
-## Study 2: Enrichment options
-### Design
-
-:::: {.columns}  
-::: {.column width="29%"}
-![](www/benchmarking.jpg){width=65%}
-:::
-
-::: {.column width="4%"}
-:::
-
-::: {.column width="60%"}
-* __Teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: signaling (difference, overlap, no signaling)
-:::
-::::
-  
-::: {.notes}
-
-In a second study, we aim to reduce these misconceptions by, among other things.
-
-* enriching the visualizations
-* e.g. by visual benchmarking (__we as scientists__ also use this as an __interpretation aid__)
-* or signalling (__know__ from __multimedia research__ that signalling can promote understanding).
-
-:::
-
-
-## Study 2: Enrichment options
-### Design
-
-:::: {.columns}  
-::: {.column width="29%"}
-![](www/signaling_overlap.jpg){width=100%}  
-![](www/signaling_cohensU3.jpg){width=100%}
-:::
-
-::: {.column width="4%"}
-:::
-
-::: {.column width="60%"}
-* __Teachers__ (N = Bayesian updating)<br /><br />
-* __2 RCTs__
-  - Factor: visual benchmarking (yes vs. no)
-  - Factor: signaling (difference, overlap, no signaling)
-:::
-::::
-  
-::: {.notes}
-
-In a second study, we aim to reduce these misconceptions by, among other things.
-
-* enriching the visualizations
-* e.g. by visual benchmarking (__we as scientists__ also use this as an __interpretation aid__)
-* or signalling (__know__ from __multimedia research__ that signalling can promote understanding).
-
-:::
-
 
 
   
@@ -909,7 +820,8 @@ In a second study, we aim to reduce these misconceptions by, among other things.
 * Visualization type __relevant predictor__ of successful communication of effect sizes<br /><br /><br />
 * __Halfeye plot__ as promising visualization type<br /><br /><br />
 * Evidence of danger from __misconceptions__<br /><br /><br />
-* Not stand-alone: context clearinghouses and teacher education/training. 
+* __Not stand-alone__: context clearinghouses and teacher education/training<br /><br /><br />
+* Limitation: Not (yet) compared to __textual__ representations
 
 
 
@@ -1156,6 +1068,97 @@ study1_w %>%
           axis.text.x = element_blank())
 ```
 <br />without misconceptions
+
+## Study 2: Enrichment options
+### Design
+
+:::: {.columns}  
+::: {.column width="29%"}
+  <div class="blueTop">__Study 2__</div>
+  <div class="blueBottom"><br />Comparison of the effect of different __enrichment__ options on understanding.<br /><br />_confirmatory_</div>
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="60%"}
+* __Teachers__ (N = Bayesian updating)<br /><br />
+* __2 RCTs__
+  - Factor: visual benchmarking (yes vs. no)
+  - Factor: signaling (difference, overlap, no signaling)
+:::
+::::
+  
+::: {.notes}
+
+In a second study, we aim to reduce these misconceptions by, among other things.
+
+* enriching the visualizations
+* e.g. by visual benchmarking (__we as scientists__ also use this as an __interpretation aid__)
+* or signalling (__know__ from __multimedia research__ that signalling can promote understanding).
+
+:::
+
+
+## Study 2: Enrichment options
+### Design
+
+:::: {.columns}  
+::: {.column width="29%"}
+![](www/benchmarking.jpg){width=65%}
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="60%"}
+* __Teachers__ (N = Bayesian updating)<br /><br />
+* __2 RCTs__
+  - Factor: visual benchmarking (yes vs. no)
+  - Factor: signaling (difference, overlap, no signaling)
+:::
+::::
+  
+::: {.notes}
+
+In a second study, we aim to reduce these misconceptions by, among other things.
+
+* enriching the visualizations
+* e.g. by visual benchmarking (__we as scientists__ also use this as an __interpretation aid__)
+* or signalling (__know__ from __multimedia research__ that signalling can promote understanding).
+
+:::
+
+
+## Study 2: Enrichment options
+### Design
+
+:::: {.columns}  
+::: {.column width="29%"}
+![](www/signaling_overlap.jpg){width=100%}  
+![](www/signaling_cohensU3.jpg){width=100%}
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="60%"}
+* __Teachers__ (N = Bayesian updating)<br /><br />
+* __2 RCTs__
+  - Factor: visual benchmarking (yes vs. no)
+  - Factor: signaling (difference, overlap, no signaling)
+:::
+::::
+  
+::: {.notes}
+
+In a second study, we aim to reduce these misconceptions by, among other things.
+
+* enriching the visualizations
+* e.g. by visual benchmarking (__we as scientists__ also use this as an __interpretation aid__)
+* or signalling (__know__ from __multimedia research__ that signalling can promote understanding).
+
+:::
 
 
 ## Study 2: Enrichment options
