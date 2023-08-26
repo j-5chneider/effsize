@@ -299,8 +299,8 @@ In the context of the project: 3 studies
 ![](../www/eff1.jpg){width=30%}
 
 ::: {.notes}
-* for the Delphi studies, we surveyed 4 experts in data visualization<br />`r fa(name = "arrow-right")` __which visualization types__ they felt were appropriate for communicating __group scores on a metric variable__ to teachers.
-* __synthesis__ of the lists yielded 16 visualization types.
+* for the Delphi studies, we surveyed 4 experts in data visualization<br />`r fa(name = "arrow-right")` __which visualization types__ they felt were appropriate for communicating __group scores on a metric variable__ to teachers.<br />
+* __synthesis__ of the lists yielded 16 visualization types.<br />
 * for these, we then distinguished the groups respectively on the x-axis, the y-axis, and by color
 :::
 
@@ -330,8 +330,7 @@ __Results: "Top ranked" visualizations__
 
 -
 
-* __best ranked__ were the visualizations....
-* as is common in Delphi studies, we produced the ranking in several interations<br />`r fa(name = "arrow-right")` however, we did not compute an assessor match.
+* __best ranked__ were the visualizations...
 * these 4 visualizations were then examined in the subsequent study.
 :::
 
@@ -365,12 +364,11 @@ __Results: "Top ranked" visualizations__
 ::::
 
 ::: {.notes}
-* in study 1 we investigated the __effect of these visualizations__ on our __3 aspects of comprehension__.
+* in study 1 we investigated the __effect of these visualizations__ on our __3 aspects of sense-making__.
 * to do this, we __surveyed__ 40 teachers, 
 * each of whom assessed 24 visualizations
   - they went through __all 4 visualization types__
   - which we depicted __6x__ each in __different effect sizes__
-* We __contextualized__ the shown __data__ of the visualizations by __short study descriptions__.
 :::
 
 
@@ -435,7 +433,7 @@ measures %>%
 ## Study 1: Visualization types
 ### Results
 
-Bayesian multilevel analysis: dummy-coded visualization types  
+__Bayesian multilevel__ analysis: dummy-coded visualization types  
 
 \
 
@@ -686,10 +684,10 @@ names(results_overview) <- c("Type",
                              "Informativity",
                              "Value")
 
-results_overview$Type <- c("Gardner-Altman (x-Achse)",
-                           "Halfeye (x-Achse)",
-                           "Halfeye (y-Achse)",
-                           "Raincloud (y-Achse)")
+results_overview$Type <- c("Gardner-Altman (x-axis)",
+                           "Halfeye (x-axis)",
+                           "Halfeye (y-axis)",
+                           "Raincloud (y-axis)")
 results_overview %>%
   kbl(digits = 3) %>%
   kable_paper(full_width = T) %>%
