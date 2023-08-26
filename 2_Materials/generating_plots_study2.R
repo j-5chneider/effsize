@@ -120,7 +120,6 @@ for (i1 in group_names) {# all group names (vignettes)
 ### Script for producing and saving the plots                   ############# #
 ### Condition: Benchmarks                                       ###############
 ###                                                             ############# #
-### Original script from Samuel Merk                            ############# #
 ############################################################################# #
 
 

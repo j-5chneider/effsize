@@ -13,6 +13,10 @@ library(ggh4x)
 library(egg)
 library(grid)
 
+############################################################################# #
+########  CHECK COMPREHENSION OF DISPERSION       #############################
+############################################################################# #
+
 ## basic characteristics of the data ##########################################
 # generate list of group names
 group_names <- list(c("reading\non tablet", "reading\non paper"),
@@ -20,7 +24,7 @@ group_names <- list(c("reading\non tablet", "reading\non paper"),
                     c("computer\nsimulation", "real\nlaboratory"),
                     c("with\nsubtitles", "without\nsubtitles"))
 
-# Effect sizes. Based on thresholds of Cohen's d (Cohen, 1988)
+# Effect sizes = 0 as we focus on dispersion
 es <- 0
 
 
@@ -56,10 +60,10 @@ for (i1 in group_names) {# all group names (vignettes)
         
         # save this plot
         ggsave(
-            file = paste0("2_Materials/plots/halfeye_yaxis_", 
+            file = paste0("2_Materials/7_treatment-checks/halfeye_yaxis_", 
                           str_remove(gsub(" ", "", i1[1]), "\n"), 
                           str_remove(gsub(" ", "", i1[2]), "\n"), 
-                          "_treatmentCheck-variance.svg"),
+                          "_treatmentCheck-dispersion.svg"),
             width = 6,
             height = 6,
             device = "svg"
@@ -97,10 +101,10 @@ for (i1 in group_names) {# all group names (vignettes)
         
         # save this plot
         ggsave(
-            file = paste0("2_Materials/plots/halfeye_xaxis_", 
+            file = paste0("2_Materials/7_treatment-checks/halfeye_xaxis_", 
                           str_remove(gsub(" ", "", i1[1]), "\n"), 
                           str_remove(gsub(" ", "", i1[2]), "\n"), 
-                          "_treatmentCheck-variance.svg"),
+                          "_treatmentCheck-dispersion.svg"),
             width = 6,
             height = 6,
             device = "svg"
@@ -136,7 +140,7 @@ ggplot(data, aes(x=testscore, y=group)) +
 
 # save this plot
 ggsave(
-    file = paste0("2_Materials/plots/halfeye_yaxis_", 
+    file = paste0("2_Materials/7_treatment-checks/halfeye_yaxis_", 
                   "_treatmentCheck-axis.svg"),
     width = 6,
     height = 6,
@@ -168,9 +172,15 @@ ggplot(data, aes(x=testscore, y=group)) +
 
 # save this plot
 ggsave(
-    file = paste0("2_Materials/plots/halfeye_xaxis_", 
+    file = paste0("2_Materials/7_treatment-checks/halfeye_xaxis_", 
                   "_treatmentCheck-axis.svg"),
     width = 6,
     height = 6,
     device = "svg"
 )
+
+
+
+############################################################################# #
+########                  #############################
+############################################################################# #
