@@ -12,7 +12,7 @@ format:
   revealjs:
       theme: [sky, www/custom.scss] # sky default
       logo: www/dipf-logo.png
-      footer: "Folien: [bit.ly/gebf23-v](https://bit.ly/gebf23-v) (view) | [bit.ly/gebf23-g](https://bit.ly/gebf23-g) (download from github)"
+      footer: "Folien: [bit.ly/klarpsy-v](https://bit.ly/klarpsy-v) (view) | [bit.ly/klarpsy-d](https://bit.ly/klarpsy-d) (download from github)"
       smaller: true
       scrollable: true
       width: 1500
@@ -49,7 +49,7 @@ library(kableExtra)
 ::: {.column width="65%"}
 \
 
-* "__Clearinghouse__" Ansätze<br />`r fa(name = "arrow-right")` Evidenzbasis systematischer Forschung bereitstellen [@Knogleretal.2022]<br /><br /><br /><br />
+* "__Clearinghouse__" Ansätze<br />`r fa(name = "arrow-right")` Evidenzbasis systematischer Forschung bereitstellen [@Knogler.etal.2022]<br /><br /><br /><br />
 * Verwendung der Materialien in Lehrpersonenbildung [@Shavelson.2020]<br /><br /><br /><br />
 * Effektstärken (ES) als eine der __Schlüsselinformationen__ [@Burns.etal.2011]<br /><br /><br /><br />
 * Wissenschaftler*innen und "Clearinghouses" verwenden in der Regel standardisierte __textuelle__ ES-Metriken [@Cohen.1988]
@@ -242,7 +242,7 @@ Basierend auf Forschung zur __Kommunikation__ und __Visualisierung__ von __ES__ 
 ::::
 
 
-[@lortie-forguesetal.2021]
+[@Lortie-Forgues.etal.2021]
 
 
 ::: {.notes}
