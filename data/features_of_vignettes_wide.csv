@@ -1,0 +1,5 @@
+Text_id	Tags	Text_title	Lexical Richness: Type Token Ratio (Root TTR)	Mean Sentence Length in Tokens	Number of Connectives: Breindl All Connectives	Lexical Variation Feature: Modifier	Mean Token Length in Syllables	Syntactic Complexity Feature: Complex Nominals per Clause
+334247		digital_analog	6.36396103067893	18.0	10.0	0.135135135135135	1.94444444444444	0.4
+334248		live_video	6.88333361752435	17.75	2.0	0.135135135135135	2.23943661971831	0.333333333333333
+334249		simulation_realExperiment	6.27737249216624	18.5	1.0	0.138888888888889	2.5	0.75
+334250		mit_ohneUntertitel	5.8925565098879	18.0	1.0	0.108108108108108	2.33333333333333	0.4
