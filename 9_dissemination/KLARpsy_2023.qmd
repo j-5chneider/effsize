@@ -2,9 +2,9 @@
 title: 'Vermittlung von Effektgrößen an Lehrkräfte' 
 subtitle: 'Untersuchung verschiedener Visualisierungen'
 title-slide-attributes:
-  data-background-image: www/title-bg.jpg
+  data-background-image: www/title-bg1.jpg
   data-background-size: cover
-  data-background-opacity: "0.3"
+  #data-background-opacity: "0.3"
 author: "<b>Jürgen Schneider</b><br /><span style='font-size: .8em'>Kirstin Schmidt, Kristina Bohrer, Samuel Merk</span>"
 date: last-modified # today
 date-format: "18 Oct 2023" # "DD MMMM YYYY"
