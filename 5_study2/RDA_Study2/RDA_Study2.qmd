@@ -12,19 +12,16 @@ editor_options:
 ```{r}
 library(formr)
 library(tidyverse)
+library(skimr)
+library(GGally)
 
-# Interactivly define account credentials
+# Import item data from .csv
+study2_data <- read_csv("data/teachers_study2_update00.csv")
 
-# Add credentials
-formr_connect(keyring = "der_kristina_ihr_formr")
 
-# Or use plain text
-formr_connect(email = "kristina.bohrer@gmx.de",
-              password = "hovcez-dakQyc-7wukzu")
 
-# Download data
-study2_data <- formr_results("TueDiBASE_study2")
-formr_disconnect()
+
+#study2_w_timestamp <- read_csv("data/")
 ```
 
 
@@ -40,6 +37,7 @@ data <-
 ```
 
 ## Data wrangling
+### Wrangling item data
 First we create a specific dataframe which contains the information about effect size, plottype ...
 ```{r}
 plot_info <- data %>%
@@ -58,6 +56,7 @@ plot_info <- data %>%
 
 Next we wrangle a separate dataframe which contains just the answers of the participants to the items, their identifier and the plotorder.
 ```{r}
+#| label: item_datawrangling
 item_values <- data %>%
     dplyr::select(session, contains(c("sensi_", "acccl_", "accov_", "accu3_", "value_", "infor_", "diffi_"))) %>% 
     pivot_longer(-session, names_to = "variables", values_to = "values", 
@@ -73,6 +72,7 @@ item_values <- data %>%
 
 Then we join these two data sets and recode/calculate some of the dependet variables like accuracy...
 ```{r}
+#| label: item_datajoining
 data_w <- full_join(plot_info, 
                     item_values,
                     by = c("session", "plot")) %>% 
@@ -104,11 +104,11 @@ data_w <- full_join(plot_info,
            # actual difference of rating relative to depicted effectsize 
            diff_ov = (rating_ov/100) - effsize_ov) %>%
     group_by(session) %>% 
-    mutate(rating_ov_missconcept = median(rating_ov, na.rm = T) < 68.9,
-           rating_u3_missconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
+    mutate(rating_ov_misconcept = median(rating_ov, na.rm = T) < 68.9,
+           rating_u3_misconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
     ungroup() %>% 
-    mutate(rating_u3_filtered = ifelse(rating_u3_missconcept == T, NA, rating_u3),
-           rating_ov_filtered = ifelse(rating_ov_missconcept == T, NA, rating_ov),
+    mutate(rating_u3_filtered = ifelse(rating_u3_misconcept == T, NA, rating_u3),
+           rating_ov_filtered = ifelse(rating_ov_misconcept == T, NA, rating_ov),
            diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
            diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
            sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
@@ -141,6 +141,173 @@ data_w <- full_join(plot_info,
            effsize_abs = abs(effsize))
 ```
 
+### Wrangling time data
+```{r}
+#| label: timestamp_datawrangling
+#study_w_timestamp <- 
+#    read_csv(here("data/teachers_study1_N40_detailed.csv")) %>% 
+#    # filter participants from study1_w only
+#    filter(session %in% study1_w$session) %>% 
+#    # we only need vars sensitivity or accuracy
+#    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>%  
+#    # create var with plot number
+#    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1)),
+#           # recode wrong item labelling
+#           plot = ifelse(plot == "plotx__6", "plotx_06", plot)) %>% 
+#    relocate(session, plot) %>% 
+#    # delete the page number in item name
+#    mutate(item_name = str_sub(item_name, 1, 5)) %>%  
+#    pivot_wider(id_cols = c(session, plot), names_from = item_name, 
+#                values_from = answered_relative) %>% 
+#    rowwise() %>%
+#    # what was the time of the first item to be clicked?
+#    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>%
+#    ungroup() %>% 
+#    dplyr::select(session, plot, effic, sensi, acccl, accu3, accov) %>% 
+#    left_join(., study1_w %>% 
+#                  select(session, plot, type), by=c("session", "plot")) %>% 
+#    # generate data set so that the six plots from the same type are ordered
+#    # one after the other (and not 1-24)
+#    group_by(session, type) %>% 
+#    arrange(plot) %>% 
+#    mutate(plotNrWithin = 1:n()) %>%
+#    ungroup() %>% 
+#    group_by(plotNrWithin, type) %>% 
+#    mutate(effic_10righttrunc = ifelse(effic > quantile(effic, .9), NA, effic),
+#           effic_05righttrunc = ifelse(effic > quantile(effic, .95), NA, effic),
+#           log_effic_05righttrunc =log(effic_05righttrunc),
+#           log_effic_10righttrunc = log(effic_10righttrunc),
+#           plotNrWithin0 = plotNrWithin -1,
+#           plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
+#    ungroup()
+```
+
+## Demographics
+```{r}
+#| label: demographics
+sociodemographics <- 
+    read_delim("data/teachers_study2_update00.csv") %>%
+    select(session, mcstu, texpe, mcsub) %>% 
+    mutate(reply = session %in% c(data$session)) %>%
+    filter(!reply == "FALSE") %>%
+    select(-reply) %>%
+    mutate(
+        mcstu = as.factor(mcstu),
+        texpe = as.numeric(texpe),
+        mcsub = as.factor(mcsub),
+        subject_stem = grepl("1", mcsub),
+        subject_languages = grepl("2", mcsub),
+        subject_humanities_socialscience = grepl("3", mcsub),
+        subject_asthetic = grepl("4", mcsub)
+    ) 
+
+skim(sociodemographics) 
+```
+
+## Always plot yor raw data
+### Dependent variables
+#### Likert items
+```{r}
+#| label: plot raw diffi infor value
+
+data |> 
+  select(session, starts_with(c("diffi_", "infor_", "value_"))) |> 
+    gather(variable, value, -session) |> 
+    mutate(plot = substr(variable, 7, 8),
+           variable = substr(variable, 1, 5)) |>
+    spread(variable, value) |> 
+    mutate(diffi = as_factor(diffi),
+           infor = as_factor(infor),
+           value = as_factor(value)) |> 
+    ggpairs(columns = c("diffi", "infor", "value"))
+
+ggplot(data)
+```
+
+#### Effect size Ratings
+##### Abstract Metric
+```{r}
+ggpairs(data_w |> 
+            select(rating_am, effsize_am) |> 
+            mutate_all(as_factor) |> 
+            na.omit(), 
+        columns = c("rating_am", "effsize_am"),
+        alpha = .3)
+```
+
+##### U3
+```{r}
+# With misconceptualizers
+ggpairs(data_w |> 
+            select(rating_u3, effsize_u3) |> 
+            mutate(effsize_u3 = as_factor(effsize_u3)) |> 
+            na.omit(), 
+        columns = c("rating_u3", "effsize_u3"))
+
+# Without misconceptualizers
+ggpairs(data_w |> 
+            filter(rating_u3_misconcept == F) |> 
+            select(rating_u3, effsize_u3) |> 
+            mutate(effsize_u3 = as_factor(effsize_u3)) |> 
+            na.omit(), 
+        columns = c("rating_u3", "effsize_u3"))
+```
+
+
+##### Overlap
+```{r}
+# With misconceptualizers
+ggpairs(data_w |> 
+            select(rating_ov, effsize_ov) |> 
+            mutate(effsize_ov = as_factor(effsize_ov)) |> 
+            na.omit(), 
+        columns = c("rating_ov", "effsize_ov"))
+
+# Without misconceptualizers
+ggpairs(data_w |> 
+            filter(rating_ov_misconcept == F) |> 
+            select(rating_ov, effsize_ov) |> 
+            mutate(effsize_ov = as_factor(effsize_ov)) |> 
+            na.omit(), 
+        columns = c("rating_ov", "effsize_ov"))
+```
+
+#### Sensitivity ratings
+##### Sensitivity ordinal
+```{r}
+ggpairs(data_w |> 
+            select(sensi_ordinal, effsize_am) |> 
+            mutate(sensi_ordinal = as_factor(sensi_ordinal)) |> 
+            na.omit(), 
+        columns = c("sensi_ordinal", "effsize_am"))
+```
+
+##### Sensitivity correct
+```{r}
+ggpairs(data_w |> 
+            select(sensi_correct, effsize_am) |> 
+            mutate(sensi_correct = as_factor(sensi_correct)) |> 
+            na.omit(), 
+        columns = c("sensi_correct", "effsize_am"))
+```
+
+
+#### Misceptualizers
+```{r}
+ggpairs(data_w |> 
+            select(rating_ov_misconcept, rating_u3_misconcept) |> 
+            mutate_all(as_factor) |> 
+            na.omit(), 
+        columns = c("rating_ov_misconcept", "rating_u3_misconcept"))
+```
+
+
+
 ## Hypotheses 1x
 ### Hypothesis H1a
+```{r}
+#|label: hypothesis 1a
+
+```
+
 
