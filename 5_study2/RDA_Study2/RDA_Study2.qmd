@@ -1,0 +1,146 @@
+---
+title: "Reproducible_Report_StudyII"
+format: 
+  html:
+    toc: true
+    theme: flatly  
+editor_options: 
+  chunk_output_type: console
+---
+
+## Data Import
+```{r}
+library(formr)
+library(tidyverse)
+
+# Interactivly define account credentials
+
+# Add credentials
+formr_connect(keyring = "der_kristina_ihr_formr")
+
+# Or use plain text
+formr_connect(email = "kristina.bohrer@gmx.de",
+              password = "hovcez-dakQyc-7wukzu")
+
+# Download data
+study2_data <- formr_results("TueDiBASE_study2")
+formr_disconnect()
+```
+
+
+## Participants
+The data download has `r nrow(study2_data)` rows and `r nrow(study2_data |> filter(!is.na(ended)))` finished the survey. Of theses `r nrow(study2_data |> dplyr::filter(!is.na(ended)) |> dplyr::filter(!is.na(attention_check)))` did not pass the attention check.
+So the data we will use is defined as follows:
+```{r}
+data <- 
+    study2_data |> 
+    filter(!is.na(ended)) |>
+    mutate(attention_check_passed = is.na(attention_check)) |> 
+    as_tibble()
+```
+
+## Data wrangling
+First we create a specific dataframe which contains the information about effect size, plottype ...
+```{r}
+plot_info <- data %>%
+    # we only need the rows with info on plots
+    select(session, contains("plot")) |> 
+    # make a long df
+    pivot_longer(2:21, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>% 
+    # separate the info into three columns
+    separate(col = values, into = c("type", "axis", "effsize"),
+             sep = "_", remove = F) %>%
+    mutate(plot = variables,       # rename variables for later join
+                  type = paste(type, axis, sep = "_")) %>%
+    select(-variables, -axis)
+```
+
+Next we wrangle a separate dataframe which contains just the answers of the participants to the items, their identifier and the plotorder.
+```{r}
+item_values <- data %>%
+    dplyr::select(session, contains(c("sensi_", "acccl_", "accov_", "accu3_", "value_", "infor_", "diffi_"))) %>% 
+    pivot_longer(-session, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    # create variable for later join
+    mutate(plot = paste0("plotx_", str_sub(variables, -2, -1)), 
+           variables = str_sub(variables, 1, -4)) %>%    
+    # rename variable names to get a data set 
+    # with one line per participant per page
+    pivot_wider(id_cols = c(session, plot), names_from = "variables", 
+                values_from = "values")
+```
+
+Then we join these two data sets and recode/calculate some of the dependet variables like accuracy...
+```{r}
+data_w <- full_join(plot_info, 
+                    item_values,
+                    by = c("session", "plot")) %>% 
+    select(-values) %>%
+    mutate(rating_am = as.numeric(acccl), # some var need to be defined as
+           rating_u3 = as.numeric(accu3), # numeric again
+           rating_ov = as.numeric(accov),
+           diffi = as.numeric(diffi),
+           infor = as.numeric(infor),
+           value = as.numeric(value),
+           effsize = as.numeric(effsize),
+           effsize_am = case_when( 
+           # there is no negative Cliff's Delta, so we have to compute 
+           # two transformations
+               effsize > 0 ~   (((2*pnorm(effsize/2))-1)/pnorm(effsize/2)),
+           # transform the actual effect size Cohen's d to Cliff's Delta
+               effsize < 0 ~ (- (((2*pnorm(abs(effsize)/2))-1)/pnorm(abs(effsize)/2))) 
+           # transform the actual effect size Cohen's d to Cliff's Delta 
+           # and make it negative as in the item
+           ),
+           effsize_u3 = 1-pnorm(effsize), # reverse so that it fits the direction of the U3 item
+           # transform the actual effect size Cohen's d to Cohen's U3
+           effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
+           # transform the actual effect size Cohen's d to overlap
+           # actual difference of rating relative to depicted effectsize 
+           diff_am = (rating_am - effsize_am)/2,
+           # actual difference of rating relative to depicted effectsize
+           diff_u3 = (rating_u3/100) - effsize_u3,
+           # actual difference of rating relative to depicted effectsize 
+           diff_ov = (rating_ov/100) - effsize_ov) %>%
+    group_by(session) %>% 
+    mutate(rating_ov_missconcept = median(rating_ov, na.rm = T) < 68.9,
+           rating_u3_missconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
+    ungroup() %>% 
+    mutate(rating_u3_filtered = ifelse(rating_u3_missconcept == T, NA, rating_u3),
+           rating_ov_filtered = ifelse(rating_ov_missconcept == T, NA, rating_ov),
+           diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
+           diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
+           sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
+                                        NA,
+                                        as.numeric(!grepl("equal", sensi))),
+           sensi_ordinal = ordered(factor(substr(sensi, 55, 100)),
+                                   levels = c("inferior",
+                                              "equal",
+                                              "superior")),
+           sensi_binary_filtered = case_when(sensi_ordinal == "equal" ~ 0, 
+                                             (sensi_ordinal == "inferior" & 
+                                                  effsize < 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize > 0) ~ as.numeric(NA),
+                                             (sensi_ordinal == "inferior" & # was not there
+                                                  effsize > 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize < 0) ~ 1, 
+                                             TRUE ~ as.numeric(NA)), # was 1
+           sensi_correct = case_when(sensi_ordinal == "equal" ~ "judged equal", 
+                                     (sensi_ordinal == "inferior" & 
+                                                  effsize < 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize > 0) ~ "wrong direction",
+                                             (sensi_ordinal == "inferior" & # was not there
+                                                  effsize > 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize < 0) ~ "right direction", 
+                                             TRUE ~ NA_character_),
+           effsize_abs = abs(effsize))
+```
+
+## Hypotheses 1x
+### Hypothesis H1a
+
