@@ -14,14 +14,13 @@ library(formr)
 library(tidyverse)
 library(skimr)
 library(GGally)
-
+library(ggforce)
+library(brms)
 # Import item data from .csv
-study2_data <- read_csv("data/teachers_study2_update00.csv")
+study2_data <- read_csv(here::here("data/teachers_study2_update00.csv"))
 
-
-
-
-#study2_w_timestamp <- read_csv("data/")
+# Import detailed data .json
+study2_data_detailed <- as.data.frame(jsonlite::fromJSON(here::here("data/teachers_study2_update00_detailed.json")))
 ```
 
 
@@ -138,48 +137,63 @@ data_w <- full_join(plot_info,
                                                   (sensi_ordinal == "superior" & 
                                                   effsize < 0) ~ "right direction", 
                                              TRUE ~ NA_character_),
-           effsize_abs = abs(effsize))
+           effsize_abs = abs(effsize),
+           ameffsize_overunderstimation = case_when(effsize_am > 0 ~ ifelse(effsize_am > rating_am,
+                                                                            "magnitude_underrated",
+                                                                            ifelse(effsize_am == rating_am,
+                                                                                   "exact",
+                                                                                   "magnitude_overrated")),
+                                                    effsize_am < 0 ~ ifelse(rating_am < effsize_am,
+                                                                            "magnitude_overrated",
+                                                                            ifelse(effsize_am == rating_am,
+                                                                                   "exact",
+                                                                                   "magnitude_underrated")))) |> 
+    # add the between-person conditions group and topic
+    left_join(data |> select(session, group, topic)) |> 
+    # create binary variables for the presence of a benchmark or signaling
+    mutate(gr_benchmark = ifelse(grepl("benchmark", group), "benchmark", "nobenchmark"),
+           gr_signaling = ifelse(grepl("signaling", group), "signaling", "nosignaling"))
 ```
 
 ### Wrangling time data
 ```{r}
 #| label: timestamp_datawrangling
-#study_w_timestamp <- 
-#    read_csv(here("data/teachers_study1_N40_detailed.csv")) %>% 
-#    # filter participants from study1_w only
-#    filter(session %in% study1_w$session) %>% 
-#    # we only need vars sensitivity or accuracy
-#    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>%  
-#    # create var with plot number
-#    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1)),
-#           # recode wrong item labelling
-#           plot = ifelse(plot == "plotx__6", "plotx_06", plot)) %>% 
-#    relocate(session, plot) %>% 
-#    # delete the page number in item name
-#    mutate(item_name = str_sub(item_name, 1, 5)) %>%  
-#    pivot_wider(id_cols = c(session, plot), names_from = item_name, 
-#                values_from = answered_relative) %>% 
-#    rowwise() %>%
-#    # what was the time of the first item to be clicked?
-#    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>%
-#    ungroup() %>% 
-#    dplyr::select(session, plot, effic, sensi, acccl, accu3, accov) %>% 
-#    left_join(., study1_w %>% 
-#                  select(session, plot, type), by=c("session", "plot")) %>% 
-#    # generate data set so that the six plots from the same type are ordered
-#    # one after the other (and not 1-24)
-#    group_by(session, type) %>% 
-#    arrange(plot) %>% 
-#    mutate(plotNrWithin = 1:n()) %>%
-#    ungroup() %>% 
-#    group_by(plotNrWithin, type) %>% 
-#    mutate(effic_10righttrunc = ifelse(effic > quantile(effic, .9), NA, effic),
-#           effic_05righttrunc = ifelse(effic > quantile(effic, .95), NA, effic),
-#           log_effic_05righttrunc =log(effic_05righttrunc),
-#           log_effic_10righttrunc = log(effic_10righttrunc),
-#           plotNrWithin0 = plotNrWithin -1,
-#           plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
-#    ungroup()
+
+study_w_timestamp <- 
+    study2_data_detailed |> 
+    as_tibble() |> 
+    # filter participants from study2_w only
+    filter(session %in% data$session) %>% 
+    # we only need vars sensitivity or accuracy
+    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>%  
+    # create var with plot number
+    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1))) %>% 
+    relocate(session, plot) %>% 
+    # delete the page number in item name
+    mutate(item_name = str_sub(item_name, 1, 5)) %>%  
+    pivot_wider(id_cols = c(session, plot), names_from = item_name, 
+                values_from = answered_relative) %>% 
+    rowwise() %>%
+    # what was the time of the first item to be clicked?
+    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>%
+    ungroup() %>% 
+    dplyr::select(session, plot, effic, sensi, acccl, accu3, accov) %>% 
+    left_join(., data_w %>% 
+                  select(session, plot, type), by=c("session", "plot")) %>% 
+    # generate data set so that the six plots from the same type are ordered
+    # one after the other (and not 1-24)
+    group_by(session, type) %>% 
+    arrange(plot) %>% 
+    mutate(plotNrWithin = 1:n()) %>%
+    ungroup() %>% 
+    group_by(plotNrWithin, type) %>% 
+    mutate(effic_10righttrunc = ifelse(effic > quantile(effic, .9), NA, effic),
+           effic_05righttrunc = ifelse(effic > quantile(effic, .95), NA, effic),
+           log_effic_05righttrunc =log(effic_05righttrunc),
+           log_effic_10righttrunc = log(effic_10righttrunc),
+           plotNrWithin0 = plotNrWithin - 1,
+           plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
+    ungroup()
 ```
 
 ## Demographics
@@ -203,6 +217,7 @@ sociodemographics <-
 
 skim(sociodemographics) 
 ```
+
 
 ## Always plot yor raw data
 ### Dependent variables
@@ -304,10 +319,19 @@ ggpairs(data_w |>
 
 
 ## Hypotheses 1x
-### Hypothesis H1a
+### Hypothesis H1a: Effects of benchmarks on accuracy
+#### Abstract metric
 ```{r}
-#|label: hypothesis 1a
+#|label: hypothesis 1a am
+data_w |> 
+  ggplot(aes(group, diff_am)) +
+    geom_violin() +
+    geom_jitter(aes(color = ameffsize_overunderstimation), alpha = .05) +
+    stat_summary(fun.data = mean_sdl, 
+                 fun.args = list(mult = 1)) +
+    theme_minimal()
 
 ```
 
 
+### Hypothesis H2a: Effects of benchmarks on sensitivity
