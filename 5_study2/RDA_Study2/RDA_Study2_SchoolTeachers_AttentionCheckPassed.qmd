@@ -220,7 +220,42 @@ data_w <- full_join(plot_info,
     # create binary variables for the presence of a benchmark or signaling
     mutate(gr_benchmark = ifelse(grepl("benchmark", group), "benchmark", "nobenchmark"),
            gr_signaling = ifelse(grepl("signaling", group), "signaling", "nosignaling"))
+
+
 ```
+
+Show descriptive results of accuracy variables, perceived difficulty, sensitivity, perceived informativity, perceived value, and misconceptualizers per experimental condition
+
+```{r}
+skim(
+  data_w |>
+  select(diffi, infor, value, rating_u3, 
+         rating_ov, rating_am, diff_u3, diff_ov,
+         diff_am, sensi_binary, plot, session, group) |>
+    gather(variable, value, 1:10) |>
+    mutate(var = paste(variable, group, sep = "_")) |>
+    select(-group, -variable) |>
+    group_by(session, plot) |>
+    spread(var, value) |>
+    ungroup()
+    )
+
+
+skim(
+  data_w |>
+  select(rating_ov_misconcept, rating_u3_misconcept, session, group) |>
+      mutate(rating_ov_misconcept = case_when(rating_ov_misconcept == "TRUE" ~ 1,
+                                              TRUE ~ 0),
+             rating_u3_misconcept = case_when(rating_u3_misconcept == "TRUE" ~ 1,
+                                              TRUE ~ 0))  |>
+      unique() |>
+      gather(variable, value, 1:2) |>
+      mutate(var = paste(variable, group, sep = "_")) |>
+      select(-group, -variable) |>
+      spread(var, value)
+    )
+```
+
 
 ### Wrangling time data
 ```{r}
@@ -266,7 +301,25 @@ study_w_timestamp <-
                                  "benchmark", "nobenchmark"),
            gr_signaling = ifelse(grepl("signaling", group), 
                                  "signaling", "nosignaling"))
+
+
 ```
+
+Show descriptive results of efficiency per experimental condition
+
+```{r}
+skim(
+  study_w_timestamp |>
+  select(effic, plot, session, group) |>
+    gather(variable, value, effic) |>
+    mutate(var = paste(variable, group, sep = "_")) |>
+    select(-group, -variable) |>
+    group_by(session, plot) |>
+    spread(var, value) |>
+    ungroup()
+    )
+```
+
 
 ## Missingness
 ```{r}
@@ -323,7 +376,7 @@ sociodemographics <-
 skim(sociodemographics) 
 ```
 
-## Attention Check
+## Attention check
 ```{r}
 study2_data_ended |> 
     mutate(attention_check = case_when(is.na(attention_check) ~ "passed",
@@ -352,7 +405,7 @@ study2_data_ended |>
 ```
 
 
-## Always plot yor raw data
+## Always plot your raw data
 ### Dependent variables
 #### Likert items
 ```{r}
@@ -370,8 +423,8 @@ study2_data |>
     ggpairs(columns = c("diffi", "infor", "value"))
 ```
 
-#### Effect size Ratings
-##### Abstract Metric
+#### Effect size ratings
+##### Abstract metric
 ```{r}
 ggpairs(data_w |> 
             select(rating_am, effsize_am) |> 
@@ -630,8 +683,8 @@ data_w |>
     stat_summary(fun.data = mean_sdl, 
                  fun.args = list(mult = 1)) +
     theme_minimal() +
-    labs(title = "Accuracy (Overlap)",
-         subtitle = "Per Benchmarking and Overlap Misconcept")
+    labs(title = "Accuracy (U3)",
+         subtitle = "Per Benchmarking and U3 Misconcept")
 ```
 
 
@@ -645,8 +698,8 @@ data_w |>
     stat_summary(fun.data = mean_sdl, 
                  fun.args = list(mult = 1)) +
     theme_minimal() +
-    labs(title = "Accuracy (Overlap)",
-         subtitle = "Per Benchmarking and Overlap Misconcept")
+    labs(title = "Accuracy (U3)",
+         subtitle = "Per Benchmarking and U3 Misconcept")
 ```
 
 
@@ -781,7 +834,7 @@ data_w |>
 #| cache: true
 
 hyp3a_vinterceptonly <-
-    brm(diffi ~ type + effsize_f + (1 | session),
+    brm(scale(diffi) ~ type + effsize_f + (1 | session),
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -790,7 +843,7 @@ plot(hyp3a_vinterceptonly)
 pp_check(hyp3a_vinterceptonly)
 
 hyp3a_vintercept <-
-    brm(diffi ~ type + effsize_f + gr_benchmark + (1 | session),
+    brm(scale(diffi) ~ type + effsize_f + gr_benchmark + (1 | session),
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -927,7 +980,7 @@ data_w |>
     theme_minimal()
 
 hyp5a_vinterceptonly <-
-    brm(infor ~ type + effsize_f + (1 | session),
+    brm(scale(infor) ~ type + effsize_f + (1 | session),
         iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
@@ -937,7 +990,7 @@ plot(hyp5a_vinterceptonly)
 pp_check(hyp5a_vinterceptonly)
 
 hyp5a_vintercept <-
-    brm(infor ~ type + effsize_f + gr_benchmark + (1 | session),
+    brm(scale(infor) ~ type + effsize_f + gr_benchmark + (1 | session),
         iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
@@ -973,7 +1026,7 @@ data_w |>
     theme_minimal()
 
 hyp6a_vinterceptonly <-
-    brm(value ~ type + effsize_f + (1 | session),
+    brm(scale(value) ~ type + effsize_f + (1 | session),
         iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
@@ -983,7 +1036,7 @@ plot(hyp6a_vinterceptonly)
 pp_check(hyp6a_vinterceptonly)
 
 hyp6a_vintercept <-
-    brm(value ~ type + effsize_f + gr_benchmark + (1 | session),
+    brm(scale(value) ~ type + effsize_f + gr_benchmark + (1 | session),
         iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
@@ -1294,7 +1347,7 @@ data_w |>
 #| label: hypothesis H3b Effects of signaling on perceived difficulty
 #| cache: true
 hyp3b_vinterceptonly <-
-    brm(diffi ~ type + effsize_f + (1 | session),
+    brm(scale(diffi) ~ type + effsize_f + (1 | session),
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1303,7 +1356,7 @@ plot(hyp3b_vinterceptonly)
 pp_check(hyp3b_vinterceptonly)
 
 hyp3b_vintercept <-
-    brm(diffi ~ type + effsize_f + group + (1 | session),
+    brm(scale(diffi) ~ type + effsize_f + group + (1 | session),
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1441,7 +1494,7 @@ data_w |>
     theme_minimal()
 
 hyp5b_vinterceptonly <-
-    brm(infor ~ type + effsize_f + (1 | session),
+    brm(scale(infor) ~ type + effsize_f + (1 | session),
         iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
@@ -1451,7 +1504,7 @@ plot(hyp5b_vinterceptonly)
 pp_check(hyp5b_vinterceptonly)
 
 hyp5b_vintercept <-
-    brm(infor ~ type + effsize_f + group + (1 | session),
+    brm(scale(infor) ~ type + effsize_f + group + (1 | session),
         iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
@@ -1489,7 +1542,7 @@ data_w |>
     theme_minimal()
 
 hyp6b_vinterceptonly <-
-    brm(value ~ type + effsize_f + (1 | session),
+    brm(scale(value) ~ type + effsize_f + (1 | session),
         iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
@@ -1499,7 +1552,7 @@ plot(hyp6b_vinterceptonly)
 pp_check(hyp6b_vinterceptonly)
 
 hyp6b_vintercept <-
-    brm(value ~ type + effsize_f + group + (1 | session),
+    brm(scale(value) ~ type + effsize_f + group + (1 | session),
         iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
@@ -1645,7 +1698,7 @@ hyp7bov_bf
 
 
 
-## Bayes Factors
+## Bayes factors
 ```{r}
 #| code-fold: false
 
