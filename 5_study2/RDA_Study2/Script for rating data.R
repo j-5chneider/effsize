@@ -29,3 +29,42 @@ study2_data_ended |>
                  ), 100)[1:floor(0.9*n())]
            )) |> View()
     openxlsx::write.xlsx("data/data_for_rating.xlsx")
+
+### Interraterreliability after 20 Rating ######################################
+rating_1_rater_1 <- 
+        readxl::read_excel(here::here("data/data_for_rating_rater1.xlsx"))
+rating_1_rater_2 <- 
+        readxl::read_excel(here::here("data/data_for_rating_rater2.xlsx"))
+
+library(irr)
+## uxaxs_1x
+kalpha_uxaxs_1x <-
+    kripp.alpha(matrix(
+        c(rating_1_rater_1$uxaxs_1x_rating_juergen[1:37],
+          rating_1_rater_2$uxaxs_1x_rating_kristina[1:37]),
+        nrow = 2,
+        byrow = T), "nominal")
+
+## uxaxs_1x
+kalpha_uxaxs_1y <-
+    kripp.alpha(matrix(
+        c(rating_1_rater_1$uxaxs_1y_rating_juergen[1:37],
+          rating_1_rater_2$uxaxs_1y_rating_kristina[1:37]),
+        nrow = 2,
+        byrow = T), "nominal")
+
+## uyaxs_1x
+kalpha_uyaxs_1x <-
+    kripp.alpha(matrix(
+        c(rating_1_rater_1$rating_juergen_uyaxs_1x[1:37],
+          rating_1_rater_2$rating_kristina_uyaxs_1x[1:37]),
+        nrow = 2,
+        byrow = T), "nominal")
+
+## uyaxs_1x
+kalpha_uyaxs_1y <-
+    kripp.alpha(matrix(
+        c(rating_1_rater_1$rating_juergen_uyaxs_1y[1:37],
+          rating_1_rater_2$rating_kristina_uyaxs_1y[1:37]),
+        nrow = 2,
+        byrow = T), "nominal")
