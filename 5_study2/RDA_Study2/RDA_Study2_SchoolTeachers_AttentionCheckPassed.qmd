@@ -558,7 +558,10 @@ data_w |>
 
 data_w |> 
   ggplot(aes(effsize_am, rating_am)) +
-    geom_jitter()
+    geom_jitter() +
+    stat_smooth() +
+    facet_wrap(~group, ncol = 2) +
+    theme_minimal()
 
 # fit gaussion varying intercept only model
 hyp1a_am_vinterceptonly_gaussian <- 
@@ -630,6 +633,15 @@ data_w |>
     theme_minimal() +
     labs(title = "Accuracy (Overlap)",
          subtitle = "Per Benchmarking and Overlap Misconcept")
+
+data_w |> 
+  ggplot(aes(effsize_ov, 
+             rating_ov)) +
+    geom_jitter() +
+    stat_smooth() +
+    facet_grid(rating_ov_misconcept ~ group, scales = "free") +
+    labs(title = "Accuracy Overlap", subtitle = "Per Group and Overlap Misconcept") +
+    theme_minimal()
 ```
 
 The heavy left tails indicate clearly non-normality. Hence we will use the `student()` family.
@@ -687,6 +699,16 @@ data_w |>
     theme_minimal() +
     labs(title = "Accuracy (U3)",
          subtitle = "Per Benchmarking and U3 Misconcept")
+
+data_w |> 
+  ggplot(aes(effsize_u3, 
+             rating_u3, 
+             color = rating_u3_misconcept)) +
+    geom_jitter() +
+    stat_smooth() +
+    theme_minimal() +
+    facet_wrap(~ group, ncol = 2)
+    labs(title = "Accuracy (U3)")
 ```
 
 
