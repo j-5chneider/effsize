@@ -172,11 +172,13 @@ data_w <- full_join(plot_info,
            effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
            # transform the actual effect size Cohen's d to overlap
            # actual difference of rating relative to depicted effectsize 
-           diff_am = (rating_am - effsize_am)/2,
+           diff_am = ifelse(effsize_am > 0,
+                            rating_am - effsize_am,
+                            effsize_am - rating_am),
            # actual difference of rating relative to depicted effectsize
-           diff_u3 = (1 - rating_u3/100) - effsize_u3,
-           #  for no bimodality
-           diff_u3_sym = ((1 - rating_u3/100) - .5) - (effsize_u3 - .5),
+           diff_u3 = ifelse((effsize_u3 - .5) > 0,
+                            (rating_u3/100 - .5) - (effsize_u3 - .5),
+                            (effsize_u3 - .5) -  (rating_u3/100 - .5)),
            # actual difference of rating relative to depicted effectsize 
            diff_ov = (rating_ov/100) - effsize_ov) %>%
     group_by(session) %>% 
