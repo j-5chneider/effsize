@@ -715,7 +715,7 @@ data_w |>
 ```{r}
 #| label: hypothesis 1a u3
 data_w |> 
-  ggplot(aes(diff_u3_sym, group)) +
+  ggplot(aes(diff_u3, group)) +
     geom_violin() +
     geom_sina(alpha = .05) +
     facet_wrap(~ rating_u3_misconcept) +
