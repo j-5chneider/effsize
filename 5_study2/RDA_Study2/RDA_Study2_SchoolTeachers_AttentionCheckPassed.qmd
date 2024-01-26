@@ -172,14 +172,37 @@ data_w <- full_join(plot_info,
            effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
            # transform the actual effect size Cohen's d to overlap
            # actual difference of rating relative to depicted effectsize 
-           diff_am = ifelse(effsize_am > 0,
-                            rating_am - effsize_am,
-                            effsize_am - rating_am),
+           #diff_am = ifelse(effsize_am > 0 ,
+           #                 rating_am - effsize_am,
+           #                 effsize_am - rating_am),
            # actual difference of rating relative to depicted effectsize
-           diff_u3 = ifelse((effsize_u3 - .5) > 0,
-                            (rating_u3/100 - .5) - (effsize_u3 - .5),
-                            (effsize_u3 - .5) -  (rating_u3/100 - .5)),
-           # actual difference of rating relative to depicted effectsize 
+           rating_u3_in_d = qnorm(rating_u3/100), 
+           rating_ov_in_d = -2*qnorm(0.5*rating_ov/100),
+           overunderrating_u3 = ifelse(effsize < 0,
+                                       (rating_u3_in_d - effsize)*(-1),
+                                       rating_u3_in_d - effsize),
+           overunderrating_overlap = ifelse(effsize < 0,
+                                       (rating_ov_in_d - effsize)*(-1),
+                                       rating_ov_in_d - effsize),
+          
+          #diff_u3 = ifelse((effsize_u3 - .5) > 0,
+          #                 (rating_u3/100 - .5) - (effsize_u3 - .5),
+          #                 (effsize_u3 - .5) -  (rating_u3/100 - .5)),
+          #diff_am = ifelse(effsize_am > 0 & rating_am > 0 | 
+          #                 effsize_am < 0 & rating_am > 0,
+          #                 rating_am - effsize_am,
+          #                 effsize_am - rating_am),
+          #diff_u3_test = case_when(
+          #                 ((effsize_u3 - .5) > 0 & (rating_u3 -.5) > 0) |
+          #                 ((effsize_u3 - .5) > 0 & (rating_u3 -.5) < 0) |
+          #                 ((effsize_u3 - .5) < 0 & (rating_u3 -.5) > 0) 
+          #                 ~ (rating_u3/100 - .5) - (effsize_u3 - .5),
+          #                 
+          #                 ((effsize_u3 - .5) < 0 & (rating_u3 -.5) < 0) ~ 
+          #                 (effsize_u3 - .5) -  (rating_u3/100 - .5),
+          #                 
+          #                 T ~ NA),
+        #    actual difference of rating relative to depicted effectsize 
            diff_ov = (rating_ov/100) - effsize_ov) %>%
     group_by(session) %>% 
     mutate(rating_ov_misconcept = median(rating_ov, na.rm = T) < 68.9,
@@ -224,6 +247,52 @@ data_w <- full_join(plot_info,
            gr_signaling = ifelse(grepl("signaling", group), "signaling", "nosignaling"))
 
 
+test <-
+    data_w |>
+    select(rating_u3,effsize_u3, effsize, rating_u3_in_d, overunderrating_u3, rating_ov, effsize_ov, rating_ov_in_d, overunderrating_overlap)
+
+data_w |> 
+  ggplot(aes(overunderrating_u3, group)) +
+    geom_violin() +
+    geom_jitter(alpha = .05) +
+    stat_summary(fun.data = mean_sdl, 
+                 fun.args = list(mult = 1)) +
+    theme_minimal() +
+    labs(title = "Accuracy (U3)",
+         subtitle = "Per Benchmarking")
+
+data_w |> 
+  ggplot(aes(overunderrating_u3, group)) +
+    geom_violin() +
+    geom_sina(alpha = .05) +
+    facet_wrap(~ rating_u3_misconcept) +
+    stat_summary(fun.data = mean_sdl, 
+                 fun.args = list(mult = 1)) +
+    theme_minimal() +
+    labs(title = "Accuracy (U3)",
+         subtitle = "Per Benchmarking and U3 Misconcept")
+
+
+data_w |> 
+  ggplot(aes(overunderrating_overlap, group)) +
+    geom_violin() +
+    geom_jitter(alpha = .05) +
+    stat_summary(fun.data = mean_sdl, 
+                 fun.args = list(mult = 1)) +
+    theme_minimal() +
+    labs(title = "Accuracy (overlap)",
+         subtitle = "Per Benchmarking")
+
+data_w |> 
+  ggplot(aes(overunderrating_overlap, group)) +
+    geom_violin() +
+    geom_sina(alpha = .05) +
+    facet_wrap(~ rating_ov_misconcept) +
+    stat_summary(fun.data = mean_sdl, 
+                 fun.args = list(mult = 1)) +
+    theme_minimal() +
+    labs(title = "Accuracy (Overlap)",
+         subtitle = "Per Benchmarking and Overlap Misconcept")
 ```
 
 Show descriptive results of accuracy variables, perceived difficulty, sensitivity, perceived informativity, perceived value, and misconceptualizers per experimental condition
