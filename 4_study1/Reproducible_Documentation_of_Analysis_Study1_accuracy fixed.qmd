@@ -1,0 +1,2206 @@
+---
+title: "Reproducible Documentation of Analysis Study 1"
+format: 
+  html:
+    theme: solar
+    fontsize: 0.85em
+    toc: true
+    toc-location: left
+    toc-depth: 4
+    embed-resources: true
+    code-fold: true
+    code-tools: true
+editor: source
+bibliography: references.bib
+editor_options: 
+  chunk_output_type: console
+---
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# R Version
+
+```{r}
+R.Version()
+```
+
+
+# Import of the Data
+
+The data was assessed with the `formr` survey framework [@arslan2020]. The raw data was imported via the following code. 
+
+__Please note that the results of the Bayesian analyses may slightly vary due to the estimation approach.__
+
+```{r}
+#| label: libraries and data import
+#| results: hide
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggforce)
+library(lme4)
+library(BFpack)
+library(hrbrthemes)
+library(patchwork)
+library(brms)
+library(viridis)
+library(ggdist)
+library(tidybayes)
+library(here)
+library(skimr)
+load(here("data/teachers_study1_N40.RData"))
+
+skim(study1)
+
+set.seed(25051982)
+```
+
+# Data Wrangling
+
+## Data Set 1
+
+__(without efficiency and accuracy transformed)__
+
+```{r}
+#| label: data wrangling
+
+# wrangle information on the plot type, ES, ...
+plot_info <- study1 %>%
+    pivot_longer(2:195, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::filter(str_detect(variables, "plot")) %>% 
+    # we only need the rows with info on plots
+    tidyr::separate(col = values, into = c("type", "axis", "effsize"), 
+                    # separate the info into three columns
+                    sep = "_", remove = F) %>%
+    dplyr::mutate(plot = variables,       # rename variables for later join
+                  type = paste(type, axis, sep = "_")) %>%
+    dplyr::select(-variables, -axis)
+
+# wrangle answers to items on each page
+item_values <- study1 %>%
+    dplyr::select(-c(topic:itemo)) %>%
+    pivot_longer(2:169, names_to = "variables", values_to = "values", 
+                 values_transform = as.character) %>%
+    dplyr::mutate(variables = case_when(      # recode variable names that have
+        variables == "sensi_6" ~ "sensi_06",  # accidentally been labeled
+        variables == "acccl_6" ~ "acccl_06",  # without zero
+        variables == "accu3_6" ~ "accu3_06",
+        variables == "accov_6" ~ "accov_06",
+        variables == "diffi_6" ~ "diffi_06",
+        variables == "infor_6" ~ "infor_06",
+        variables == "value_6" ~ "value_06",
+        TRUE ~ variables 
+    )) %>%
+    dplyr::mutate(plot = paste0("plotx_", str_sub(variables, -2, -1)), 
+                  # create variable for later join
+                  variables = str_sub(variables, 1, -4)) %>%    
+    # rename variable names to get a data set 
+    # with one line per participant per page
+    pivot_wider(id_cols = c(session, plot), names_from = "variables", 
+                values_from = "values")
+
+# join the two data sets
+study1_w <- full_join(plot_info, item_values, 
+                               by = c("session", "plot")) %>% 
+    # by participant and page (plot)
+    dplyr::select(-values) %>%
+    dplyr::mutate(rating_am = as.numeric(acccl), # some var need to be defined as
+                  rating_u3 = as.numeric(accu3), # numeric again
+                  rating_ov = as.numeric(accov),
+                  diffi = as.numeric(diffi),
+                  infor = as.numeric(infor),
+                  value = as.numeric(value),
+                  effsize = as.numeric(effsize),
+                  effsize_am = case_when( 
+                  # there is no negative Cliff's Delta, so we have to compute 
+                  # two transformations
+                      effsize > 0 ~   (((2*pnorm(effsize/2))-1)/pnorm(effsize/2)),
+                  # transform the actual effect size Cohen's d to Cliff's Delta
+                      effsize < 0 ~ (- (((2*pnorm(abs(effsize)/2))-1)/pnorm(abs(effsize)/2))) 
+                  # transform the actual effect size Cohen's d to Cliff's Delta 
+                  # and make it negative as in the item
+                  ),
+                  effsize_u3 = 1-pnorm(effsize), # reverse so that it fits the direction of the U3 item
+                  # transform the actual effect size Cohen's d to Cohen's U3
+                  effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
+                  # transform the actual effect size Cohen's d to overlap
+                  # actual difference of rating relative to depicted effectsize 
+                  diff_am = (rating_am - effsize_am)/2,
+                  # actual difference of rating relative to depicted effectsize
+                  diff_u3 = (rating_u3/100) - effsize_u3,
+                  # actual difference of rating relative to depicted effectsize 
+                  diff_ov = (rating_ov/100) - effsize_ov) %>%
+    group_by(session) %>% 
+    mutate(rating_ov_missconcept = median(rating_ov, na.rm = T) < 68.9,
+           rating_u3_missconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
+    ungroup() %>% 
+    mutate(rating_u3_filtered = ifelse(rating_u3_missconcept == T, NA, rating_u3),
+           rating_ov_filtered = ifelse(rating_ov_missconcept == T, NA, rating_ov),
+           diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
+           diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
+           sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
+                                        NA,
+                                        as.numeric(!grepl("equal", sensi))),
+           sensi_ordinal = ordered(factor(substr(sensi, 55, 100)),
+                                   levels = c("inferior",
+                                              "equal",
+                                              "superior")),
+           sensi_binary_filtered = case_when(sensi_ordinal == "equal" ~ 0, 
+                                             (sensi_ordinal == "inferior" & 
+                                                  effsize < 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize > 0) ~ as.numeric(NA),
+                                             (sensi_ordinal == "inferior" & # was not there
+                                                  effsize > 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize < 0) ~ 1, 
+                                             TRUE ~ as.numeric(NA)), # was 1
+           sensi_correct = case_when(sensi_ordinal == "equal" ~ "judged equal", 
+                                     (sensi_ordinal == "inferior" & 
+                                                  effsize < 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize > 0) ~ "wrong direction",
+                                             (sensi_ordinal == "inferior" & # was not there
+                                                  effsize > 0) | 
+                                                  (sensi_ordinal == "superior" & 
+                                                  effsize < 0) ~ "right direction", 
+                                             TRUE ~ NA_character_),
+           effsize_abs = abs(effsize))
+```
+
+\
+
+__Basic Information on data set__
+
+
+```{r}
+skim(study1_w)
+```
+\
+\
+
+## Data Set 2
+
+__(with efficiency and accuracy transformed)__
+
+```{r}
+# create a list of u3_misconceptualizers
+u3_misconceptualizers <-
+    study1_w %>% 
+    filter(rating_u3_missconcept == T) %>% 
+    pull(session) %>% 
+    unique()
+
+# create a list of ov_misconceptualizers
+ov_misconceptualizers <-
+    study1_w %>% 
+    filter(rating_ov_missconcept == T) %>% 
+    pull(session) %>% 
+    unique()    
+
+### wrangle time stamp data ####################################################
+study1_w_timestamp <- 
+    read_csv(here("data/teachers_study1_N40_detailed.csv")) %>% 
+    # filter participants from study1_w only
+    filter(session %in% study1_w$session) %>% 
+    # we only need vars sensitivity or accuracy
+    dplyr::filter(str_detect(item_name, "sensi|acccl|accu3|accov")) %>%  
+    # create var with plot number
+    mutate(plot = paste0("plotx_", str_sub(item_name, -2, -1)),
+           # recode wrong item labelling
+           plot = ifelse(plot == "plotx__6", "plotx_06", plot)) %>% 
+    relocate(session, plot) %>% 
+    # delete the page number in item name
+    mutate(item_name = str_sub(item_name, 1, 5)) %>%  
+    pivot_wider(id_cols = c(session, plot), names_from = item_name, 
+                values_from = answered_relative) %>% 
+    rowwise() %>%
+    # what was the time of the first item to be clicked?
+    mutate(effic = min(sensi, acccl, accu3, accov, na.rm=T)) %>%
+    ungroup() %>% 
+    dplyr::select(session, plot, effic, sensi, acccl, accu3, accov) %>% 
+    left_join(., study1_w %>% 
+                  select(session, plot, type), by=c("session", "plot")) %>% 
+    # generate data set so that the six plots from the same type are ordered
+    # one after the other (and not 1-24)
+    group_by(session, type) %>% 
+    arrange(plot) %>% 
+    mutate(plotNrWithin = 1:n()) %>%
+    ungroup() %>% 
+    group_by(plotNrWithin, type) %>% 
+    mutate(effic_10righttrunc = ifelse(effic > quantile(effic, .9), NA, effic),
+           effic_05righttrunc = ifelse(effic > quantile(effic, .95), NA, effic),
+           log_effic_05righttrunc =log(effic_05righttrunc),
+           log_effic_10righttrunc = log(effic_10righttrunc),
+           plotNrWithin0 = plotNrWithin -1,
+           plotNrWithin_factor = as.factor(plotNrWithin)) %>% 
+    ungroup()
+```
+\
+
+
+__Basic information on data set__
+
+```{r}
+skim(study1_w_timestamp)
+```
+\
+\
+
+# Sample Description
+
+## Sociodemographics
+```{r}
+# socio demographics 
+sociodemographics <- read_delim("data/teachers_study1a.csv", delim = ";") %>%
+    select(session, mcstu, texpe, mcsub) %>% 
+    # filter(!is.na(mcstu & texpe)) %>%
+    mutate(reply = session %in% c(study1_w$session)) %>%
+    filter(!reply == "FALSE") %>%
+    select(-reply) %>%
+    mutate(mcstu = as.factor(mcstu),
+    texpe = as.numeric(texpe),
+    mcsub = as.factor(mcsub),
+    subject_stem = grepl("1", mcsub),
+    subject_languages = grepl("2", mcsub),
+    subject_humanities_socialscience = grepl("3", mcsub),
+    subject_asthetic = grepl("4", mcsub)) 
+
+skim(sociodemographics) 
+
+study1_w_demo <- full_join(study1_w, sociodemographics, by = "session") %>%
+    mutate(schooltype_binary = ifelse(mcstu == 6, 1, 0)) # 6 = other
+
+```
+N = 15 participants checked "other" when asked which school type they teach at. This might be problematic as we cannot guarantee that these participants are actual school teachers. Hence, we decided to explore differences between those participants who indicated to work at a a specific school type and those that indicated "other" (see section Are there Differences Between Particpants That Indicated a Specific School Type and Those That Indicated "other"?).
+
+
+## Descriptives of the Dependent Variables
+### Descriptives of Accuracy and Perceived Variables Across all Visualization Types
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+skim(study1_w %>%
+         select(diffi, infor, value, rating_u3, rating_ov, rating_am, diff_u3,
+                diff_ov, diff_am))
+```
+
+
+### Descriptives of Accuracy and Perceived Variables Grouped by Visualization Types
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+skim(study1_w %>%
+         select(diffi, infor,value,rating_u3, rating_ov, rating_am, diff_u3, diff_ov, diff_am,  session, type, plot) %>%
+    gather(var, value, diffi, infor,value,rating_u3, rating_ov, rating_am, diff_u3, diff_ov, diff_am)%>%
+    mutate(variable = paste(var, type, sep = "_"))%>%
+    select(-type, -var)%>%
+    group_by(session, plot) %>%
+    spread(variable, value) %>%
+    ungroup())
+```
+
+
+### Descriptives of Efficiency Across Visualization Types
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+skim(study1_w_timestamp %>%
+    select(effic, session))
+```
+
+### Descriptives of Efficiency Grouped by Visualization Types
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+skim(study1_w_timestamp %>%
+    select(effic, session, type, plot) %>%
+    gather(var, value, effic)%>%
+    mutate(variable = paste(var, type, sep = "_"))%>%
+    select(-type, -var)%>%
+    group_by(session, plot) %>%
+    spread(variable, value) %>%
+    ungroup())
+```
+\
+\
+
+## Are there Differences Between Particpants That Indicated a Specific School Type and Those That Indicated "other"?
+
+### Graphical Overview
+```{r}
+study1_w_demo %>% 
+    ggplot(., aes(effsize, rating_am, color = as.factor(schooltype_binary))) +
+    geom_jitter() +
+    stat_smooth() +
+    ylab("Abstract metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Schooltype") +
+    theme_modern_rc()
+
+
+study1_w_demo%>% 
+    ggplot(., aes(effsize_u3, rating_u3, color = as.factor(schooltype_binary))) +
+    geom_jitter() +
+    stat_smooth() +
+    ylab("Cohen's U3 metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Schooltype") +
+    theme_modern_rc()
+
+study1_w_demo %>% 
+    ggplot(., aes(effsize_abs, rating_ov, color = as.factor(schooltype_binary))) +
+    geom_jitter() +
+    stat_smooth(method = "lm") +
+    ylab("Overlap metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Schooltype") +
+    theme_modern_rc()
+
+
+study1_w_demo %>% 
+ggplot(., aes(as.factor(schooltype_binary), infor)) +
+    geom_jitter()+
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult =1),
+                 color = "white") +
+    ylab("Perceived Informativity") +
+    xlab("School Type 1") +
+    theme_modern_rc()
+
+
+study1_w_demo %>%
+ggplot(., aes(as.factor(schooltype_binary), diffi)) +
+    geom_jitter()+
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult =1),
+                 color = "white") +
+    ylab("Perceived Difficulty") +
+    xlab("School Type") +
+    theme_modern_rc()
+
+
+study1_w_demo %>%
+ggplot(., aes(as.factor(schooltype_binary), value)) +
+    geom_jitter()+
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult =1),
+                 color = "white") +
+    ylab("Perceived Value") +
+    xlab("School Type 1=others") +
+    theme_modern_rc()
+```
+
+
+### Compute Kendall's $\tau$ for `rating_am`, `rating_u3` and `rating_ov`
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+## accuracy U3 
+### overall 
+study1_w_demo %>% 
+    do(tau_u3 = unlist(cor(.$effsize_u3, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_u3)
+
+### grouped by plot type 
+study1_w_demo %>% 
+    group_by(type) %>% 
+    do(tau_u3 = unlist(cor(.$effsize_u3, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_u3)
+
+### grouped by school type
+study1_w_demo %>% 
+    group_by(schooltype_binary) %>% 
+    do(tau_u3a = unlist(cor(.$effsize_u3, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_u3a)
+
+### grouped by school type and plot type
+study1_w_demo %>% 
+    group_by(schooltype_binary, type) %>% 
+    do(tau_u3 = unlist(cor(.$effsize_u3, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_u3)
+
+
+## overlap 
+
+### overall 
+study1_w_demo %>% 
+    do(tau_ov = unlist(cor(.$effsize_abs, .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+
+### grouped by plot type 
+study1_w_demo %>% 
+    group_by(type) %>% 
+    do(tau_ov = unlist(cor(.$effsize_abs, .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+
+### grouped by school type
+study1_w_demo %>% 
+    group_by(schooltype_binary) %>% 
+    do(tau_ov = unlist(cor(.$effsize_abs, .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+
+### grouped by school type and plot type 
+study1_w_demo %>% 
+    group_by(schooltype_binary, type) %>% 
+    do(tau_ov = unlist(cor(.$effsize_abs, .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+
+## Abstract Metric
+
+### overall
+study1_w_demo %>% 
+    do(tau_am = unlist(cor(.$effsize, .$rating_am, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_am)
+
+
+### grouped by plot type
+study1_w_demo %>% 
+    group_by(type) %>% 
+    do(tau_am = unlist(cor(.$effsize, .$rating_am, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_am)
+
+
+### grouped by school type
+study1_w_demo %>% 
+    group_by(schooltype_binary) %>% 
+    do(tau_am = unlist(cor(.$effsize, .$rating_am, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_am)
+
+
+### grouped by school type and plot type
+study1_w_demo %>% 
+    group_by(schooltype_binary, type) %>% 
+    do(tau_am = unlist(cor(.$effsize, .$rating_am, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_am)
+
+study1_w_demo_vda <- study1_w_demo %>%
+    select(session, plot, rating_ov, rating_am, rating_u3, schooltype_binary) %>%
+    pivot_longer(rating_ov:rating_u3, names_to = "variables", 
+                 values_to = "values") %>%
+    mutate(var = paste(variables, schooltype_binary, sep = "_")) %>%
+    select(-variables, values) %>%
+    group_by(session, plot) %>%
+    pivot_wider(names_from = "var", values_from = "values")
+```
+The results do not substantially differ between the two groups. Hence, we will include the participants indicated "other" school types in the following analyses.
+
+# Accuracy: Misconceptions
+
+## Distribution of the Accuracy Variables
+
+```{r}
+#| label: distribution acc dvs
+
+study1_w %>% 
+    select(rating_am, rating_u3, rating_ov) %>% 
+    pivot_longer(
+        c(rating_am, rating_u3, rating_ov),
+        names_to = "dependent_variable", 
+        values_to = "rated_effectsize"
+        ) %>% 
+    ggplot(., aes(rated_effectsize)) +
+    geom_histogram() +
+    xlab("Rated effect size") +
+    facet_wrap(~dependent_variable, scales = "free_x", 
+                labeller = as_labeller(c("rating_am" = "Abstract metric",
+                                         "rating_ov" = "Overlap metric",
+                                         "rating_u3" = "Cohen's U3 metric"))) +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"))
+```
+
+Somewhat disturbing is the first mode in `rating_ov`. Maybe some users confused `overlap` and `non-overlap`? Another artifact seems to be the first mode in `rating_u3`.
+
+### Are there Constant Misconceptions per Persons?
+
+```{r}
+#| label: misconceptiosn per person
+ggplot(study1_w %>% 
+    select(rating_am, rating_u3, rating_ov, effsize, effsize_am, session) %>% 
+    pivot_longer(
+        c(rating_am, rating_u3, rating_ov),
+        names_to = "operationalization", 
+        values_to = "judged_effectsize"
+        ),
+    aes(judged_effectsize, as.numeric(as.factor(session)),
+        color = session)
+        ) +
+    geom_jitter(height = 0) +
+    xlab("Rated effect size") +
+    ylab("Participant ID") +
+    facet_wrap(~ operationalization, scales = "free_x", 
+                labeller = as_labeller(c("rating_am" = "Abstract metric",
+                                         "rating_ov" = "Overlap metric",
+                                         "rating_u3" = "Cohen's U3 metric"))) +
+    theme_modern_rc() +
+    theme(legend.position = "none",
+          strip.text = element_text(color = "white"))
+```
+
+
+### Association of Ratings and Actual Effect Size
+
+```{r}
+#| label: acc associations
+study1_w %>% 
+    ggplot(., aes(effsize, rating_am)) +
+    geom_jitter() +
+    stat_smooth() +
+    ylab("Abstract metric") +
+    xlab("Plotted effect size") +
+    theme_modern_rc()
+
+
+study1_w %>% 
+    ggplot(., aes(effsize_u3, rating_u3, color = rating_u3_missconcept)) +
+    geom_jitter() +
+    stat_smooth() +
+    ylab("Cohen's U3 metric") +
+    xlab("Plotted effect size (transformed to U3)") +
+    labs(color = "Misconcept") +
+    theme_modern_rc()
+
+study1_w %>% 
+    ggplot(., aes(effsize_abs, rating_ov, color = rating_ov_missconcept)) +
+    geom_jitter() +
+    stat_smooth(method = "lm") +
+    ylab("Overlap metric") +
+    xlab("Plotted effect size") +
+    labs(color = "Misconcept") +
+    theme_modern_rc()
+
+```
+
+The correlations underpin the interpretation of the misconceptions. Therefore, we will look at the intercorrelations of the dependent variables.
+
+### Compute Kendall's $\tau$ for `rating_am`, `rating_u3` and `rating_ov`
+
+```{r}
+#| label: kendalls tau
+#| code-fold: true
+#| code-summary: "Show the code"
+
+study1_w %>% 
+    group_by(type) %>% 
+    do(tau_am = unlist(cor(.$effsize, .$rating_am, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_am)
+
+
+study1_w %>% 
+    group_by(rating_ov_missconcept, type) %>% 
+    do(tau_ov = unlist(cor(.$effsize_abs, .$rating_ov, method = "kendall", 
+                           use = "pairwise.complete"))) %>% 
+    unnest(tau_ov)
+
+
+study1_w %>% 
+    group_by(rating_u3_missconcept, type) %>% 
+    do(tau_u3 = cor(.$effsize_u3, .$rating_u3, method = "kendall", 
+                           use = "pairwise.complete")) %>% 
+    unnest(tau_u3)
+```
+
+### Associations of the Dependent Variables
+
+```{r}
+#| label: associactions inter-dv
+#| out-height: "30%"
+ggplot(study1_w, 
+       aes(rating_am, rating_u3)) +
+    geom_jitter() +
+    xlab("Abstract metric") +
+    ylab("Cohen's U3 metric") +
+    theme_modern_rc() +
+ggplot(study1_w, 
+       aes(rating_am, rating_ov)) +
+    geom_jitter() +
+    xlab("Abstract metric") +
+    ylab("Overlap metric") +
+    theme_modern_rc() +
+ggplot(study1_w, 
+       aes(rating_ov, rating_u3)) +
+    geom_jitter() +
+    xlab("Overlap metric") +
+    ylab("Cohen's U3 metric") +
+    theme_modern_rc()
+```
+
+### Global Under- or Overestimation
+
+```{r}
+#| label: under- overestimation
+study1_w %>% 
+    select(diff_am, diff_u3_filtered, diff_ov_filtered, session, type) %>% 
+    gather(dependent_variable, difference_to_true_effsize, 
+           diff_am, diff_u3_filtered, diff_ov_filtered) %>% 
+    ggplot(., aes(type, difference_to_true_effsize)) +
+    geom_boxplot(alpha = .3) +
+    facet_wrap(~dependent_variable, scales = "free_y", 
+                labeller = as_labeller(c("diff_am" = "Abstract metric",
+                                         "diff_ov_filtered" = "Overlap metric (filtered)",
+                                         "diff_u3_filtered" = "Cohen's U3 metric (filtered)"))) +
+    geom_jitter(aes(color = type)) +
+    ylab("Difference to true effect size") +
+    xlab("Accuracy item") +
+    labs(color = "Accuracy item") +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"),
+          axis.text.x = element_blank())
+```
+
+
+# Research Question 1
+
+## Accuracy Abstract Metric
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
+### Random Intercept Models With and Without Visualization Type
+```{r}
+#| results: hide
+
+# Difference variable 
+mod0_diff_am <- brm(diff_am ~ + (1|session), 
+                          data = study1_w,
+                          iter = 20000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4)
+mod1_diff_am <- brm(diff_am ~ effsize + (1|session), 
+                          data = study1_w,
+                          iter = 20000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4)
+mod2_diff_am <- brm(diff_am ~ type + effsize + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+```
+
+
+```{r}
+bayes_factor(mod1_diff_am, mod0_diff_am)
+bayes_factor(mod2_diff_am, mod1_diff_am)
+```
+
+## Accuracy Cohen's U3
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
+### Random Intercept Models With and Without Visualization Type
+```{r}
+#| results: hide
+
+# Difference Variable 
+mod0_diff_u3 <- brm(diff_u3 ~ + (1|session), 
+                          data = study1_w%>% 
+                              filter(rating_u3_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+
+mod1_diff_u3 <- brm(diff_u3 ~ effsize_u3 + (1|session), 
+                          data = study1_w%>% 
+                              filter(rating_u3_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+
+mod2_diff_u3 <- brm(diff_u3 ~ type + effsize_u3 + (1|session), 
+                       data = study1_w %>% 
+                           filter(rating_u3_missconcept == F),
+                       iter = 10000,
+                       save_pars = save_pars(all = TRUE),
+                       cores = 4
+                       )
+```
+
+
+```{r}
+bayes_factor(mod1_diff_u3, mod0_diff_u3)
+bayes_factor(mod2_diff_u3, mod1_diff_u3)
+```
+
+## Accuracy overlap
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
+### Random Intercept Models With and Without Visualization Type
+```{r}
+#| results: hide
+
+# Difference Variable
+mod0_diff_ov <- brm(diff_ov ~ + (1|session), 
+                          data = study1_w%>% 
+                              filter(rating_ov_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+
+mod1_diff_ov <- brm(diff_u3 ~ effsize_abs + (1|session), 
+                          data = study1_w%>% 
+                              filter(rating_u3_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+
+mod2_diff_ov <- brm(diff_ov ~ type + effsize_abs + (1|session), 
+                          data = study1_w %>% 
+                              filter(rating_ov_missconcept == F),
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+```
+
+
+```{r}
+bayes_factor(mod1_diff_ov, mod0_diff_ov)
+bayes_factor(mod2_diff_ov, mod1_diff_ov)
+```
+
+
+## Perceived Difficulty
+
+### Graphical Overview
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, diffi)) +
+    geom_jitter() +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white") +
+    theme_modern_rc() +
+    labs(title = "Difficulty",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+### Random Intercept Models With and Without Visualization Type
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
+```{r}
+#| results: hide
+
+# Perceived Difficulty
+mod0_diffi <- brm(diffi ~ + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+mod1_diffi <- brm(diffi ~ effsize + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+mod2_diffi <- brm(diffi ~ type + effsize + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+```
+
+
+```{r}
+bayes_factor(mod1_diffi, mod0_diffi)
+bayes_factor(mod2_diffi, mod1_diffi)
+```
+
+## Perceived Informativity
+
+### Graphical Overview
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, infor)) +
+    geom_jitter() +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white") +
+    theme_modern_rc() +
+    labs(title = "Informativity",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+### Random Intercept Models With and Without Visualization Type
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
+```{r}
+#| results: hide
+
+# Perceived Informativity
+mod0_infor <- brm(infor ~ + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+mod1_infor <- brm(infor ~ effsize + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+mod2_infor <- brm(infor ~ type + effsize + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+```
+
+
+```{r}
+bayes_factor(mod1_infor, mod0_infor)
+bayes_factor(mod2_infor, mod1_infor)
+```
+
+## Perceived Value
+
+### Graphical Overview
+
+```{r}
+study1_w %>% 
+    ggplot(aes(type, value)) +
+    geom_jitter() +
+    stat_summary(fun.data = mean_sdl,
+                 fun.args = list(mult = 1),
+                 color = "white") +
+    theme_modern_rc() +
+    labs(title = "Perceived Value",
+         subtitle = "per Plot Type",
+         caption = "Means ± 1*SD")
+```
+
+### Random Intercept Models With and Without Visualization Type
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
+```{r}
+#| results: hide
+
+# Perceived Value 
+mod0_value <- brm(value ~ + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+mod1_value <- brm(value ~ effsize + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+mod2_value <- brm(value ~ type + effsize + (1|session), 
+                          data = study1_w,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE),
+                          cores = 4
+                          )
+```
+
+
+```{r}
+bayes_factor(mod1_value, mod0_value)
+bayes_factor(mod2_value, mod1_value)
+```
+
+## Table of All Random Intercept Models
+```{r}
+sjPlot::tab_model(
+    mod0_diff_am, mod0_diff_u3, mod0_diff_ov,
+    mod0_diffi, mod0_infor, mod0_value,
+    mod1_diff_am, mod1_diff_u3, mod1_diff_ov,
+    mod1_diffi, mod1_infor, mod1_value,
+    mod2_diff_am, mod2_diff_u3, mod2_diff_ov,
+    mod2_diffi, mod2_infor, mod2_value
+    )
+```
+
+
+## Sensitivity
+
+### Graphical Overview
+```{r}
+#| label: sensi plot
+#| warning: false
+
+ggplot(study1_w %>% 
+           select(sensi_ordinal, type) %>% 
+           na.omit(), aes(sensi_ordinal, 
+                          color = sensi_ordinal,
+                          fill = sensi_ordinal)) +
+    facet_wrap(~ type) +
+    geom_bar() +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white")) +
+    ggtitle("Sensitivity", "all participants")
+
+ggplot(study1_w %>% 
+           select(sensi_ordinal, type, session) %>% 
+           na.omit() %>% 
+           filter(!session %in% ov_misconceptualizers & 
+                      !session %in% u3_misconceptualizers), aes(sensi_ordinal, 
+                          color = sensi_ordinal,
+                          fill = sensi_ordinal)) +
+    facet_wrap(~ type) +
+    geom_bar() +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white")) +
+    ggtitle("Sensitivity", "without missconceptualizers")
+
+ggplot(study1_w %>% 
+           select(sensi_correct, type, session) %>%
+           dplyr::filter(!is.na(sensi_correct)),
+       aes(sensi_correct, 
+           color = sensi_correct,
+           fill = sensi_correct)) +
+    facet_wrap(~ type) +
+    geom_bar() +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white"),
+          axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(color = "", fill = "") +
+    ggtitle("Binary Sensitivity", "without wrong decisions")
+    
+    
+ggplot(study1_w %>% 
+           select(sensi_binary_filtered, type, session),
+       aes(sensi_binary_filtered, 
+           color = as.factor(sensi_binary_filtered),
+           fill = as.factor(sensi_binary_filtered))) +
+    facet_wrap(~ type) +
+    geom_bar() +
+    theme_modern_rc() +
+    theme(strip.text = element_text(color = "white")) +
+    labs(color = "", fill = "") +
+    ggtitle("Binary Sensitivity", "without wrong decisions (0=equal, 1=right direction)")
+```
+
+### Logistic Regressions With and Without Visualization Type
+
+Fitting a series of logistic regressions with non-informative priors  
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
+```{r}
+#| label: sensi models
+#| results: hide
+
+logreg_mod0 <- brm(
+    sensi_binary_filtered ~ +(1 | session),
+    family = bernoulli(link = "logit"),
+    data = study1_w,
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4
+    
+)
+
+logreg_mod1 <-
+    brm(
+        sensi_binary_filtered ~ effsize_abs + (1 | session),
+        family = bernoulli(link = "logit"),
+        data = study1_w,
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4
+        
+    )
+
+logreg_mod2 <-
+    brm(
+        sensi_binary_filtered ~ effsize_abs + type + (1 | session),
+        family = bernoulli(link = "logit"),
+        data = study1_w,
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4
+        
+    )
+```
+
+
+```{r}
+bayes_factor(logreg_mod1, logreg_mod0)
+bayes_factor(logreg_mod2, logreg_mod1)
+
+sjPlot::tab_model(logreg_mod0, logreg_mod1, logreg_mod2, show.icc = TRUE)
+
+pp_check(logreg_mod2) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+## Efficiency
+### Visualisation
+#### Raw Data
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    coord_cartesian(ylim = c(0,100000)) + 
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+#### 5% Percent Truncated 
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_05righttrunc)) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    coord_cartesian(ylim = c(0,85000)) + 
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="5% Truncated Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+#### 10% Percent Truncated 
+```{r}
+ggplot(study1_w_timestamp, aes(as.factor(plotNrWithin), effic_10righttrunc)) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    coord_cartesian(ylim = c(0,85000)) + 
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="10% Truncated Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+#### `log()` Transformed 
+```{r}
+ggplot(study1_w_timestamp, 
+       aes(as.factor(plotNrWithin), 
+           log(effic_05righttrunc))) +
+    geom_boxplot(alpha = .2, color = "lightgrey") +
+    geom_sina(alpha = .5) +
+    facet_wrap(~type) +
+    theme_modern_rc() +
+    labs(title ="log Transformed Dwell Times Until First Decision",
+          subtitle = "Per Plot Type and Plot Repetition") +
+    theme(strip.text = element_text(color = "white"))
+```
+
+### Modeling With `{brms}`
+
+We generally compare
+
+0. a model (mod0) with intercept only
+1. a model (mod1) with intercept + plotted effect size (control variable)
+2. a model (mod2) with intercept + plotted effect size + visualization type
+
+#### Efficiency for First Plot
+```{r}
+#| error: false
+#| warning: false
+#| results: hide
+
+study1_w_timestamp_effsize <- study1_w_timestamp %>% 
+    full_join(study1_w %>% select(session, effsize), by = "session")
+
+plot01_mod0 <-
+    brm(log_effic_05righttrunc ~ 1 + (1 | session),
+        data = study1_w_timestamp_effsize %>%
+            filter(plotNrWithin == 1),
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4,
+        iter = 6000)
+
+pp_check(plot01_mod0) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+
+```{r}
+#| error: false
+#| warning: false
+#| results: hide
+
+plot01_mod1 <-
+    brm(log_effic_05righttrunc~ 1 + effsize + (1 | session),
+        data = study1_w_timestamp_effsize %>%
+            filter(plotNrWithin == 1),
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4,
+        iter = 6000)
+
+pp_check(plot01_mod1) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+
+```{r}
+#| error: false
+#| warning: false
+#| results: hide
+
+plot01_mod2 <-
+    brm(log_effic_05righttrunc ~ 1 + effsize + type + (1 | session),
+        data = study1_w_timestamp_effsize %>%
+            filter(plotNrWithin == 1),
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4,
+        iter = 6000)
+
+pp_check(plot01_mod2) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+
+```{r}
+#| error: false
+#| warning: false
+#| results: hide
+
+sjPlot::tab_model(plot01_mod0, plot01_mod1, plot01_mod2)
+bayes_factor(plot01_mod1, plot01_mod0)
+bayes_factor(plot01_mod2, plot01_mod1)
+```
+
+#### Efficiency for Last Three Plots
+```{r}
+#| error: false
+#| warning: false
+#| results: hide
+
+plot0306_mod0 <-
+    brm(log_effic_05righttrunc ~ 1 + plotNrWithin_factor + (1 | session),
+        data = study1_w_timestamp_effsize %>%
+            filter(plotNrWithin >= 4),
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4,
+        iter = 6000)
+
+pp_check(plot0306_mod0) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+
+```{r}
+#| error: false
+#| warning: false
+#| results: hide
+
+plot0306_mod1 <-
+    brm(log_effic_05righttrunc ~ 1 + plotNrWithin_factor + effsize +
+            (1 | session),
+        data = study1_w_timestamp_effsize %>%
+            filter(plotNrWithin >= 4),
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4)
+
+pp_check(plot0306_mod1) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+
+```{r}
+#| error: false
+#| warning: false
+#| results: hide
+
+plot0306_mod2 <-
+    brm(log_effic_05righttrunc ~ 1 + plotNrWithin_factor + effsize +
+            type + (1 | session),
+        data = study1_w_timestamp_effsize %>%
+            filter(plotNrWithin >= 4),
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4)
+
+pp_check(plot0306_mod2) +
+    theme_modern_rc() +
+    scale_color_manual(values=viridis(2, begin = .3))
+```
+
+
+```{r}
+
+sjPlot::tab_model(plot0306_mod0, plot0306_mod1, plot0306_mod2)
+bayes_factor(plot0306_mod1, plot0306_mod0)
+bayes_factor(plot0306_mod2, plot0306_mod1)
+```
+
+
+# Research Question 2
+
+## Contrast Effects 
+
+### Graphical Overview
+
+```{r}
+#| results: hide
+
+# preparing multilevel model with brms for graphical overview
+
+# rating ov
+mod_plot_diffov <- brm (
+    diff_ov ~ (1 | type),
+    data = study1_w %>% 
+        filter(rating_ov_missconcept == F),
+    control = list(adapt_delta = .999),
+    cores = 4,
+    iter = 10000
+    
+)
+
+
+plot_diffov <- mod_plot_diffov %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean
+             )) +
+    stat_halfeye() + 
+    theme_ipsum_rc()+
+    theme(axis.title.x = element_blank(),
+          axis.text.y = element_text(hjust = 0)) +
+    ggtitle('Accuracy in Overlap Metric')
+```
+
+```{r}
+
+plot_diffov
+
+ggsave("4_study1/plot_diffov.png", 
+    plot_diffov,
+    width = 25*.55,
+    height = 16*.55)
+
+```
+
+
+```{r}
+#| results: hide
+
+# difficulty
+mod_plot_diffi <- brm (
+    scale(diffi) ~ (1 | type),
+    data = study1_w,
+    control = list(adapt_delta = .999),
+    cores = 4,
+    iter = 10000
+    
+)
+
+plot_diffi <- mod_plot_diffi %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean
+             )) +
+    stat_halfeye() +
+    theme_ipsum_rc() +
+    theme(axis.title.x = element_blank(),
+          axis.text.y = element_text(hjust = 0)) +
+    ggtitle('Perceived Task Difficulty')
+```
+
+
+```{r}
+#| results: hide
+
+# informativity
+mod_plot_infor <- brm (
+    scale(infor) ~ (1 | type),
+    data = study1_w,
+    control = list(adapt_delta = .999),
+    cores = 4,
+    iter = 10000
+    
+)
+
+plot_infor <- mod_plot_infor %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean
+             )) +
+  stat_halfeye() +
+    theme_ipsum_rc() +
+    theme(axis.title.x = element_blank(),
+          axis.text.y = element_blank()) +
+    ggtitle('Perceived Informativity')
+```
+
+
+```{r}
+#| results: hide
+
+# value 
+mod_plot_value <- brm (
+    scale(value) ~ (1 | type),
+    data = study1_w,
+    control = list(adapt_delta = .999),
+    cores = 4,
+    iter = 10000
+    
+)
+
+plot_value <- mod_plot_value %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean 
+             )) +
+  stat_halfeye() +
+    theme_ipsum_rc() +
+    theme(axis.title.x = element_blank(),
+          axis.text.y = element_text(hjust = 0)) +
+    ggtitle('Perceived Value')
+```
+
+
+```{r}
+#| results: hide
+
+# efficiency for the first plot
+
+mod_plot_efficiency1 <-
+    brm(
+        scale(effic) ~ (1 | type),
+        data = study1_w_timestamp_effsize %>%
+            filter(plotNrWithin == 1),
+        control = list(adapt_delta = .999),
+        cores = 4
+        
+    )
+ 
+
+plot_efficiency1 <- mod_plot_efficiency1 %>%
+  spread_draws(b_Intercept, r_type[type,]) %>%
+  mutate(type_mean = b_Intercept + r_type) %>%
+  ggplot(aes(y = type, x = type_mean 
+             )) +
+  stat_halfeye() +
+    theme_ipsum_rc() +
+    theme(axis.title.x = element_blank(),
+          axis.text.y = element_blank(), 
+          axis.title.y = element_blank()) +
+    ggtitle('Efficiency for the First Plot')
+```
+
+
+```{r}
+plot_contrasteffects <- plot_diffi + plot_infor + plot_value + plot_efficiency1 + 
+    plot_layout(ncol=2)
+
+plot_contrasteffects 
+
+ggsave("4_study1/plot_contrasteffects.png", 
+    plot_contrasteffects,
+    width = 25*.55,
+    height = 16*.55)
+```
+
+
+### Model Contrast Effects with `{brms}`
+
+```{r}
+#| results: hide
+
+# create dummy variables to compare visualization types for those measures that showed evidence for difference (accuracy overlap, perceived task difficulty, perceived informativity, perceived value, sensitivity, efficiency)
+
+
+## Gardner Altman Plot vs. Halfeye xaxis
+gardneraltman_vs_halfeye_x <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_halfeye_x = 
+               case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "gardneraltman_xaxis" | type == "halfeye_xaxis") %>%
+    ungroup()
+
+gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_halfeye_x = 
+               case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "gardneraltman_xaxis" | type == "halfeye_xaxis") %>%
+    ungroup() %>% 
+    full_join(study1_w %>% select(session, effsize), by = "session")
+```
+
+
+```{r}
+#| results: hide
+
+mod_diffov_gardneraltman_halfeye_x <- 
+    brm(diff_ov ~ dummy_gardneraltman_halfeye_x +  effsize_abs + (1|session), 
+                          data = gardneraltman_vs_halfeye_x%>% 
+                              filter(rating_ov_missconcept == F),
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+
+```
+
+
+```{r}
+#| results: hide
+mod_diffi_gardneraltman_halfeye_x <- 
+    brm(scale(diffi) ~ dummy_gardneraltman_halfeye_x + effsize 
+        + (1|session), 
+                          data = gardneraltman_vs_halfeye_x,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+```
+
+```{r}
+#| results: hide
+mod_infor_gardneraltman_halfeye_x <- 
+    brm(scale(infor) ~ dummy_gardneraltman_halfeye_x + effsize
+        + (1|session), 
+                          data = gardneraltman_vs_halfeye_x,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+
+mod_value_gardneraltman_halfeye_x <- 
+    brm(scale(value) ~ dummy_gardneraltman_halfeye_x + effsize 
+        + (1|session), 
+                          data = gardneraltman_vs_halfeye_x,
+                          save_pars = save_pars(all = TRUE))
+```
+
+```{r}
+#| results: hide
+mod_sensi_gardneraltman_halfeye_x <-
+    brm(
+        sensi_binary_filtered ~ dummy_gardneraltman_halfeye_x + effsize_abs + (1 | session),
+        family = bernoulli(link = "logit"),
+        data = gardneraltman_vs_halfeye_x,
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4
+    )
+
+```
+
+
+```{r}
+#| results: hide
+mod_effic01_gardneraltman_halfeye_x <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_halfeye_x + 
+            effsize + (1|session),
+    data = gardneraltman_vs_halfeye_x_effic %>%  
+    filter(plotNrWithin == 1),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+
+mod_effic0306_gardneraltman_halfeye_x <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_halfeye_x +
+            effsize + (1|session),
+    data = gardneraltman_vs_halfeye_x_effic %>% 
+        filter(plotNrWithin >= 4),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+```
+
+
+```{r}
+#| results: hide
+
+## Gardner Altman Plot vs. Halfeye yaxis
+gardneraltman_vs_halfeye_y <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_halfeye_y = 
+               case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "gardneraltman_xaxis" | type == "halfeye_yaxis") %>%
+    ungroup()
+
+
+gardneraltman_vs_halfeye_y_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_halfeye_y = 
+               case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "gardneraltman_xaxis" | type == "halfeye_yaxis") %>%
+    ungroup()  %>% 
+    full_join(study1_w %>% select(session, effsize), by = "session")
+```
+
+```{r}
+#| results: hide
+
+mod_diffov_gardneraltman_halfeye_y <- 
+    brm(diff_ov ~ dummy_gardneraltman_halfeye_y + effsize_abs + (1|session), 
+                          data = gardneraltman_vs_halfeye_y%>% 
+                              filter(rating_ov_missconcept == F),
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+
+```{r}
+#| results: hide
+mod_diffi_gardneraltman_halfeye_y <- 
+    brm(scale(diffi) ~ dummy_gardneraltman_halfeye_y + effsize 
+        + (1|session), 
+                          data = gardneraltman_vs_halfeye_y,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+
+```{r}
+#| results: hide
+mod_infor_gardneraltman_halfeye_y <- 
+    brm(scale(infor) ~ dummy_gardneraltman_halfeye_y + effsize 
+        + (1|session), 
+                          data = gardneraltman_vs_halfeye_y,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+
+mod_value_gardneraltman_halfeye_y <- 
+    brm(scale(value) ~ dummy_gardneraltman_halfeye_y + effsize 
+        + (1|session), 
+                          data = gardneraltman_vs_halfeye_y,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+```{r}
+#| results: hide
+mod_sensi_gardneraltman_halfeye_y <-
+    brm(
+        sensi_binary_filtered ~ dummy_gardneraltman_halfeye_y + effsize_abs + (1 | session),
+        family = bernoulli(link = "logit"),
+        data = gardneraltman_vs_halfeye_y,
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4
+    )
+
+```
+
+```{r}
+#| results: hide
+mod_effic01_gardneraltman_halfeye_y <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_halfeye_y +
+            effsize + (1|session),
+    data = gardneraltman_vs_halfeye_y_effic %>%  
+    filter(plotNrWithin == 1),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+
+mod_effic0306_gardneraltman_halfeye_y <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_halfeye_y + 
+            effsize + (1|session),
+    data = gardneraltman_vs_halfeye_y_effic %>% 
+        filter(plotNrWithin >= 4),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+```
+
+
+```{r}
+#| results: hide
+
+## Raincloud Plot vs. Halfeye x axis
+raincloud_vs_halfeye_x <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_raincloud_halfeye_x = 
+               case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "halfeye_xaxis" | type == "raincloud_yaxis") %>%
+    ungroup()
+
+raincloud_vs_halfeye_x_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_raincloud_halfeye_x = 
+               case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "raincloud_yaxis" | type == "halfeye_xaxis") %>%
+    ungroup() %>% 
+    full_join(study1_w %>% select(session, effsize), by = "session")
+```
+
+
+```{r}
+#| results: hide
+mod_diffov_raincloud_halfeye_x <- 
+    brm(diff_ov ~ dummy_raincloud_halfeye_x + effsize_abs + (1|session), 
+                          data = raincloud_vs_halfeye_x %>% 
+                              filter(rating_ov_missconcept == F),
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+
+```{r}
+#| results: hide
+
+mod_diffi_raincloud_halfeye_x <- 
+    brm(scale(diffi) ~ dummy_raincloud_halfeye_x + 
+            effsize + (1|session), 
+                          data = raincloud_vs_halfeye_x,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+```{r}
+#| results: hide
+
+mod_infor_raincloud_halfeye_x <- 
+    brm(scale(infor) ~ dummy_raincloud_halfeye_x +
+        effsize + (1|session), 
+                          data = raincloud_vs_halfeye_x,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+
+mod_value_raincloud_halfeye_x <- 
+    brm(scale(value) ~ dummy_raincloud_halfeye_x + 
+            effsize + (1|session), 
+                          data = raincloud_vs_halfeye_x,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+
+```
+
+```{r}
+#| results: hide
+
+mod_sensi_raincloud_halfeye_x <-
+    brm(
+        sensi_binary_filtered ~ dummy_raincloud_halfeye_x + effsize_abs + (1 | session),
+        family = bernoulli(link = "logit"),
+        data = raincloud_vs_halfeye_x,
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4
+    )
+
+```
+
+```{r}
+#| results: hide
+
+mod_effic01_raincloud_halfeye_x <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_raincloud_halfeye_x + 
+            effsize + (1|session),
+    data = raincloud_vs_halfeye_x_effic %>%  
+    filter(plotNrWithin == 1),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+
+mod_effic0306_raincloud_halfeye_x <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_raincloud_halfeye_x +
+            effsize + (1|session),
+    data = raincloud_vs_halfeye_x_effic %>% 
+        filter(plotNrWithin >= 4),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+```
+
+
+```{r}
+#| results: hide
+
+##  Raincloud Plot vs.Halfeye yaxis
+raincloud_vs_halfeye_y <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_raincloud_halfeye_y = 
+               case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "halfeye_yaxis" | type == "raincloud_yaxis") %>%
+    ungroup()
+
+raincloud_vs_halfeye_y_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_raincloud_halfeye_y = 
+               case_when(type == "raincloud_yaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "raincloud_yaxis" | type == "halfeye_yaxis") %>%
+    ungroup() %>% 
+    full_join(study1_w %>% select(session, effsize), by = "session")
+```
+
+
+```{r}
+#| results: hide
+
+mod_diffov_raincloud_halfeye_y <- 
+    brm(diff_ov ~ dummy_raincloud_halfeye_y + effsize_abs + (1|session), 
+                          data = raincloud_vs_halfeye_y %>% 
+                              filter(rating_ov_missconcept == F),
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+
+```{r}
+#| results: hide
+
+mod_diffi_raincloud_halfeye_y <- 
+    brm(scale(diffi) ~ dummy_raincloud_halfeye_y + 
+            effsize + (1|session), 
+                          data = raincloud_vs_halfeye_y,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+
+```{r}
+#| results: hide
+
+mod_infor_raincloud_halfeye_y <- 
+    brm(scale(infor) ~ dummy_raincloud_halfeye_y + 
+            effsize + (1|session), 
+                          data = raincloud_vs_halfeye_y,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+
+mod_value_raincloud_halfeye_y <- 
+    brm(scale(value) ~ dummy_raincloud_halfeye_y + 
+            effsize + (1|session), 
+                          data = raincloud_vs_halfeye_y,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+```{r}
+#| results: hide
+
+mod_sensi_raincloud_halfeye_y <-
+    brm(
+        sensi_binary_filtered ~ dummy_raincloud_halfeye_y + effsize_abs + (1 | session),
+        family = bernoulli(link = "logit"),
+        data = raincloud_vs_halfeye_y,
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4
+    )
+
+```
+
+```{r}
+#| results: hide
+
+mod_effic01_raincloud_halfeye_y <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_raincloud_halfeye_y +
+            effsize + (1|session),
+    data = raincloud_vs_halfeye_y_effic %>%  
+    filter(plotNrWithin == 1),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+
+mod_effic0306_raincloud_halfeye_y <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_raincloud_halfeye_y +
+            effsize + (1|session),
+    data = raincloud_vs_halfeye_y_effic %>% 
+        filter(plotNrWithin >= 4),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+```
+
+
+```{r}
+sjPlot::tab_model(
+        mod_diffov_gardneraltman_halfeye_x, 
+        mod_diffi_gardneraltman_halfeye_x, 
+        mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
+        mod_sensi_gardneraltman_halfeye_x,
+        mod_effic01_gardneraltman_halfeye_x, mod_effic0306_gardneraltman_halfeye_x,
+        mod_diffov_gardneraltman_halfeye_y, 
+        mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, 
+        mod_value_gardneraltman_halfeye_y, mod_sensi_gardneraltman_halfeye_y,
+        mod_effic01_gardneraltman_halfeye_y, mod_effic0306_gardneraltman_halfeye_y,
+        mod_diffov_raincloud_halfeye_x, mod_diffi_raincloud_halfeye_x, 
+        mod_infor_raincloud_halfeye_x, mod_value_raincloud_halfeye_x,
+        mod_sensi_raincloud_halfeye_x,
+        mod_effic01_raincloud_halfeye_x, mod_effic0306_raincloud_halfeye_x,
+        mod_diffov_raincloud_halfeye_y, 
+        mod_diffi_raincloud_halfeye_y, mod_infor_raincloud_halfeye_y, 
+        mod_value_raincloud_halfeye_y, mod_sensi_raincloud_halfeye_y,
+        mod_effic01_raincloud_halfeye_y, mod_effic0306_raincloud_halfeye_y)
+```
+
+
+```{r}
+#| results: hide
+
+## Gardner Altman Plot vs. Raincloud Plot
+gardneraltman_vs_raincloud <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_raincloud = 
+               case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "gardneraltman_xaxis" | type == "raincloud_yaxis") %>%
+    ungroup()
+
+gardneraltman_vs_raincloud_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_gardneraltman_raincloud = 
+               case_when(type == "gardneraltman_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "gardneraltman_xaxis" | type == "raincloud_yaxis") %>%
+    ungroup() %>% 
+    full_join(study1_w %>% select(session, effsize), by = "session")
+```
+
+
+```{r}
+#| results: hide
+
+mod_diffov_gardneraltman_raincloud <- 
+    brm(diff_ov ~ dummy_gardneraltman_raincloud + effsize_abs + (1|session), 
+                          data = gardneraltman_vs_raincloud%>% 
+                              filter(rating_ov_missconcept == F),
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+
+```{r}
+#| results: hide
+
+mod_diffi_gardneraltman_raincloud <- 
+    brm(scale(diffi) ~ dummy_gardneraltman_raincloud + 
+            effsize + (1|session), 
+                          data = gardneraltman_vs_raincloud,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+
+```{r}
+#| results: hide
+
+mod_infor_gardneraltman_raincloud <- 
+    brm(scale(infor) ~ dummy_gardneraltman_raincloud +
+            effsize + (1|session), 
+        data = gardneraltman_vs_raincloud,
+        save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+
+mod_value_gardneraltman_raincloud <- 
+    brm(scale(value) ~ dummy_gardneraltman_raincloud + 
+            effsize + (1|session), 
+                          data = gardneraltman_vs_raincloud,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+```
+
+```{r}
+#| results: hide
+mod_sensi_gardneraltman_raincloud <-
+    brm(
+        sensi_binary_filtered ~ dummy_gardneraltman_raincloud + effsize_abs + (1 | session),
+        family = bernoulli(link = "logit"),
+        data = gardneraltman_vs_raincloud,
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4
+    )
+
+```
+
+```{r}
+#| results: hide
+
+mod_effic01_gardneraltman_raincloud <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_raincloud + 
+            effsize + (1|session),
+    data = gardneraltman_vs_raincloud_effic %>%  
+    filter(plotNrWithin == 1),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+
+mod_effic0306_gardneraltman_raincloud <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_gardneraltman_raincloud + 
+            effsize + (1|session),
+    data = gardneraltman_vs_raincloud_effic %>% 
+        filter(plotNrWithin >= 4),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+```
+
+
+```{r}
+#| results: hide
+
+## Halfeye xaxis vs. Halfeye yaxis
+
+halfeye_x_vs_halfeye_y <- study1_w %>%
+    group_by(session) %>%
+    mutate(dummy_halfeye_x_halfeye_y = 
+               case_when(type == "halfeye_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "halfeye_xaxis" | type == "halfeye_yaxis") %>%
+    ungroup()
+
+halfeye_x_vs_halfeye_y_effic <- study1_w_timestamp %>%
+    group_by(session) %>%
+    mutate(dummy_halfeye_x_halfeye_y = 
+               case_when(type == "halfeye_xaxis" ~ 0, TRUE ~ 1)) %>%
+    filter(type == "halfeye_xaxis" | type == "halfeye_yaxis") %>%
+    ungroup() %>% 
+    full_join(study1_w %>% select(session, effsize), by = "session")
+```
+
+
+```{r}
+#| results: hide
+
+mod_diffov_halfeye_x_halfeye_y <- 
+    brm(diff_ov ~ dummy_halfeye_x_halfeye_y + effsize_abs + (1|session), 
+                          data = halfeye_x_vs_halfeye_y%>% 
+                              filter(rating_ov_missconcept == F),
+                          save_pars = save_pars(all = TRUE),
+        
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 20000)
+```
+
+
+```{r}
+#| results: hide
+
+mod_diffi_halfeye_x_halfeye_y <- 
+    brm(scale(diffi) ~ dummy_halfeye_x_halfeye_y +
+            effsize + (1|session), 
+                          data = halfeye_x_vs_halfeye_y,
+                          iter = 10000,
+                          save_pars = save_pars(all = TRUE))
+```
+
+```{r}
+#| results: hide
+mod_infor_halfeye_x_halfeye_y <- 
+    brm(scale(infor) ~ dummy_halfeye_x_halfeye_y + 
+            effsize + (1|session), 
+                          data = halfeye_x_vs_halfeye_y,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4)
+
+mod_value_halfeye_x_halfeye_y <- 
+    brm(scale(value) ~ dummy_halfeye_x_halfeye_y + 
+            effsize + (1|session), 
+                          data = halfeye_x_vs_halfeye_y,
+                          save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+```
+
+```{r}
+#| results: hide
+mod_sensi_halfeye_x_halfeye_y <-
+    brm(
+        sensi_binary_filtered ~ dummy_halfeye_x_halfeye_y + effsize_abs + (1 | session),
+        family = bernoulli(link = "logit"),
+        data = halfeye_x_vs_halfeye_y,
+        save_pars = save_pars(all = TRUE),
+        silent = 2,
+        refresh = 0,
+        cores = 4
+    )
+
+```
+
+```{r}
+#| results: hide
+
+mod_effic01_halfeye_x_halfeye_y <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_halfeye_x_halfeye_y + 
+            effsize + (1|session),
+    data = halfeye_x_vs_halfeye_y_effic %>%  
+    filter(plotNrWithin == 1),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    iter = 10000)
+
+mod_effic0306_halfeye_x_halfeye_y <- 
+    brm(scale(log_effic_05righttrunc) ~ dummy_halfeye_x_halfeye_y + 
+            effsize + (1|session),
+    data = halfeye_x_vs_halfeye_y_effic%>% 
+        filter(plotNrWithin >= 4),
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    refresh = 0,
+    cores = 4,
+    iter = 10000)
+```
+
+```{r}
+sjPlot::tab_model(mod_diffov_gardneraltman_raincloud, 
+                  mod_diffi_gardneraltman_raincloud,
+                  mod_infor_gardneraltman_raincloud, 
+                  mod_value_gardneraltman_raincloud,
+                  mod_sensi_gardneraltman_raincloud,
+                  mod_effic01_gardneraltman_raincloud, 
+                  mod_effic0306_gardneraltman_raincloud)
+```
+
+
+```{r}
+sjPlot::tab_model(mod_diffov_halfeye_x_halfeye_y, 
+                  mod_diffi_halfeye_x_halfeye_y, 
+                  mod_infor_halfeye_x_halfeye_y, 
+                  mod_value_halfeye_x_halfeye_y,
+                  mod_sensi_halfeye_x_halfeye_y,
+                  mod_effic01_halfeye_x_halfeye_y,
+                  mod_effic0306_halfeye_x_halfeye_y)
+```
+

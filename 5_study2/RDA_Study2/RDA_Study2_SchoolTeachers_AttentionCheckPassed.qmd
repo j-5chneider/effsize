@@ -587,7 +587,9 @@ hyp1a_am_vinterceptonly_gaussian <-
         iter = 10000, warmup = 1000,
         family = gaussian(), 
         data = data_w |> 
-            filter(group %in% c("cg", "eg_benchmark")))
+            filter(group %in% c("cg", "eg_benchmark"),
+                   !diff_am == "-Inf",
+                   !diff_am == "Inf"))
 
 plot(hyp1a_am_vinterceptonly_gaussian)
 pp_check(hyp1a_am_vinterceptonly_gaussian) + xlim(c(-1, 1))
@@ -599,7 +601,9 @@ hyp1a_am_vinterceptonly_student <-
         iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
-            filter(group %in% c("cg", "eg_benchmark")),
+            filter(group %in% c("cg", "eg_benchmark"),
+                   !diff_am == "-Inf",
+                   !diff_am == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_am_vinterceptonly_student)
@@ -612,7 +616,9 @@ hyp1a_am_vintercept_student <-
         iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
-            filter(group %in% c("cg", "eg_benchmark")),
+            filter(group %in% c("cg", "eg_benchmark"),
+                   !diff_am == "-Inf",
+                   !diff_am == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_am_vintercept_student)
@@ -636,6 +642,18 @@ hyp1a_am_bias_bf
 :::{.callout-warning collapse=false appearance='default' icon=true}
 - I filtered out just the CG and the benchmark group
 :::
+
+```{r}
+
+cliffs_delta(diff_am ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_overlap",
+                  !group == "eg_signaling_u3"#,
+                  #!diff_am == "-Inf",
+                  #!diff_am == "Inf"
+                  )) 
+
+```
+
 
 ### Overlap
 ```{r}
@@ -683,7 +701,9 @@ hyp1a_ov_vinterceptonly_student <-
         iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
-            filter(group %in% c("cg", "eg_benchmark")),
+            filter(group %in% c("cg", "eg_benchmark"),
+                   !diff_ov == "-Inf",
+                   !diff_ov == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_ov_vinterceptonly_student)
@@ -695,7 +715,9 @@ hyp1a_ov_vintercept_student <-
     brm(diff_ov_filtered ~ type + effsize_f + gr_benchmark + (1|session),
         family = student(), 
         data = data_w |> 
-            filter(group %in% c("cg", "eg_benchmark")),
+            filter(group %in% c("cg", "eg_benchmark"),
+                   !diff_ov == "-Inf",
+                   !diff_ov == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_ov_vintercept_student)
@@ -714,6 +736,17 @@ hyp1a_ov_bias_bf <-
 hyp1a_ov_bias_bf
 ```
 
+```{r}
+
+cliffs_delta(diff_ov ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_overlap",
+                  !group == "eg_signaling_u3",
+                  !rating_ov_misconcept == "TRUE"
+                  #!diff_ov == "-Inf",
+                  #!diff_ov == "Inf"
+                  )
+           ) 
+```
 
 ### U3
 ```{r}
@@ -783,7 +816,9 @@ hyp1a_u3_vinterceptonly_student <-
     brm(diff_u3_filtered ~ type + effsize_f + (1|session),
         family = student(), 
         data = data_w |> 
-            filter(group %in% c("cg", "eg_benchmark")),
+            filter(group %in% c("cg", "eg_benchmark"),
+                   !diff_u3 == "-Inf",
+                   !diff_u3 == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_u3_vinterceptonly_student)
@@ -795,7 +830,9 @@ hyp1a_u3_vintercept_student <-
     brm(diff_u3_filtered ~ type + effsize_f + gr_benchmark + (1|session),
         family = student(), 
         data = data_w |> 
-            filter(group %in% c("cg", "eg_benchmark")),
+            filter(group %in% c("cg", "eg_benchmark"),
+                   !diff_u3 == "-Inf",
+                   !diff_u3 == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_u3_vintercept_student)
@@ -814,6 +851,16 @@ hyp1a_u3_bias_bf <-
 hyp1a_u3_bias_bf
 ```
 
+```{r}
+cliffs_delta(diff_u3 ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_overlap",
+                  !group == "eg_signaling_u3",
+                  !rating_u3_misconcept == "TRUE"
+                  #!diff_u3 == "-Inf",
+                  #!diff_u3 == "Inf"
+                  )
+           ) 
+```
 
 ## Hypothesis H2a: Effects of benchmarks on sensitivity
 
@@ -1156,7 +1203,10 @@ hyp1b_am_vinterceptonly_gaussian <-
         iter = 10000, warmup = 1000,
         family = gaussian(), 
         data = data_w |> 
-            filter(group != "eg_benchmark"))
+            filter(group != "eg_benchmark",
+                   !diff_am == "-Inf",
+                   !diff_am == "Inf")
+                   )
 
 plot(hyp1b_am_vinterceptonly_gaussian)
 pp_check(hyp1b_am_vinterceptonly_gaussian) + xlim(c(-1, 1))
@@ -1168,7 +1218,9 @@ hyp1b_am_vinterceptonly_student <-
         iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
-            filter(group != "eg_benchmark"),
+            filter(group != "eg_benchmark",
+                   !diff_am == "-Inf",
+                   !diff_am == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_am_vinterceptonly_student)
@@ -1181,7 +1233,9 @@ hyp1b_am_vintercept_student <-
         iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
-            filter(group != "eg_benchmark"),
+            filter(group != "eg_benchmark",
+                   !diff_am == "-Inf",
+                   !diff_am == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_am_vintercept_student)
@@ -1200,6 +1254,25 @@ hyp1b_am_bias_bf <-
   bayes_factor(hyp1b_am_vintercept_student,
                hyp1b_am_vinterceptonly_student)
 hyp1b_am_bias_bf
+```
+
+```{r}
+
+# cg vs. signaling u3
+cliffs_delta(diff_am ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_overlap",
+                  !group == "eg_benchmark"#,
+                  #!diff_am == "-Inf",
+                  #!diff_am == "Inf"
+                  )) 
+# cg vs. signaling overlap
+cliffs_delta(diff_am ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_u3",
+                  !group == "eg_benchmark"#,
+                  #!diff_am == "-Inf",
+                  #!diff_am == "Inf"
+                  )) 
+
 ```
 
 
@@ -1237,7 +1310,9 @@ hyp1b_ov_vinterceptonly_student <-
     brm(diff_ov_filtered ~ type + effsize_f + (1|session),
         family = student(), 
         data = data_w |> 
-            filter(group != "eg_benchmark"),
+            filter(group != "eg_benchmark",
+                   !diff_ov == "-Inf",
+                   !diff_ov == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_ov_vinterceptonly_student)
@@ -1249,7 +1324,9 @@ hyp1b_ov_vintercept_student <-
     brm(diff_ov_filtered ~ type + effsize_f + group + (1|session),
         family = student(), 
         data = data_w |> 
-            filter(group != "eg_benchmark"),
+            filter(group != "eg_benchmark",
+                   !diff_ov == "-Inf",
+                   !diff_ov == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_ov_vintercept_student)
@@ -1269,6 +1346,26 @@ hyp1b_ov_bias_bf <-
 hyp1b_ov_bias_bf
 ```
 
+
+
+```{r}
+# cg vs. signaling u3
+cliffs_delta(diff_ov ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_overlap",
+                  !group == "eg_benchmark"#,
+                  #!diff_ov == "-Inf",
+                  #!diff_ov == "Inf"
+                  )) 
+# cg vs. signaling overlap
+cliffs_delta(diff_ov ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_u3",
+                  !group == "eg_benchmark",
+                  !rating_ov_misconcept == "TRUE"
+                  #!diff_ov == "-Inf",
+                  #!diff_ov == "Inf"
+                  )) 
+
+```
 
 ### U3
 ```{r}
@@ -1313,7 +1410,9 @@ hyp1b_u3_vinterceptonly_student <-
     brm(diff_u3_filtered ~ type + effsize_f + (1|session),
         family = student(), 
         data = data_w |> 
-            filter(group != "eg_benchmark"),
+            filter(group != "eg_benchmark",
+                   !diff_u3 == "-Inf",
+                   !diff_u3 == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_u3_vinterceptonly_student)
@@ -1325,7 +1424,9 @@ hyp1b_u3_vintercept_student <-
     brm(diff_u3_filtered ~ type + effsize_f + group + (1|session),
         family = student(), 
         data = data_w |> 
-            filter(group != "eg_benchmark"),
+            filter(group != "eg_benchmark",
+                   !diff_u3 == "-Inf",
+                   !diff_u3 == "Inf"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_u3_vintercept_student)
@@ -1344,7 +1445,25 @@ hyp1b_u3_bias_bf <-
 hyp1b_u3_bias_bf
 ```
 
+```{r}
+# cg vs. signaling u3
+cliffs_delta(diff_u3 ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_overlap",
+                  !group == "eg_benchmark",
+                  !rating_u3_misconcept == "TRUE"#,
+                  #!diff_u3 == "-Inf",
+                  #!diff_u3 == "Inf"
+                  )) 
+# cg vs. signaling overlap
+cliffs_delta(diff_u3 ~ group, data = data_w |> 
+           filter(!group == "eg_signaling_u3",
+                  !group == "eg_benchmark",
+                  !rating_u3_misconcept == "TRUE"
+                  #!diff_u3 == "-Inf",
+                  #!diff_u3 == "Inf"
+                  )) 
 
+```
 ## Hypothesis H2b: Effects of signaling on sensitivity
 
 ```{r}
