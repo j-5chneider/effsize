@@ -15,7 +15,9 @@ editor_options:
   chunk_output_type: console
 ---
 
+
 ## Data Import
+
 ```{r}
 library(modelsummary)
 library(broom.mixed)
@@ -111,9 +113,11 @@ study2_data_detailed <-
 ```
 
 
+
 ## Data wrangling
 ### Wrangling item data
 First we create a specific dataframe which contains the information about effect size, plottype ...
+
 ```{r}
 plot_info <- study2_data  |> 
     # we only need the rows with info on plots
@@ -129,7 +133,9 @@ plot_info <- study2_data  |>
     select(-variables, -axis)
 ```
 
+
 Next we wrangle a separate dataframe which contains just the answers of the participants to the items, their identifier and the plotorder.
+
 ```{r}
 #| label: item_datawrangling
 item_values <- study2_data %>%
@@ -145,7 +151,9 @@ item_values <- study2_data %>%
                 values_from = "values")
 ```
 
+
 Then we join these two data sets and recode/calculate some of the dependet variables like accuracy...
+
 ```{r}
 #| label: item_datajoining
 data_w <- full_join(plot_info, 
@@ -230,12 +238,14 @@ data_w <- full_join(plot_info,
 # for debugging
 test <-
     data_w |>
-    select(rating_u3, effsize_u3, effsize, rating_u3_in_d, diff_u3, rating_ov, effsize_ov, rating_ov_in_d, diff_ov, rating_am, rating_am_in_d)
+    select(rating_u3,effsize_u3, effsize, rating_u3_in_d, diff_u3, rating_ov, effsize_ov, rating_ov_in_d, diff_ov)
 
 
 ```
 
+
 Show descriptive results of accuracy variables, perceived difficulty, sensitivity, perceived informativity, perceived value, and misconceptualizers per experimental condition
+
 
 ```{r}
 skim(
@@ -268,7 +278,9 @@ skim(
 ```
 
 
+
 ### Wrangling time data
+
 ```{r}
 #| label: timestamp_datawrangling
 
@@ -316,7 +328,9 @@ study_w_timestamp <-
 
 ```
 
+
 Show descriptive results of efficiency per experimental condition
+
 
 ```{r}
 skim(
@@ -332,7 +346,9 @@ skim(
 ```
 
 
+
 ## Missingness
+
 ```{r}
 data_w|> 
     select(-contains("filtered")) |> 
@@ -342,7 +358,9 @@ data_w|>
     theme(plot.margin = unit(c(1,2,1,1), "cm"))
 ```
 
+
 ## Outliers
+
 ```{r}
 # define tidyverse ready scale function
 scale_this <- function(x){
@@ -365,7 +383,9 @@ data_w |>
 ```
 
 
+
 ## Demographics
+
 ```{r}
 #| label: demographics
 sociodemographics <- 
@@ -387,7 +407,9 @@ sociodemographics <-
 skim(sociodemographics) 
 ```
 
+
 ## Attention check
+
 ```{r}
 study2_data_ended |> 
     mutate(attention_check = case_when(is.na(attention_check) ~ "passed",
@@ -399,7 +421,9 @@ study2_data_ended |>
     ggtitle("Survey Duration", "Per Result of Attention Check")
 ```
 
+
 ## Understandig items
+
 ```{r}
 study2_data_ended |> 
     mutate(attention_check = case_when(is.na(attention_check) ~ "passed",
@@ -416,9 +440,11 @@ study2_data_ended |>
 ```
 
 
+
 ## Always plot your raw data
 ### Dependent variables
 #### Likert items
+
 ```{r}
 #| label: plot raw diffi infor value
 
@@ -434,8 +460,10 @@ study2_data |>
     ggpairs(columns = c("diffi", "infor", "value"))
 ```
 
+
 #### Effect size ratings
 ##### Abstract metric
+
 ```{r}
 ggpairs(data_w |> 
             select(rating_am, effsize_am) |> 
@@ -445,7 +473,9 @@ ggpairs(data_w |>
         alpha = .3)
 ```
 
+
 ##### U3
+
 ```{r}
 # With misconceptualizers
 ggpairs(data_w |> 
@@ -464,7 +494,9 @@ ggpairs(data_w |>
 ```
 
 
+
 ##### Overlap
+
 ```{r}
 # With misconceptualizers
 ggpairs(data_w |> 
@@ -483,8 +515,10 @@ ggpairs(data_w |>
 ```
 
 
+
 #### Sensitivity ratings
 ##### Sensitivity ordinal
+
 ```{r}
 ggpairs(data_w |> 
             select(sensi_ordinal, effsize_am) |> 
@@ -493,7 +527,9 @@ ggpairs(data_w |>
         columns = c("sensi_ordinal", "effsize_am"))
 ```
 
+
 ##### Sensitivity correct
+
 ```{r}
 ggpairs(data_w |> 
             select(sensi_correct, effsize_am) |> 
@@ -502,7 +538,9 @@ ggpairs(data_w |>
         columns = c("sensi_correct", "effsize_am"))
 ```
 
+
 #### Efficiency
+
 ```{r}
 ggplot(study_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
     geom_boxplot(alpha = .2, color = "lightgrey") +
@@ -517,7 +555,9 @@ ggplot(study_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
 ```
 
 
+
 #### Misceptualizers
+
 ```{r}
 ggpairs(data_w |> 
             select(rating_ov_misconcept, rating_u3_misconcept) |> 
@@ -525,6 +565,7 @@ ggpairs(data_w |>
             na.omit(), 
         columns = c("rating_ov_misconcept", "rating_u3_misconcept"))
 ```
+
 
 
 
@@ -551,6 +592,7 @@ ggpairs(data_w |>
 
 ## Hypothesis H1a: Effects of benchmarks on accuracy
 ### Abstract metric
+
 ```{r}
 #| label: hypothesis 1a am
 #| cache: true
@@ -634,11 +676,13 @@ hyp1a_am_bias_bf <-
 hyp1a_am_bias_bf
 ```
 
+
 :::{.callout-warning collapse=false appearance='default' icon=true}
 - I filtered out just the CG and the benchmark group
 :::
 
 ### Overlap
+
 ```{r}
 #| label: hypothesis 1a ov
 #| cache: true
@@ -674,7 +718,9 @@ data_w |>
     theme_minimal()
 ```
 
+
 The heavy left tails indicate clearly non-normality. Hence we will use the `student()` family.
+
 
 ```{r}
 #| cache: true
@@ -716,7 +762,9 @@ hyp1a_ov_bias_bf
 ```
 
 
+
 ### U3
+
 ```{r}
 #| cache: true
 data_w |> 
@@ -752,7 +800,6 @@ data_w |>
     labs(title = "Accuracy (U3)")
 ```
 
-
 ```{r}
 #| label: hypothesis 1a u3
 data_w |> 
@@ -767,7 +814,6 @@ data_w |>
          subtitle = "Per Benchmarking and U3 Misconcept")
 ```
 
-
 ```{r}
 data_w |>
     ggplot(aes(effsize_u3, rating_u3)) + 
@@ -775,7 +821,6 @@ data_w |>
     stat_smooth() +
     facet_wrap(~ rating_u3_misconcept)
 ```
-
 
 ```{r}
 #| cache: true
@@ -816,7 +861,9 @@ hyp1a_u3_bias_bf
 ```
 
 
+
 ## Hypothesis H2a: Effects of benchmarks on sensitivity
+
 
 ```{r}
 #| label: h2a Effects of benchmarks on sensitivity plot
@@ -839,7 +886,6 @@ data_w |>
     facet_wrap(~group, ncol = 1) + 
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: h2a Effects of benchmarks on sensitivity
@@ -881,7 +927,9 @@ hyp2a_bf
 ```
 
 
+
 ## Hypothesis H3a: Effects of benchmarks on perceived difficulty
+
 ```{r}
 #| label: hypothesis H3a Effects of benchmarks on perceived difficulty plot
 #| cache: true
@@ -892,7 +940,6 @@ data_w |>
     stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1))+
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: hypothesis H3a Effects of benchmarks on perceived difficulty
@@ -931,7 +978,9 @@ hyp3a_bf
 ```
 
 
+
 ## Hypothesis H4a: Effects of signaling on efficiency - first plot
+
 ```{r}
 #| label: hypothesis H4a Effects of signaling on efficiency
 #| cache: true
@@ -987,7 +1036,9 @@ hyp4a_bf <-
 hyp4a_bf
 ```
 
+
 ## Hypothesis H4a: Effects of signaling on efficiency - last three plots
+
 ```{r}
 #| label: hypothesis H4a Effects of signaling on efficiency last three
 #| cache: true
@@ -1033,7 +1084,9 @@ hyp4alast_bf
 
 
 
+
 ## Hypothesis H5a: Effects of benchmarks on perceived informativity
+
 ```{r}
 #| label: hypothesis H5a Effects of benchmarks on perceived informativity
 #| cache: true
@@ -1079,7 +1132,9 @@ hyp5a_bf
 ```
 
 
+
 ## Hypothesis H6a: Effects of benchmarks on perceived value
+
 ```{r}
 #| label: hypothesis H6a Effects of benchmarks on perceived value
 #| cache: true
@@ -1125,11 +1180,13 @@ hyp6a_bf
 ```
 
 
+
 # Hypotheses b
 
 ## Hypothesis H1b: Effects of signaling on accuracy
 
 ### Abstract metric
+
 ```{r}
 #| label: hypothesis 1b am
 #| cache: true
@@ -1204,7 +1261,9 @@ hyp1b_am_bias_bf
 ```
 
 
+
 ### Overlap
+
 ```{r}
 #| label: hypothesis 1b ov
 #| cache: true
@@ -1229,7 +1288,9 @@ data_w |>
     theme_minimal()
 ```
 
+
 The heavy left tails indicate clearly non-normality. Hence we will use the `student()` family.
+
 
 ```{r}
 #| cache: true
@@ -1271,7 +1332,9 @@ hyp1b_ov_bias_bf
 ```
 
 
+
 ### U3
+
 ```{r}
 #| label: hypothesis 1b u3
 #| cache: true
@@ -1297,7 +1360,6 @@ data_w |>
     labs(title = "Accuracy (U3)")
 ```
 
-
 ```{r}
 data_w |>
     ggplot(aes(effsize_u3, rating_u3)) + 
@@ -1305,7 +1367,6 @@ data_w |>
     stat_smooth() +
     facet_wrap(~ rating_u3_misconcept)
 ```
-
 
 ```{r}
 #| cache: true
@@ -1346,7 +1407,9 @@ hyp1b_u3_bias_bf
 ```
 
 
+
 ## Hypothesis H2b: Effects of signaling on sensitivity
+
 
 ```{r}
 #| label: h2b Effects of signaling on sensitivity plot
@@ -1369,7 +1432,6 @@ data_w |>
     facet_wrap(~group, ncol = 1) + 
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: h2b Effects of signaling on sensitivity
@@ -1409,7 +1471,9 @@ hyp2b_bf
 ```
 
 
+
 ## Hypothesis H3b: Effects of signaling on perceived difficulty
+
 ```{r}
 #| label: hypothesis H3b Effects of signaling on perceived difficulty plot
 #| cache: true
@@ -1420,7 +1484,6 @@ data_w |>
     stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1))+
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: hypothesis H3b Effects of signaling on perceived difficulty
@@ -1458,7 +1521,9 @@ hyp3b_bf <-
 hyp3b_bf
 ```
 
+
 ## Hypothesis H4b: Effects of signaling on efficiency - first plot
+
 ```{r}
 #| label: hypothesis H4b Effects of signaling on efficiency
 #| cache: true
@@ -1515,7 +1580,9 @@ hyp4b_bf <-
 hyp4b_bf
 ```
 
+
 ## Hypothesis H4b: Effects of signaling on efficiency - last three plots
+
 ```{r}
 #| label: hypothesis H4b Effects of signaling on efficiency last three
 #| cache: true
@@ -1561,7 +1628,9 @@ hyp4blast_bf
 ```
 
 
+
 ## Hypothesis H5b: Effects of signaling on perceived informativity
+
 ```{r}
 #| label: hypothesis H5b Effects of signaling on perceived informativity
 #| cache: true
@@ -1609,7 +1678,9 @@ hyp5b_bf
 ```
 
 
+
 ## Hypothesis H6b: Effects of signaling on perceived value
+
 ```{r}
 #| label: hypothesis H6b Effects of signaling on perceived value
 #| cache: true
@@ -1656,7 +1727,9 @@ hyp6b_bf
 ```
 
 
+
 ## Hypothesis H7bu3: Effects of signaling on misconcepts u3
+
 ```{r}
 #| label: hypothesis H7b Effects of signaling on misconcepts u3
 #| cache: true
@@ -1717,7 +1790,9 @@ hyp7bu3_bf
 ```
 
 
+
 ## Hypothesis H7bov: Effects of signaling on misconcepts ov
+
 ```{r}
 #| label: hypothesis H7bov Effects of signaling on misconcepts ov
 #| cache: true
@@ -1777,7 +1852,9 @@ hyp7bov_bf
 
 
 
+
 ## Bayes factors
+
 ```{r}
 #| code-fold: false
 
@@ -1835,3 +1912,4 @@ hyp7bu3_bf$bf
 # H7bov: when signaling ov, smaller number of ov misconceptualizer
 hyp7bov_bf$bf
 ```
+
