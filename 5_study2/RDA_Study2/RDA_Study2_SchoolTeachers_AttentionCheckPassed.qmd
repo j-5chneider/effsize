@@ -227,12 +227,6 @@ data_w <- full_join(plot_info,
     mutate(gr_benchmark = ifelse(grepl("benchmark", group), "benchmark", "nobenchmark"),
            gr_signaling = ifelse(grepl("signaling", group), "signaling", "nosignaling"))
 
-# for debugging
-test <-
-    data_w |>
-    select(rating_u3, effsize_u3, effsize, rating_u3_in_d, diff_u3, rating_ov, effsize_ov, rating_ov_in_d, diff_ov, rating_am, rating_am_in_d)
-
-
 ```
 
 Show descriptive results of accuracy variables, perceived difficulty, sensitivity, perceived informativity, perceived value, and misconceptualizers per experimental condition
@@ -243,12 +237,18 @@ skim(
   select(diffi, infor, value, rating_u3, 
          rating_ov, rating_am, diff_u3, diff_ov,
          diff_am, sensi_binary, plot, session, group) |>
+    filter (!diff_u3 == "-Inf",
+            !diff_u3 == "Inf",
+            !diff_ov == "-Inf",
+            !diff_ov == "Inf",
+            !diff_am == "-Inf",
+            !diff_am == "Inf") |>
     gather(variable, value, 1:10) |>
     mutate(var = paste(variable, group, sep = "_")) |>
     select(-group, -variable) |>
-    group_by(session, plot) |>
-    spread(var, value) |>
-    ungroup()
+    # group_by(session, plot) |>
+    spread(var, value) # |>
+    # ungroup()
     )
 
 
@@ -325,9 +325,9 @@ skim(
     gather(variable, value, effic) |>
     mutate(var = paste(variable, group, sep = "_")) |>
     select(-group, -variable) |>
-    group_by(session, plot) |>
-    spread(var, value) |>
-    ungroup()
+    #group_by(session, plot) |>
+    spread(var, value) #|>
+    #ungroup()
     )
 ```
 
@@ -563,7 +563,7 @@ data_w |>
                  fun.args = list(mult = 1)) +
     theme_minimal() +
     labs(title = "Accuracy (Abstract Metric)",
-         subtitle = "Per Benchmarking")
+         subtitle = "Per Experimental Condition")
 
 data_w |> 
   ggplot(aes(effsize, rating_am_in_d, color = diff_am)) +
@@ -572,8 +572,7 @@ data_w |>
     geom_abline(intercept = 0, slope =1) +
     theme_minimal() +
     facet_wrap(~group) +
-    labs(title = "Accuracy (Abstract Metric)",
-         subtitle = "Per Benchmarking and U3 Misconcept")
+    labs(title = "Accuracy (Abstract Metric)")
 
 data_w |> 
   ggplot(aes(effsize_am, rating_am)) +
@@ -651,7 +650,7 @@ data_w |>
                  fun.args = list(mult = 1)) +
     theme_minimal() +
     labs(title = "Accuracy (Overlap)",
-         subtitle = "Per Benchmarking and Overlap Misconcept")
+         subtitle = "Per Experimental Condition and Overlap Misconcept")
 
 
 data_w |> 
@@ -662,7 +661,7 @@ data_w |>
     facet_grid(group ~rating_ov_misconcept) +
     theme_minimal() +
     labs(title = "Accuracy (overlap)",
-         subtitle = "Per Benchmarking and U3 Misconcept")
+         subtitle = "Per Experimental Condition and Overlap Misconcept")
 
 data_w |> 
   ggplot(aes(effsize_ov, 
@@ -728,7 +727,7 @@ data_w |>
                  fun.args = list(mult = 1)) +
     theme_minimal() +
     labs(title = "Accuracy (U3)",
-         subtitle = "Per Benchmarking and U3 Misconcept")
+         subtitle = "Per Experimental Condition and U3 Misconcept")
 
 
 data_w |> 
@@ -739,7 +738,7 @@ data_w |>
     facet_grid(group ~rating_u3_misconcept) +
     theme_minimal() +
     labs(title = "Accuracy (U3)",
-         subtitle = "Per Benchmarking and U3 Misconcept")
+         subtitle = "Per Experimental Condition and U3 Misconcept")
 
 data_w |> 
   ggplot(aes(effsize_u3, 
@@ -764,7 +763,7 @@ data_w |>
                  fun.args = list(mult = 1)) +
     theme_minimal() +
     labs(title = "Accuracy (U3)",
-         subtitle = "Per Benchmarking and U3 Misconcept")
+         subtitle = "Per Experimental Condition and U3 Misconcept")
 ```
 
 
@@ -944,7 +943,7 @@ study_w_timestamp |>
     facet_wrap(~group) +
     theme_modern_rc() +
     labs(title ="Dwell Times Until First Decision",
-          subtitle = "Per Plot Type and Plot Repetition") +
+          subtitle = "Per Experimental Condition and Plot Repetition") +
     theme(strip.text = element_text(color = "white"))
 
 
@@ -1142,7 +1141,7 @@ data_w |>
                  fun.args = list(mult = 1)) +
     theme_minimal() +
     labs(title = "Accuracy (Abstract Metric)",
-         subtitle = "Per Benchmarking")
+         subtitle = "Per Experimental Condition")
 
 data_w |> 
   ggplot(aes(effsize_am, rating_am)) +
@@ -1217,7 +1216,7 @@ data_w |>
                  fun.args = list(mult = 1)) +
     theme_minimal() +
     labs(title = "Accuracy (Overlap)",
-         subtitle = "Per Benchmarking and Overlap Misconcept")
+         subtitle = "Per Experimental Condition and Overlap Misconcept")
 
 data_w |> 
   ggplot(aes(effsize_ov, 
@@ -1284,7 +1283,7 @@ data_w |>
                  fun.args = list(mult = 1)) +
     theme_minimal() +
     labs(title = "Accuracy (U3)",
-         subtitle = "Per Benchmarking and U3 Misconcept")
+         subtitle = "Per Experimental Condition and U3 Misconcept")
 
 data_w |> 
   ggplot(aes(effsize_u3, 
@@ -1471,7 +1470,7 @@ study_w_timestamp |>
     facet_wrap(~group) +
     theme_modern_rc() +
     labs(title ="Dwell Times Until First Decision",
-          subtitle = "Per Plot Type and Plot Repetition") +
+          subtitle = "Per Experimental Condition and Plot Repetition") +
     theme(strip.text = element_text(color = "white"))
 
 
