@@ -189,10 +189,10 @@ data_w <- full_join(plot_info,
     mutate(rating_ov_misconcept = median(rating_ov, na.rm = T) < 68.9,
            rating_u3_misconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
     ungroup() %>% 
-    mutate(rating_u3_filtered = ifelse(rating_u3_misconcept == T, NA, rating_u3),
-           rating_ov_filtered = ifelse(rating_ov_misconcept == T, NA, rating_ov),
-           diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
-           diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
+    mutate(rating_u3_filtered = ifelse(rating_u3_misconcept == T, NA, rating_u3_in_d),
+           rating_ov_filtered = ifelse(rating_ov_misconcept == T, NA, rating_ov_in_d),
+           #diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
+           #diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
            sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
                                         NA,
                                         as.numeric(!grepl("equal", sensi))),
@@ -650,7 +650,8 @@ cliffs_delta(diff_am ~ group, data = data_w |>
                   !group == "eg_signaling_u3"#,
                   #!diff_am == "-Inf",
                   #!diff_am == "Inf"
-                  )) 
+                  ))
+               
 
 ```
 
@@ -697,13 +698,14 @@ The heavy left tails indicate clearly non-normality. Hence we will use the `stud
 #| cache: true
 # fit student varying intercept only model
 hyp1a_ov_vinterceptonly_student <- 
-    brm(diff_ov_filtered ~ type + effsize_f + (1|session),
+    brm(diff_ov ~ type + effsize_f + (1|session),
         iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
                    !diff_ov == "-Inf",
-                   !diff_ov == "Inf"),
+                   !diff_ov == "Inf",
+                   rating_ov_misconcept = "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_ov_vinterceptonly_student)
@@ -712,12 +714,13 @@ pp_check(hyp1a_ov_vinterceptonly_student) + xlim(c(-1, 1))
 
 # fit student varying intercept model
 hyp1a_ov_vintercept_student <- 
-    brm(diff_ov_filtered ~ type + effsize_f + gr_benchmark + (1|session),
+    brm(diff_ov ~ type + effsize_f + gr_benchmark + (1|session),
         family = student(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
                    !diff_ov == "-Inf",
-                   !diff_ov == "Inf"),
+                   !diff_ov == "Inf",
+                   rating_ov_misconcept = "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_ov_vintercept_student)
@@ -813,12 +816,13 @@ data_w |>
 #| cache: true
 # fit student varying intercept only model
 hyp1a_u3_vinterceptonly_student <- 
-    brm(diff_u3_filtered ~ type + effsize_f + (1|session),
+    brm(diff_u3 ~ type + effsize_f + (1|session),
         family = student(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
                    !diff_u3 == "-Inf",
-                   !diff_u3 == "Inf"),
+                   !diff_u3 == "Inf",
+                   rating_u3_misconcept = "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_u3_vinterceptonly_student)
@@ -827,12 +831,13 @@ pp_check(hyp1a_u3_vinterceptonly_student) + xlim(c(-1, 1))
 
 # fit student varying intercept model
 hyp1a_u3_vintercept_student <- 
-    brm(diff_u3_filtered ~ type + effsize_f + gr_benchmark + (1|session),
+    brm(diff_u3 ~ type + effsize_f + gr_benchmark + (1|session),
         family = student(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
                    !diff_u3 == "-Inf",
-                   !diff_u3 == "Inf"),
+                   !diff_u3 == "Inf", 
+                   rating_u3_misconcept = "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_u3_vintercept_student)
@@ -1307,12 +1312,13 @@ The heavy left tails indicate clearly non-normality. Hence we will use the `stud
 #| cache: true
 # fit student varying intercept only model
 hyp1b_ov_vinterceptonly_student <- 
-    brm(diff_ov_filtered ~ type + effsize_f + (1|session),
+    brm(diff_ov ~ type + effsize_f + (1|session),
         family = student(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
                    !diff_ov == "-Inf",
-                   !diff_ov == "Inf"),
+                   !diff_ov == "Inf",
+                   rating_ov_misconcept = "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_ov_vinterceptonly_student)
@@ -1321,12 +1327,13 @@ pp_check(hyp1b_ov_vinterceptonly_student) + xlim(c(-1, 1))
 
 # fit student varying intercept model
 hyp1b_ov_vintercept_student <- 
-    brm(diff_ov_filtered ~ type + effsize_f + group + (1|session),
+    brm(diff_ov ~ type + effsize_f + group + (1|session),
         family = student(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
                    !diff_ov == "-Inf",
-                   !diff_ov == "Inf"),
+                   !diff_ov == "Inf",
+                   rating_ov_misconcept = "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_ov_vintercept_student)
@@ -1352,7 +1359,8 @@ hyp1b_ov_bias_bf
 # cg vs. signaling u3
 cliffs_delta(diff_ov ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
-                  !group == "eg_benchmark"#,
+                  !group == "eg_benchmark",
+                  !rating_ov_misconcept = "TRUE"#,
                   #!diff_ov == "-Inf",
                   #!diff_ov == "Inf"
                   )) 
@@ -1407,12 +1415,13 @@ data_w |>
 #| cache: true
 # fit student varying intercept only model
 hyp1b_u3_vinterceptonly_student <- 
-    brm(diff_u3_filtered ~ type + effsize_f + (1|session),
+    brm(diff_u3 ~ type + effsize_f + (1|session),
         family = student(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
                    !diff_u3 == "-Inf",
-                   !diff_u3 == "Inf"),
+                   !diff_u3 == "Inf",
+                   rating_u3_misconcept = "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_u3_vinterceptonly_student)
@@ -1426,7 +1435,8 @@ hyp1b_u3_vintercept_student <-
         data = data_w |> 
             filter(group != "eg_benchmark",
                    !diff_u3 == "-Inf",
-                   !diff_u3 == "Inf"),
+                   !diff_u3 == "Inf",
+                   rating_u3_misconcept = "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_u3_vintercept_student)
@@ -1453,7 +1463,8 @@ cliffs_delta(diff_u3 ~ group, data = data_w |>
                   !rating_u3_misconcept == "TRUE"#,
                   #!diff_u3 == "-Inf",
                   #!diff_u3 == "Inf"
-                  )) 
+                  ) |> 
+               group_by(group)) 
 # cg vs. signaling overlap
 cliffs_delta(diff_u3 ~ group, data = data_w |> 
            filter(!group == "eg_signaling_u3",
@@ -1464,6 +1475,7 @@ cliffs_delta(diff_u3 ~ group, data = data_w |>
                   )) 
 
 ```
+
 ## Hypothesis H2b: Effects of signaling on sensitivity
 
 ```{r}
