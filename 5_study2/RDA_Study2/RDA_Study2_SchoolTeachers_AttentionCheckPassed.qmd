@@ -189,10 +189,10 @@ data_w <- full_join(plot_info,
     mutate(rating_ov_misconcept = median(rating_ov, na.rm = T) < 68.9,
            rating_u3_misconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
     ungroup() %>% 
-    mutate(rating_u3_filtered = ifelse(rating_u3_misconcept == T, NA, rating_u3_in_d),
-           rating_ov_filtered = ifelse(rating_ov_misconcept == T, NA, rating_ov_in_d),
-           #diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
-           #diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
+    mutate(rating_u3_filtered = ifelse(rating_u3_misconcept == T, 
+                                       NA, rating_u3_in_d),
+           rating_ov_filtered = ifelse(rating_ov_misconcept == T,
+                                       NA, rating_ov_in_d),
            sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
                                         NA,
                                         as.numeric(!grepl("equal", sensi))),

@@ -116,23 +116,26 @@ data_w <- full_join(plot_info,
            effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
            # transform the actual effect size Cohen's d to overlap
            # actual difference of rating relative to depicted effectsize 
-           diff_am = ifelse(effsize_am > 0,
-                            rating_am - effsize_am,
-                            effsize_am - rating_am),
-           # actual difference of rating relative to depicted effectsize
-           diff_u3 = ifelse((effsize_u3 - .5) > 0,
-                            (rating_u3/100 - .5) - (effsize_u3 - .5),
-                            (effsize_u3 - .5) -  (rating_u3/100 - .5)),
-           # actual difference of rating relative to depicted effectsize 
-           diff_ov = (rating_ov/100) - effsize_ov) %>%
+           rating_am_in_d = r_to_d(rating_am/100),
+           rating_u3_in_d = qnorm(rating_u3/100), 
+           rating_ov_in_d = -2*qnorm(0.5*rating_ov/100),
+           diff_am = ifelse(effsize < 0,
+                            (rating_am_in_d - effsize)*(-1),
+                            rating_am_in_d - effsize),
+           diff_u3 = ifelse(effsize < 0,
+                            (rating_u3_in_d - effsize)*(-1),
+                            rating_u3_in_d - effsize),
+           diff_ov = ifelse(effsize < 0,
+                            (rating_ov_in_d - effsize)*(-1),
+                            rating_ov_in_d - effsize))  %>%
     group_by(session) %>% 
     mutate(rating_ov_misconcept = median(rating_ov, na.rm = T) < 68.9,
            rating_u3_misconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
     ungroup() %>% 
-    mutate(rating_u3_filtered = ifelse(rating_u3_misconcept == T, NA, rating_u3),
-           rating_ov_filtered = ifelse(rating_ov_misconcept == T, NA, rating_ov),
-           diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
-           diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
+    mutate(rating_u3_filtered = ifelse(rating_u3_misconcept == T, 
+                                       NA, rating_u3_in_d),
+           rating_ov_filtered = ifelse(rating_ov_misconcept == T,
+                                       NA, rating_ov_in_d),
            sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
                                         NA,
                                         as.numeric(!grepl("equal", sensi))),
