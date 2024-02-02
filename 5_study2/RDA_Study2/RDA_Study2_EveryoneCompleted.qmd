@@ -16,6 +16,7 @@ editor_options:
 ---
 
 ## Data Import
+
 ```{r}
 library(modelsummary)
 library(broom.mixed)
@@ -27,6 +28,8 @@ library(bayestestR)
 library(hrbrthemes)
 library(tidyverse)
 library(naniar)
+library(effectsize)
+library(lubridate)
 
 # set cores depending on your machine
 options(mc.cores = parallel::detectCores())
@@ -42,8 +45,64 @@ study2_data_ended <-
     study2_data_imported |> 
     filter(!is.na(ended))
 
+nrow(study2_data_ended)
 
-study2_data <- study2_data_ended
+study2_data_ended_and_passedattentioncheck <-
+    study2_data_ended # |> 
+   # filter(is.na(attention_check))
+           
+nrow(study2_data_ended_and_passedattentioncheck)
+
+study2_data_ended_and_passedattentioncheck_and_schoolteachers <-
+    study2_data_ended_and_passedattentioncheck #|> 
+    # filter(!(mcsto %in%  
+    #              c('University', 
+    #               'private tutor college',
+    #               'university',
+    #               'Higher education',
+    #               'private language school',
+    #               'Alternative provision school',
+    #               'Pompeu Fabra University',
+    #               'Adult learners',
+    #               'language school',
+    #               'Private Tutor',
+    #               'Nursery',
+    #               'Private tutor',
+    #               'none',
+    #               'A language school',
+    #               'FE',
+    #               'Tutoring high school and bachelor students',
+    #               'college of further education',
+    #               'university and special business school',
+    #               'Language school',
+    #               'Higher education (university)',
+    #               'Online Tutoring',
+    #               'Language School',
+    #               'ESL/Study abroad university class',
+    #               'Adult education college',
+    #               'Kindergarten',
+    #               'University of Colorado',
+    #               'indepedent school for languages',
+    #               '1:1 learning for children with SEN/SEMH',
+    #               'TEFL',
+    #               'Private tutoring company',
+    #               'higher ed',
+    #               'USF',
+    #               'Realise Training',
+    #               'FE College',
+    #               'English as a foreign language institution',
+    #               'higher education',
+    #               'Higher Ed',
+    #               'Higher education -University',
+    #               'University students',
+    #               'English courses',
+    #               'various',
+    #               'Prep school')
+    # ))
+
+nrow(study2_data_ended_and_passedattentioncheck_and_schoolteachers)
+
+study2_data <- study2_data_ended_and_passedattentioncheck_and_schoolteachers
 
 # Import detailed data .json
 study2_data_detailed <-
@@ -52,10 +111,12 @@ study2_data_detailed <-
     filter(session %in% study2_data$session)
 ```
 
-
 ## Data wrangling
+
 ### Wrangling item data
+
 First we create a specific dataframe which contains the information about effect size, plottype ...
+
 ```{r}
 plot_info <- study2_data  |> 
     # we only need the rows with info on plots
@@ -72,6 +133,7 @@ plot_info <- study2_data  |>
 ```
 
 Next we wrangle a separate dataframe which contains just the answers of the participants to the items, their identifier and the plotorder.
+
 ```{r}
 #| label: item_datawrangling
 item_values <- study2_data %>%
@@ -88,6 +150,7 @@ item_values <- study2_data %>%
 ```
 
 Then we join these two data sets and recode/calculate some of the dependet variables like accuracy...
+
 ```{r}
 #| label: item_datajoining
 data_w <- full_join(plot_info, 
@@ -209,8 +272,8 @@ skim(
     )
 ```
 
-
 ### Wrangling time data
+
 ```{r}
 #| label: timestamp_datawrangling
 
@@ -273,8 +336,8 @@ skim(
     )
 ```
 
-
 ## Missingness
+
 ```{r}
 data_w|> 
     select(-contains("filtered")) |> 
@@ -285,6 +348,7 @@ data_w|>
 ```
 
 ## Outliers
+
 ```{r}
 # define tidyverse ready scale function
 scale_this <- function(x){
@@ -306,8 +370,8 @@ data_w |>
     arrange(desc(abs(value_z)))
 ```
 
-
 ## Demographics
+
 ```{r}
 #| label: demographics
 sociodemographics <- 
@@ -330,6 +394,7 @@ skim(sociodemographics)
 ```
 
 ## Attention check
+
 ```{r}
 study2_data_ended |> 
     mutate(attention_check = case_when(is.na(attention_check) ~ "passed",
@@ -342,6 +407,7 @@ study2_data_ended |>
 ```
 
 ## Understandig items
+
 ```{r}
 study2_data_ended |> 
     mutate(attention_check = case_when(is.na(attention_check) ~ "passed",
@@ -350,17 +416,19 @@ study2_data_ended |>
                           uvary_2x, uvary_2y),
                  names_to = "understanding_variable",
                  values_to = "answer") |> 
-    ggplot(aes(fill = factor(answer), x = attention_check)) +
+    ggplot(aes(color = factor(answer), fill = factor(answer), x = attention_check)) +
         facet_wrap(~understanding_variable) +
         geom_bar(position = "fill") +
         theme_minimal() +
     ggtitle("Answers to Treatmentchecks", "Per Result of Attention Check")
 ```
 
-
 ## Always plot your raw data
+
 ### Dependent variables
+
 #### Likert items
+
 ```{r}
 #| label: plot raw diffi infor value
 
@@ -377,7 +445,9 @@ study2_data |>
 ```
 
 #### Effect size ratings
+
 ##### Abstract metric
+
 ```{r}
 ggpairs(data_w |> 
             select(rating_am, effsize_am) |> 
@@ -385,9 +455,17 @@ ggpairs(data_w |>
             na.omit(), 
         columns = c("rating_am", "effsize_am"),
         alpha = .3)
+
+ggpairs(data_w |> 
+            select(rating_am_in_d, effsize) |> 
+            mutate_all(as_factor) |> 
+            na.omit(), 
+        columns = c("rating_am_in_d", "effsize"),
+        alpha = .3)
 ```
 
 ##### U3
+
 ```{r}
 # With misconceptualizers
 ggpairs(data_w |> 
@@ -405,8 +483,8 @@ ggpairs(data_w |>
         columns = c("rating_u3", "effsize_u3"))
 ```
 
-
 ##### Overlap
+
 ```{r}
 # With misconceptualizers
 ggpairs(data_w |> 
@@ -424,9 +502,10 @@ ggpairs(data_w |>
         columns = c("rating_ov", "effsize_ov"))
 ```
 
-
 #### Sensitivity ratings
+
 ##### Sensitivity ordinal
+
 ```{r}
 ggpairs(data_w |> 
             select(sensi_ordinal, effsize_am) |> 
@@ -436,6 +515,7 @@ ggpairs(data_w |>
 ```
 
 ##### Sensitivity correct
+
 ```{r}
 ggpairs(data_w |> 
             select(sensi_correct, effsize_am) |> 
@@ -445,6 +525,7 @@ ggpairs(data_w |>
 ```
 
 #### Efficiency
+
 ```{r}
 ggplot(study_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
     geom_boxplot(alpha = .2, color = "lightgrey") +
@@ -458,8 +539,8 @@ ggplot(study_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
     theme(strip.text = element_text(color = "white"))
 ```
 
-
 #### Misceptualizers
+
 ```{r}
 ggpairs(data_w |> 
             select(rating_ov_misconcept, rating_u3_misconcept) |> 
@@ -468,31 +549,31 @@ ggpairs(data_w |>
         columns = c("rating_ov_misconcept", "rating_u3_misconcept"))
 ```
 
-
-
 # Hypotheses
-* a - Benchmarks as Enrichment
-    * H~1a~: increase in **accuracy** (am, u3, ov) 
-    * H~2a~: increase in **sensitivity** 
-    * H~3a~: increase in task **difficulty** 
-    * H~4a~: increase in dwell time (**efficiency**) 
-    * H~5a~: increase in perceived **informativity** 
-    * H~6a~: increase in perceived **value** for practice 
- 
-* b - Signaling as Enrichment (u3 & ov) 
-    * H~1b~: increase in **accuracy** (am, u3, ov;) for teachers without misconception 
-    * H~2b~: increase in **sensitivity** 
-    * H~3b~: decrease (improving) in task **difficulty** 
-    * H~4b~: decrease (improving) in dwell time (**efficiency**) 
-    * H~5b~: increase in perceived **informativity** 
-    * H~6b~: increase in perceived **value** for practice 
-    * H^7b^~u3~: when signaling u3, smaller number of u3 misconceptualizer 
-    * H^7b^~ov~: when signaling ov, smaller number of ov misconceptualizer
+
+-   a - Benchmarks as Enrichment
+    -   H~1a~: increase in **accuracy** (am, u3, ov)
+    -   H~2a~: increase in **sensitivity**
+    -   H~3a~: increase in task **difficulty**
+    -   H~4a~: increase in dwell time (**efficiency**)
+    -   H~5a~: increase in perceived **informativity**
+    -   H~6a~: increase in perceived **value** for practice
+-   b - Signaling as Enrichment (u3 & ov)
+    -   H~1b~: increase in **accuracy** (am, u3, ov;) for teachers without misconception
+    -   H~2b~: increase in **sensitivity**
+    -   H~3b~: decrease (improving) in task **difficulty**
+    -   H~4b~: decrease (improving) in dwell time (**efficiency**)
+    -   H~5b~: increase in perceived **informativity**
+    -   H~6b~: increase in perceived **value** for practice
+    -   H^7b^~u3~: when signaling u3, smaller number of u3 misconceptualizer
+    -   H^7b^~ov~: when signaling ov, smaller number of ov misconceptualizer
 
 # Hypotheses a
 
 ## Hypothesis H1a: Effects of benchmarks on accuracy
+
 ### Abstract metric
+
 ```{r}
 #| label: hypothesis 1a am
 #| cache: true
@@ -526,7 +607,7 @@ data_w |>
 # fit gaussion varying intercept only model
 hyp1a_am_vinterceptonly_gaussian <- 
     brm(diff_am ~ type + effsize_f + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 30000,
         family = gaussian(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
@@ -540,7 +621,7 @@ pp_check(hyp1a_am_vinterceptonly_gaussian) + xlim(c(-1, 1))
 # fit student varying intercept only model
 hyp1a_am_vinterceptonly_student <- 
     brm(diff_am ~ type + effsize_f + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 30000,
         family = student(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
@@ -555,7 +636,7 @@ pp_check(hyp1a_am_vinterceptonly_student) + xlim(c(-1, 1))
 # fit student varying intercept model
 hyp1a_am_vintercept_student <- 
     brm(diff_am ~ type + effsize_f + gr_benchmark + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 30000,
         family = student(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
@@ -581,22 +662,16 @@ hyp1a_am_bias_bf <-
 hyp1a_am_bias_bf
 ```
 
-:::{.callout-warning collapse=false appearance='default' icon=true}
-- I filtered out just the CG and the benchmark group
-:::
 
 ```{r}
-
 cliffs_delta(diff_am ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_signaling_u3"
                   ))
-               
-
 ```
 
-
 ### Overlap
+
 ```{r}
 #| label: hypothesis 1a ov
 #| cache: true
@@ -639,13 +714,13 @@ The heavy left tails indicate clearly non-normality. Hence we will use the `stud
 # fit student varying intercept only model
 hyp1a_ov_vinterceptonly_student <- 
     brm(diff_ov ~ type + effsize_f + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 60000,
         family = student(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
                    !diff_ov == "-Inf",
                    !diff_ov == "Inf",
-                   rating_ov_misconcept = "FALSE"),
+                   rating_ov_misconcept == "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_ov_vinterceptonly_student)
@@ -655,12 +730,13 @@ pp_check(hyp1a_ov_vinterceptonly_student) + xlim(c(-1, 1))
 # fit student varying intercept model
 hyp1a_ov_vintercept_student <- 
     brm(diff_ov ~ type + effsize_f + gr_benchmark + (1|session),
+        #iter = 60000, 
         family = student(), 
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
                    !diff_ov == "-Inf",
                    !diff_ov == "Inf",
-                   rating_ov_misconcept = "FALSE"),
+                   rating_ov_misconcept == "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_ov_vintercept_student)
@@ -679,8 +755,9 @@ hyp1a_ov_bias_bf <-
 hyp1a_ov_bias_bf
 ```
 
-```{r}
+We have here few divergent transitions which are not problematic as the pp_checks are quite reasonable.
 
+```{r}
 cliffs_delta(diff_ov ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_signaling_u3",
@@ -690,6 +767,7 @@ cliffs_delta(diff_ov ~ group, data = data_w |>
 ```
 
 ### U3
+
 ```{r}
 #| cache: true
 data_w |> 
@@ -727,40 +805,17 @@ data_w |>
 
 
 ```{r}
-#| label: hypothesis 1a u3
-data_w |> 
-  ggplot(aes(diff_u3, group)) +
-    geom_violin() +
-    geom_sina(alpha = .05) +
-    facet_wrap(~ rating_u3_misconcept) +
-    stat_summary(fun.data = mean_sdl, 
-                 fun.args = list(mult = 1)) +
-    theme_minimal() +
-    labs(title = "Accuracy (U3)",
-         subtitle = "Per Experimental Condition and U3 Misconcept")
-```
-
-
-```{r}
-data_w |>
-    ggplot(aes(effsize_u3, rating_u3)) + 
-    geom_jitter() + 
-    stat_smooth() +
-    facet_wrap(~ rating_u3_misconcept)
-```
-
-
-```{r}
 #| cache: true
 # fit student varying intercept only model
 hyp1a_u3_vinterceptonly_student <- 
     brm(diff_u3 ~ type + effsize_f + (1|session),
         family = student(), 
+        #iter = 30000,
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
                    !diff_u3 == "-Inf",
                    !diff_u3 == "Inf",
-                   rating_u3_misconcept = "FALSE"),
+                   rating_u3_misconcept == "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_u3_vinterceptonly_student)
@@ -771,11 +826,12 @@ pp_check(hyp1a_u3_vinterceptonly_student) + xlim(c(-1, 1))
 hyp1a_u3_vintercept_student <- 
     brm(diff_u3 ~ type + effsize_f + gr_benchmark + (1|session),
         family = student(), 
+        #iter = 30000,
         data = data_w |> 
             filter(group %in% c("cg", "eg_benchmark"),
                    !diff_u3 == "-Inf",
                    !diff_u3 == "Inf", 
-                   rating_u3_misconcept = "FALSE"),
+                   rating_u3_misconcept == "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1a_u3_vintercept_student)
@@ -827,15 +883,14 @@ data_w |>
     theme_minimal()
 ```
 
-
 ```{r}
 #| label: h2a Effects of benchmarks on sensitivity
 #| cache: true
 hyp2a_bernoulli_vinterceptonly <-
     brm(sensi_binary_filtered ~ type + effsize_f + (1| session),
         family = bernoulli(link = "logit"),
-        iter = 100000,
-        warmup = 10000,
+        #iter = 100000,
+        #warmup = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE))
@@ -845,7 +900,7 @@ pp_check(hyp2a_bernoulli_vinterceptonly)
 hyp2a_bernoulli_vintercept <- 
  brm(sensi_binary_filtered ~ type + effsize_f + gr_benchmark + (1| session),
      family = bernoulli(link = "logit"),
-     iter = 100000, warmup = 10000,
+     #iter = 100000, warmup = 10000,
      data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
     save_pars = save_pars(all = TRUE)
@@ -867,8 +922,8 @@ hyp2a_bf <-
 hyp2a_bf
 ```
 
-
 ## Hypothesis H3a: Effects of benchmarks on perceived difficulty
+
 ```{r}
 #| label: hypothesis H3a Effects of benchmarks on perceived difficulty plot
 #| cache: true
@@ -879,7 +934,6 @@ data_w |>
     stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1))+
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: hypothesis H3a Effects of benchmarks on perceived difficulty
@@ -917,8 +971,8 @@ hyp3a_bf <-
 hyp3a_bf
 ```
 
-
 ## Hypothesis H4a: Effects of benchmarks on efficiency - first plot
+
 ```{r}
 #| label: hypothesis H4a Effects of benchmarks on efficiency
 #| cache: true
@@ -941,7 +995,7 @@ hyp4a_vinterceptonly <-
             filter(group %in% c("cg", "eg_benchmark") &
                        plotNrWithin == 1 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -954,7 +1008,7 @@ hyp4a_vintercept <-
             filter(group %in% c("cg", "eg_benchmark") &
                        plotNrWithin == 1 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -974,7 +1028,6 @@ hyp4a_bf <-
 hyp4a_bf
 ```
 
-
 ```{r}
 cliffs_delta(effic ~ group, data = study_w_timestamp |> 
            filter(plotNrWithin == 1 & is.infinite(effic) == F,
@@ -984,8 +1037,8 @@ cliffs_delta(effic ~ group, data = study_w_timestamp |>
            ) 
 ```
 
-
 ## Hypothesis H4a: Effects of benchmarks on efficiency - last three plots
+
 ```{r}
 #| label: hypothesis H4a Effects of benchmarks on efficiency last three
 #| cache: true
@@ -996,7 +1049,7 @@ hyp4alast_vinterceptonly <-
             filter(group %in% c("cg", "eg_benchmark") &
                        plotNrWithin > 9 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1009,7 +1062,7 @@ hyp4alast_vintercept <-
             filter(group %in% c("cg", "eg_benchmark") &
                        plotNrWithin > 9 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1029,7 +1082,6 @@ hyp4alast_bf <-
 hyp4alast_bf
 ```
 
-
 ```{r}
 cliffs_delta(effic ~ group, data = study_w_timestamp |> 
            filter(plotNrWithin > 9 & is.infinite(effic) == F,
@@ -1040,6 +1092,7 @@ cliffs_delta(effic ~ group, data = study_w_timestamp |>
 ```
 
 ## Hypothesis H5a: Effects of benchmarks on perceived informativity
+
 ```{r}
 #| label: hypothesis H5a Effects of benchmarks on perceived informativity
 #| cache: true
@@ -1052,7 +1105,7 @@ data_w |>
 
 hyp5a_vinterceptonly <-
     brm(scale(infor) ~ type + effsize_f + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -1062,7 +1115,7 @@ pp_check(hyp5a_vinterceptonly)
 
 hyp5a_vintercept <-
     brm(scale(infor) ~ type + effsize_f + gr_benchmark + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -1084,8 +1137,8 @@ hyp5a_bf <-
 hyp5a_bf
 ```
 
-
 ## Hypothesis H6a: Effects of benchmarks on perceived value
+
 ```{r}
 #| label: hypothesis H6a Effects of benchmarks on perceived value
 #| cache: true
@@ -1098,7 +1151,7 @@ data_w |>
 
 hyp6a_vinterceptonly <-
     brm(scale(value) ~ type + effsize_f + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -1108,7 +1161,7 @@ pp_check(hyp6a_vinterceptonly)
 
 hyp6a_vintercept <-
     brm(scale(value) ~ type + effsize_f + gr_benchmark + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -1130,12 +1183,12 @@ hyp6a_bf <-
 hyp6a_bf
 ```
 
-
 # Hypotheses b
 
 ## Hypothesis H1b: Effects of signaling on accuracy
 
 ### Abstract metric
+
 ```{r}
 #| label: hypothesis 1b am
 #| cache: true
@@ -1160,7 +1213,7 @@ data_w |>
 # fit gaussion varying intercept only model
 hyp1b_am_vinterceptonly_gaussian <- 
     brm(diff_am ~ type + effsize_f + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 10000, warmup = 1000,
         family = gaussian(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
@@ -1175,7 +1228,7 @@ pp_check(hyp1b_am_vinterceptonly_gaussian) + xlim(c(-1, 1))
 # fit student varying intercept only model
 hyp1b_am_vinterceptonly_student <- 
     brm(diff_am ~ type + effsize_f + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
@@ -1190,7 +1243,7 @@ pp_check(hyp1b_am_vinterceptonly_student) + xlim(c(-1, 1))
 # fit student varying intercept model
 hyp1b_am_vintercept_student <- 
     brm(diff_am ~ type + effsize_f + group + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
@@ -1232,8 +1285,8 @@ cliffs_delta(diff_am ~ group, data = data_w |>
 
 ```
 
-
 ### Overlap
+
 ```{r}
 #| label: hypothesis 1b ov
 #| cache: true
@@ -1270,7 +1323,7 @@ hyp1b_ov_vinterceptonly_student <-
             filter(group != "eg_benchmark",
                    !diff_ov == "-Inf",
                    !diff_ov == "Inf",
-                   rating_ov_misconcept = "FALSE"),
+                   rating_ov_misconcept == "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_ov_vinterceptonly_student)
@@ -1285,7 +1338,7 @@ hyp1b_ov_vintercept_student <-
             filter(group != "eg_benchmark",
                    !diff_ov == "-Inf",
                    !diff_ov == "Inf",
-                   rating_ov_misconcept = "FALSE"),
+                   rating_ov_misconcept == "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_ov_vintercept_student)
@@ -1305,14 +1358,12 @@ hyp1b_ov_bias_bf <-
 hyp1b_ov_bias_bf
 ```
 
-
-
 ```{r}
 # cg vs. signaling u3
 cliffs_delta(diff_ov ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_benchmark",
-                  rating_ov_misconcept = "FALSE"
+                  rating_ov_misconcept == "FALSE"
                   )) 
 
 # cg vs. signaling overlap
@@ -1325,6 +1376,7 @@ cliffs_delta(diff_ov ~ group, data = data_w |>
 ```
 
 ### U3
+
 ```{r}
 #| label: hypothesis 1b u3
 #| cache: true
@@ -1350,7 +1402,6 @@ data_w |>
     labs(title = "Accuracy (U3)")
 ```
 
-
 ```{r}
 data_w |>
     ggplot(aes(effsize_u3, rating_u3)) + 
@@ -1358,7 +1409,6 @@ data_w |>
     stat_smooth() +
     facet_wrap(~ rating_u3_misconcept)
 ```
-
 
 ```{r}
 #| cache: true
@@ -1370,7 +1420,7 @@ hyp1b_u3_vinterceptonly_student <-
             filter(group != "eg_benchmark",
                    !diff_u3 == "-Inf",
                    !diff_u3 == "Inf",
-                   rating_u3_misconcept = "FALSE"),
+                   rating_u3_misconcept == "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_u3_vinterceptonly_student)
@@ -1385,7 +1435,7 @@ hyp1b_u3_vintercept_student <-
             filter(group != "eg_benchmark",
                    !diff_u3 == "-Inf",
                    !diff_u3 == "Inf",
-                   rating_u3_misconcept = "FALSE"),
+                   rating_u3_misconcept == "FALSE"),
         save_pars = save_pars(all=TRUE))
 
 plot(hyp1b_u3_vintercept_student)
@@ -1445,7 +1495,6 @@ data_w |>
     theme_minimal()
 ```
 
-
 ```{r}
 #| label: h2b Effects of signaling on sensitivity
 #| cache: true
@@ -1483,8 +1532,8 @@ hyp2b_bf <-
 hyp2b_bf
 ```
 
-
 ## Hypothesis H3b: Effects of signaling on perceived difficulty
+
 ```{r}
 #| label: hypothesis H3b Effects of signaling on perceived difficulty plot
 #| cache: true
@@ -1495,7 +1544,6 @@ data_w |>
     stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1))+
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: hypothesis H3b Effects of signaling on perceived difficulty
@@ -1534,6 +1582,7 @@ hyp3b_bf
 ```
 
 ## Hypothesis H4b: Effects of signaling on efficiency - first plot
+
 ```{r}
 #| label: hypothesis H4b Effects of signaling on efficiency
 #| cache: true
@@ -1556,7 +1605,7 @@ hyp4b_vinterceptonly <-
             filter(group != "eg_benchmark" &
                        plotNrWithin == 1 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1569,7 +1618,7 @@ hyp4b_vintercept <-
             filter(group != "eg_benchmark" &
                        plotNrWithin == 1 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1589,7 +1638,6 @@ hyp4b_bf <-
                  hyp4b_vinterceptonly)
 hyp4b_bf
 ```
-
 
 ```{r}
 # cg vs. signaling u3
@@ -1612,8 +1660,8 @@ cliffs_delta(effic ~ group, data = study_w_timestamp |>
 
 ```
 
-
 ## Hypothesis H4b: Effects of signaling on efficiency - last three plots
+
 ```{r}
 #| label: hypothesis H4b Effects of signaling on efficiency last three
 #| cache: true
@@ -1624,7 +1672,7 @@ hyp4blast_vinterceptonly <-
             filter(group != "eg_benchmark" &
                        plotNrWithin > 9 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1637,7 +1685,7 @@ hyp4blast_vintercept <-
             filter(group != "eg_benchmark" &
                        plotNrWithin > 9 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1657,7 +1705,6 @@ hyp4blast_bf <-
                  hyp4blast_vinterceptonly)
 hyp4blast_bf
 ```
-
 
 ```{r}
 # cg vs. signaling u3
@@ -1680,6 +1727,7 @@ cliffs_delta(effic ~ group, data = study_w_timestamp |>
 ```
 
 ## Hypothesis H5b: Effects of signaling on perceived informativity
+
 ```{r}
 #| label: hypothesis H5b Effects of signaling on perceived informativity
 #| cache: true
@@ -1692,7 +1740,7 @@ data_w |>
 
 hyp5b_vinterceptonly <-
     brm(scale(infor) ~ type + effsize_f + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1702,7 +1750,7 @@ pp_check(hyp5b_vinterceptonly)
 
 hyp5b_vintercept <-
     brm(scale(infor) ~ type + effsize_f + group + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1726,8 +1774,8 @@ hyp5b_bf <-
 hyp5b_bf
 ```
 
-
 ## Hypothesis H6b: Effects of signaling on perceived value
+
 ```{r}
 #| label: hypothesis H6b Effects of signaling on perceived value
 #| cache: true
@@ -1740,7 +1788,7 @@ data_w |>
 
 hyp6b_vinterceptonly <-
     brm(scale(value) ~ type + effsize_f + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1750,7 +1798,7 @@ pp_check(hyp6b_vinterceptonly)
 
 hyp6b_vintercept <-
     brm(scale(value) ~ type + effsize_f + group + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1773,8 +1821,8 @@ hyp6b_bf <-
 hyp6b_bf
 ```
 
-
 ## Hypothesis H7bu3: Effects of signaling on misconcepts u3
+
 ```{r}
 #| label: hypothesis H7b Effects of signaling on misconcepts u3
 #| cache: true
@@ -1795,7 +1843,7 @@ data_w |>
 hyp7bu3_vinterceptonly <-
     brm(rating_u3_misconcept ~ type + effsize_f,
         family = bernoulli(),
-        iter = 40000,
+        #iter = 40000,
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
@@ -1809,7 +1857,7 @@ pp_check(hyp7bu3_vinterceptonly)
 hyp7bu3_vintercept <-
     brm(rating_u3_misconcept ~ type + effsize_f + group,
         family = bernoulli(),
-        iter = 40000,
+        #iter = 40000,
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
@@ -1834,8 +1882,8 @@ hyp7bu3_bf <-
 hyp7bu3_bf
 ```
 
-
 ## Hypothesis H7bov: Effects of signaling on misconcepts ov
+
 ```{r}
 #| label: hypothesis H7bov Effects of signaling on misconcepts ov
 #| cache: true
@@ -1855,7 +1903,7 @@ data_w |>
 hyp7bov_vinterceptonly <-
     brm(rating_ov_misconcept ~ type + effsize_f,
         family = bernoulli(),
-        iter = 40000,
+        #iter = 40000,
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
@@ -1869,7 +1917,7 @@ pp_check(hyp7bov_vinterceptonly)
 hyp7bov_vintercept <-
     brm(rating_ov_misconcept ~ type + effsize_f + group,
         family = bernoulli(),
-        iter = 40000,
+        #iter = 40000,
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
@@ -1893,9 +1941,8 @@ hyp7bov_bf <-
 hyp7bov_bf
 ```
 
-
-
 ## Bayes factors
+
 ```{r}
 #| code-fold: false
 
