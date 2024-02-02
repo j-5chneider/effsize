@@ -16,6 +16,7 @@ editor_options:
 ---
 
 ## Data Import
+
 ```{r}
 library(modelsummary)
 library(broom.mixed)
@@ -110,10 +111,12 @@ study2_data_detailed <-
     filter(session %in% study2_data$session)
 ```
 
-
 ## Data wrangling
+
 ### Wrangling item data
+
 First we create a specific dataframe which contains the information about effect size, plottype ...
+
 ```{r}
 plot_info <- study2_data  |> 
     # we only need the rows with info on plots
@@ -130,6 +133,7 @@ plot_info <- study2_data  |>
 ```
 
 Next we wrangle a separate dataframe which contains just the answers of the participants to the items, their identifier and the plotorder.
+
 ```{r}
 #| label: item_datawrangling
 item_values <- study2_data %>%
@@ -146,6 +150,7 @@ item_values <- study2_data %>%
 ```
 
 Then we join these two data sets and recode/calculate some of the dependet variables like accuracy...
+
 ```{r}
 #| label: item_datajoining
 data_w <- full_join(plot_info, 
@@ -267,8 +272,8 @@ skim(
     )
 ```
 
-
 ### Wrangling time data
+
 ```{r}
 #| label: timestamp_datawrangling
 
@@ -331,8 +336,8 @@ skim(
     )
 ```
 
-
 ## Missingness
+
 ```{r}
 data_w|> 
     select(-contains("filtered")) |> 
@@ -343,6 +348,7 @@ data_w|>
 ```
 
 ## Outliers
+
 ```{r}
 # define tidyverse ready scale function
 scale_this <- function(x){
@@ -364,8 +370,8 @@ data_w |>
     arrange(desc(abs(value_z)))
 ```
 
-
 ## Demographics
+
 ```{r}
 #| label: demographics
 sociodemographics <- 
@@ -388,6 +394,7 @@ skim(sociodemographics)
 ```
 
 ## Attention check
+
 ```{r}
 study2_data_ended |> 
     mutate(attention_check = case_when(is.na(attention_check) ~ "passed",
@@ -400,6 +407,7 @@ study2_data_ended |>
 ```
 
 ## Understandig items
+
 ```{r}
 study2_data_ended |> 
     mutate(attention_check = case_when(is.na(attention_check) ~ "passed",
@@ -415,10 +423,12 @@ study2_data_ended |>
     ggtitle("Answers to Treatmentchecks", "Per Result of Attention Check")
 ```
 
-
 ## Always plot your raw data
+
 ### Dependent variables
+
 #### Likert items
+
 ```{r}
 #| label: plot raw diffi infor value
 
@@ -435,7 +445,9 @@ study2_data |>
 ```
 
 #### Effect size ratings
+
 ##### Abstract metric
+
 ```{r}
 ggpairs(data_w |> 
             select(rating_am, effsize_am) |> 
@@ -446,6 +458,7 @@ ggpairs(data_w |>
 ```
 
 ##### U3
+
 ```{r}
 # With misconceptualizers
 ggpairs(data_w |> 
@@ -463,8 +476,8 @@ ggpairs(data_w |>
         columns = c("rating_u3", "effsize_u3"))
 ```
 
-
 ##### Overlap
+
 ```{r}
 # With misconceptualizers
 ggpairs(data_w |> 
@@ -482,9 +495,10 @@ ggpairs(data_w |>
         columns = c("rating_ov", "effsize_ov"))
 ```
 
-
 #### Sensitivity ratings
+
 ##### Sensitivity ordinal
+
 ```{r}
 ggpairs(data_w |> 
             select(sensi_ordinal, effsize_am) |> 
@@ -494,6 +508,7 @@ ggpairs(data_w |>
 ```
 
 ##### Sensitivity correct
+
 ```{r}
 ggpairs(data_w |> 
             select(sensi_correct, effsize_am) |> 
@@ -503,6 +518,7 @@ ggpairs(data_w |>
 ```
 
 #### Efficiency
+
 ```{r}
 ggplot(study_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
     geom_boxplot(alpha = .2, color = "lightgrey") +
@@ -516,8 +532,8 @@ ggplot(study_w_timestamp, aes(as.factor(plotNrWithin), effic)) +
     theme(strip.text = element_text(color = "white"))
 ```
 
-
 #### Misceptualizers
+
 ```{r}
 ggpairs(data_w |> 
             select(rating_ov_misconcept, rating_u3_misconcept) |> 
@@ -526,31 +542,31 @@ ggpairs(data_w |>
         columns = c("rating_ov_misconcept", "rating_u3_misconcept"))
 ```
 
-
-
 # Hypotheses
-* a - Benchmarks as Enrichment
-    * H~1a~: increase in **accuracy** (am, u3, ov) 
-    * H~2a~: increase in **sensitivity** 
-    * H~3a~: increase in task **difficulty** 
-    * H~4a~: increase in dwell time (**efficiency**) 
-    * H~5a~: increase in perceived **informativity** 
-    * H~6a~: increase in perceived **value** for practice 
- 
-* b - Signaling as Enrichment (u3 & ov) 
-    * H~1b~: increase in **accuracy** (am, u3, ov;) for teachers without misconception 
-    * H~2b~: increase in **sensitivity** 
-    * H~3b~: decrease (improving) in task **difficulty** 
-    * H~4b~: decrease (improving) in dwell time (**efficiency**) 
-    * H~5b~: increase in perceived **informativity** 
-    * H~6b~: increase in perceived **value** for practice 
-    * H^7b^~u3~: when signaling u3, smaller number of u3 misconceptualizer 
-    * H^7b^~ov~: when signaling ov, smaller number of ov misconceptualizer
+
+-   a - Benchmarks as Enrichment
+    -   H~1a~: increase in **accuracy** (am, u3, ov)
+    -   H~2a~: increase in **sensitivity**
+    -   H~3a~: increase in task **difficulty**
+    -   H~4a~: increase in dwell time (**efficiency**)
+    -   H~5a~: increase in perceived **informativity**
+    -   H~6a~: increase in perceived **value** for practice
+-   b - Signaling as Enrichment (u3 & ov)
+    -   H~1b~: increase in **accuracy** (am, u3, ov;) for teachers without misconception
+    -   H~2b~: increase in **sensitivity**
+    -   H~3b~: decrease (improving) in task **difficulty**
+    -   H~4b~: decrease (improving) in dwell time (**efficiency**)
+    -   H~5b~: increase in perceived **informativity**
+    -   H~6b~: increase in perceived **value** for practice
+    -   H^7b^~u3~: when signaling u3, smaller number of u3 misconceptualizer
+    -   H^7b^~ov~: when signaling ov, smaller number of ov misconceptualizer
 
 # Hypotheses a
 
 ## Hypothesis H1a: Effects of benchmarks on accuracy
+
 ### Abstract metric
+
 ```{r}
 #| label: hypothesis 1a am
 #| cache: true
@@ -639,24 +655,22 @@ hyp1a_am_bias_bf <-
 hyp1a_am_bias_bf
 ```
 
-:::{.callout-warning collapse=false appearance='default' icon=true}
-- I filtered out just the CG and the benchmark group
+::: {.callout-warning collapse="false" appearance="default" icon="true"}
+-   I filtered out just the CG and the benchmark group
 :::
 
 ```{r}
 
 cliffs_delta(diff_am ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
-                  !group == "eg_signaling_u3"#,
-                  #!diff_am == "-Inf",
-                  #!diff_am == "Inf"
+                  !group == "eg_signaling_u3"
                   ))
                
 
 ```
 
-
 ### Overlap
+
 ```{r}
 #| label: hypothesis 1a ov
 #| cache: true
@@ -744,14 +758,13 @@ hyp1a_ov_bias_bf
 cliffs_delta(diff_ov ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_signaling_u3",
-                  !rating_ov_misconcept == "TRUE"
-                  #!diff_ov == "-Inf",
-                  #!diff_ov == "Inf"
+                  rating_ov_misconcept == "FALSE"
                   )
            ) 
 ```
 
 ### U3
+
 ```{r}
 #| cache: true
 data_w |> 
@@ -787,7 +800,6 @@ data_w |>
     labs(title = "Accuracy (U3)")
 ```
 
-
 ```{r}
 #| label: hypothesis 1a u3
 data_w |> 
@@ -802,7 +814,6 @@ data_w |>
          subtitle = "Per Experimental Condition and U3 Misconcept")
 ```
 
-
 ```{r}
 data_w |>
     ggplot(aes(effsize_u3, rating_u3)) + 
@@ -810,7 +821,6 @@ data_w |>
     stat_smooth() +
     facet_wrap(~ rating_u3_misconcept)
 ```
-
 
 ```{r}
 #| cache: true
@@ -860,9 +870,7 @@ hyp1a_u3_bias_bf
 cliffs_delta(diff_u3 ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_signaling_u3",
-                  !rating_u3_misconcept == "TRUE"
-                  #!diff_u3 == "-Inf",
-                  #!diff_u3 == "Inf"
+                  rating_u3_misconcept == "FALSE"
                   )
            ) 
 ```
@@ -890,7 +898,6 @@ data_w |>
     facet_wrap(~group, ncol = 1) + 
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: h2a Effects of benchmarks on sensitivity
@@ -931,8 +938,8 @@ hyp2a_bf <-
 hyp2a_bf
 ```
 
-
 ## Hypothesis H3a: Effects of benchmarks on perceived difficulty
+
 ```{r}
 #| label: hypothesis H3a Effects of benchmarks on perceived difficulty plot
 #| cache: true
@@ -943,7 +950,6 @@ data_w |>
     stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1))+
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: hypothesis H3a Effects of benchmarks on perceived difficulty
@@ -981,10 +987,10 @@ hyp3a_bf <-
 hyp3a_bf
 ```
 
+## Hypothesis H4a: Effects of benchmarks on efficiency - first plot
 
-## Hypothesis H4a: Effects of signaling on efficiency - first plot
 ```{r}
-#| label: hypothesis H4a Effects of signaling on efficiency
+#| label: hypothesis H4a Effects of benchmarks on efficiency
 #| cache: true
 
 study_w_timestamp |> 
@@ -1038,9 +1044,19 @@ hyp4a_bf <-
 hyp4a_bf
 ```
 
-## Hypothesis H4a: Effects of signaling on efficiency - last three plots
 ```{r}
-#| label: hypothesis H4a Effects of signaling on efficiency last three
+cliffs_delta(effic ~ group, data = study_w_timestamp |> 
+           filter(plotNrWithin == 1 & is.infinite(effic) == F,
+                  !group == "eg_signaling_overlap",
+                  !group == "eg_signaling_u3"
+                  )
+           ) 
+```
+
+## Hypothesis H4a: Effects of benchmarks on efficiency - last three plots
+
+```{r}
+#| label: hypothesis H4a Effects of benchmarks on efficiency last three
 #| cache: true
 
 hyp4alast_vinterceptonly <-
@@ -1082,9 +1098,17 @@ hyp4alast_bf <-
 hyp4alast_bf
 ```
 
-
+```{r}
+cliffs_delta(effic ~ group, data = study_w_timestamp |> 
+           filter(plotNrWithin > 9 & is.infinite(effic) == F,
+                  !group == "eg_signaling_overlap",
+                  !group == "eg_signaling_u3"
+                  )
+           ) 
+```
 
 ## Hypothesis H5a: Effects of benchmarks on perceived informativity
+
 ```{r}
 #| label: hypothesis H5a Effects of benchmarks on perceived informativity
 #| cache: true
@@ -1129,8 +1153,8 @@ hyp5a_bf <-
 hyp5a_bf
 ```
 
-
 ## Hypothesis H6a: Effects of benchmarks on perceived value
+
 ```{r}
 #| label: hypothesis H6a Effects of benchmarks on perceived value
 #| cache: true
@@ -1175,12 +1199,12 @@ hyp6a_bf <-
 hyp6a_bf
 ```
 
-
 # Hypotheses b
 
 ## Hypothesis H1b: Effects of signaling on accuracy
 
 ### Abstract metric
+
 ```{r}
 #| label: hypothesis 1b am
 #| cache: true
@@ -1266,22 +1290,19 @@ hyp1b_am_bias_bf
 # cg vs. signaling u3
 cliffs_delta(diff_am ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
-                  !group == "eg_benchmark"#,
-                  #!diff_am == "-Inf",
-                  #!diff_am == "Inf"
+                  !group == "eg_benchmark"
                   )) 
+
 # cg vs. signaling overlap
 cliffs_delta(diff_am ~ group, data = data_w |> 
            filter(!group == "eg_signaling_u3",
-                  !group == "eg_benchmark"#,
-                  #!diff_am == "-Inf",
-                  #!diff_am == "Inf"
+                  !group == "eg_benchmark"
                   )) 
 
 ```
 
-
 ### Overlap
+
 ```{r}
 #| label: hypothesis 1b ov
 #| cache: true
@@ -1353,29 +1374,25 @@ hyp1b_ov_bias_bf <-
 hyp1b_ov_bias_bf
 ```
 
-
-
 ```{r}
 # cg vs. signaling u3
 cliffs_delta(diff_ov ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_benchmark",
-                  !rating_ov_misconcept = "TRUE"#,
-                  #!diff_ov == "-Inf",
-                  #!diff_ov == "Inf"
+                  rating_ov_misconcept = "FALSE"
                   )) 
+
 # cg vs. signaling overlap
 cliffs_delta(diff_ov ~ group, data = data_w |> 
            filter(!group == "eg_signaling_u3",
                   !group == "eg_benchmark",
-                  !rating_ov_misconcept == "TRUE"
-                  #!diff_ov == "-Inf",
-                  #!diff_ov == "Inf"
+                  rating_ov_misconcept == "FALSE"
                   )) 
 
 ```
 
 ### U3
+
 ```{r}
 #| label: hypothesis 1b u3
 #| cache: true
@@ -1401,7 +1418,6 @@ data_w |>
     labs(title = "Accuracy (U3)")
 ```
 
-
 ```{r}
 data_w |>
     ggplot(aes(effsize_u3, rating_u3)) + 
@@ -1409,7 +1425,6 @@ data_w |>
     stat_smooth() +
     facet_wrap(~ rating_u3_misconcept)
 ```
-
 
 ```{r}
 #| cache: true
@@ -1430,7 +1445,7 @@ pp_check(hyp1b_u3_vinterceptonly_student) + xlim(c(-1, 1))
 
 # fit student varying intercept model
 hyp1b_u3_vintercept_student <- 
-    brm(diff_u3_filtered ~ type + effsize_f + group + (1|session),
+    brm(diff_u3 ~ type + effsize_f + group + (1|session),
         family = student(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
@@ -1460,18 +1475,14 @@ hyp1b_u3_bias_bf
 cliffs_delta(diff_u3 ~ group, data = data_w |> 
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_benchmark",
-                  !rating_u3_misconcept == "TRUE"#,
-                  #!diff_u3 == "-Inf",
-                  #!diff_u3 == "Inf"
-                  ) |> 
-               group_by(group)) 
+                  rating_u3_misconcept == "FALSE"
+                  ))
+
 # cg vs. signaling overlap
 cliffs_delta(diff_u3 ~ group, data = data_w |> 
            filter(!group == "eg_signaling_u3",
                   !group == "eg_benchmark",
-                  !rating_u3_misconcept == "TRUE"
-                  #!diff_u3 == "-Inf",
-                  #!diff_u3 == "Inf"
+                  rating_u3_misconcept == "FALSE"
                   )) 
 
 ```
@@ -1499,7 +1510,6 @@ data_w |>
     facet_wrap(~group, ncol = 1) + 
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: h2b Effects of signaling on sensitivity
@@ -1538,8 +1548,8 @@ hyp2b_bf <-
 hyp2b_bf
 ```
 
-
 ## Hypothesis H3b: Effects of signaling on perceived difficulty
+
 ```{r}
 #| label: hypothesis H3b Effects of signaling on perceived difficulty plot
 #| cache: true
@@ -1550,7 +1560,6 @@ data_w |>
     stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1))+
     theme_minimal()
 ```
-
 
 ```{r}
 #| label: hypothesis H3b Effects of signaling on perceived difficulty
@@ -1589,6 +1598,7 @@ hyp3b_bf
 ```
 
 ## Hypothesis H4b: Effects of signaling on efficiency - first plot
+
 ```{r}
 #| label: hypothesis H4b Effects of signaling on efficiency
 #| cache: true
@@ -1645,7 +1655,29 @@ hyp4b_bf <-
 hyp4b_bf
 ```
 
+```{r}
+# cg vs. signaling u3
+
+cliffs_delta(effic ~ group, data = study_w_timestamp |> 
+           filter(plotNrWithin == 1 & is.infinite(effic) == F,
+                  !group == "eg_signaling_overlap",
+                  !group == "eg_benchmark"
+                  )
+           ) 
+
+# cg vs. signaling overlap
+
+cliffs_delta(effic ~ group, data = study_w_timestamp |> 
+           filter(plotNrWithin == 1 & is.infinite(effic) == F,
+                  !group == "eg_signaling_u3",
+                  !group == "eg_benchmark"
+                  )
+           ) 
+
+```
+
 ## Hypothesis H4b: Effects of signaling on efficiency - last three plots
+
 ```{r}
 #| label: hypothesis H4b Effects of signaling on efficiency last three
 #| cache: true
@@ -1690,8 +1722,28 @@ hyp4blast_bf <-
 hyp4blast_bf
 ```
 
+```{r}
+# cg vs. signaling u3
+
+cliffs_delta(effic ~ group, data = study_w_timestamp |> 
+           filter(plotNrWithin > 9 & is.infinite(effic) == F,
+                  !group == "eg_signaling_overlap",
+                  !group == "eg_benchmark"
+                  )
+           ) 
+
+# cg vs. signaling overlap
+
+cliffs_delta(effic ~ group, data = study_w_timestamp |> 
+           filter(plotNrWithin > 9 & is.infinite(effic) == F,
+                  !group == "eg_signaling_u3",
+                  !group == "eg_benchmark"
+                  )
+           ) 
+```
 
 ## Hypothesis H5b: Effects of signaling on perceived informativity
+
 ```{r}
 #| label: hypothesis H5b Effects of signaling on perceived informativity
 #| cache: true
@@ -1738,8 +1790,8 @@ hyp5b_bf <-
 hyp5b_bf
 ```
 
-
 ## Hypothesis H6b: Effects of signaling on perceived value
+
 ```{r}
 #| label: hypothesis H6b Effects of signaling on perceived value
 #| cache: true
@@ -1785,8 +1837,8 @@ hyp6b_bf <-
 hyp6b_bf
 ```
 
-
 ## Hypothesis H7bu3: Effects of signaling on misconcepts u3
+
 ```{r}
 #| label: hypothesis H7b Effects of signaling on misconcepts u3
 #| cache: true
@@ -1846,8 +1898,8 @@ hyp7bu3_bf <-
 hyp7bu3_bf
 ```
 
-
 ## Hypothesis H7bov: Effects of signaling on misconcepts ov
+
 ```{r}
 #| label: hypothesis H7bov Effects of signaling on misconcepts ov
 #| cache: true
@@ -1905,9 +1957,8 @@ hyp7bov_bf <-
 hyp7bov_bf
 ```
 
-
-
 ## Bayes factors
+
 ```{r}
 #| code-fold: false
 

@@ -52,6 +52,7 @@ library(ggdist)
 library(tidybayes)
 library(here)
 library(skimr)
+library(effectsize)
 load(here("data/teachers_study1_N40.RData"))
 
 skim(study1)
@@ -130,19 +131,24 @@ study1_w <- full_join(plot_info, item_values,
                   effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
                   # transform the actual effect size Cohen's d to overlap
                   # actual difference of rating relative to depicted effectsize 
-                  diff_am = (rating_am - effsize_am)/2,
-                  # actual difference of rating relative to depicted effectsize
-                  diff_u3 = (rating_u3/100) - effsize_u3,
-                  # actual difference of rating relative to depicted effectsize 
-                  diff_ov = (rating_ov/100) - effsize_ov) %>%
+                  rating_am_in_d = r_to_d(rating_am/100),
+                  rating_u3_in_d = qnorm(rating_u3/100), 
+                  rating_ov_in_d = -2*qnorm(0.5*rating_ov/100),
+                  diff_am = ifelse(effsize < 0,
+                                   (rating_am_in_d - effsize)*(-1),
+                                   rating_am_in_d - effsize),
+                  diff_u3 = ifelse(effsize < 0,
+                                   (rating_u3_in_d - effsize)*(-1),
+                                   rating_u3_in_d - effsize),
+                  diff_ov = ifelse(effsize < 0,
+                                    (rating_ov_in_d - effsize)*(-1),
+                                    rating_ov_in_d - effsize))  %>%
     group_by(session) %>% 
-    mutate(rating_ov_missconcept = median(rating_ov, na.rm = T) < 68.9,
-           rating_u3_missconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
+    mutate(rating_ov_misconcept = median(rating_ov, na.rm = T) < 68.9,
+           rating_u3_misconcept = median(rating_u3, na.rm = T) < 21.2) %>% 
     ungroup() %>% 
-    mutate(rating_u3_filtered = ifelse(rating_u3_missconcept == T, NA, rating_u3),
-           rating_ov_filtered = ifelse(rating_ov_missconcept == T, NA, rating_ov),
-           diff_u3_filtered = (rating_u3_filtered/100) - effsize_u3,
-           diff_ov_filtered = (rating_ov_filtered/100) - effsize_ov,
+    mutate(rating_u3_filtered = ifelse(rating_u3_misconcept == T, NA, rating_u3_in_d),
+           rating_ov_filtered = ifelse(rating_ov_misconcept == T, NA, rating_ov_in_d),
            sensi_binary = ifelse(is.na(sensi), # 1 if NOT "equal"
                                         NA,
                                         as.numeric(!grepl("equal", sensi))),
@@ -192,14 +198,14 @@ __(with efficiency and accuracy transformed)__
 # create a list of u3_misconceptualizers
 u3_misconceptualizers <-
     study1_w %>% 
-    filter(rating_u3_missconcept == T) %>% 
+    filter(rating_u3_misconcept == T) %>% 
     pull(session) %>% 
     unique()
 
 # create a list of ov_misconceptualizers
 ov_misconceptualizers <-
     study1_w %>% 
-    filter(rating_ov_missconcept == T) %>% 
+    filter(rating_ov_misconcept == T) %>% 
     pull(session) %>% 
     unique()    
 
@@ -580,7 +586,7 @@ study1_w %>%
 
 
 study1_w %>% 
-    ggplot(., aes(effsize_u3, rating_u3, color = rating_u3_missconcept)) +
+    ggplot(., aes(effsize_u3, rating_u3, color = rating_u3_misconcept)) +
     geom_jitter() +
     stat_smooth() +
     ylab("Cohen's U3 metric") +
@@ -589,7 +595,7 @@ study1_w %>%
     theme_modern_rc()
 
 study1_w %>% 
-    ggplot(., aes(effsize_abs, rating_ov, color = rating_ov_missconcept)) +
+    ggplot(., aes(effsize_abs, rating_ov, color = rating_ov_misconcept)) +
     geom_jitter() +
     stat_smooth(method = "lm") +
     ylab("Overlap metric") +
@@ -616,14 +622,14 @@ study1_w %>%
 
 
 study1_w %>% 
-    group_by(rating_ov_missconcept, type) %>% 
+    group_by(rating_ov_misconcept, type) %>% 
     do(tau_ov = unlist(cor(.$effsize_abs, .$rating_ov, method = "kendall", 
                            use = "pairwise.complete"))) %>% 
     unnest(tau_ov)
 
 
 study1_w %>% 
-    group_by(rating_u3_missconcept, type) %>% 
+    group_by(rating_u3_misconcept, type) %>% 
     do(tau_u3 = cor(.$effsize_u3, .$rating_u3, method = "kendall", 
                            use = "pairwise.complete")) %>% 
     unnest(tau_u3)
@@ -659,15 +665,18 @@ ggplot(study1_w,
 ```{r}
 #| label: under- overestimation
 study1_w %>% 
-    select(diff_am, diff_u3_filtered, diff_ov_filtered, session, type) %>% 
+    select(diff_am, diff_u3, diff_ov, rating_u3_misconcept, rating_ov_misconcept,
+           session, type) %>% 
+    filter(rating_u3_misconcept == F,
+           rating_ov_misconcept == F) %>%
     gather(dependent_variable, difference_to_true_effsize, 
-           diff_am, diff_u3_filtered, diff_ov_filtered) %>% 
+           diff_am, diff_u3, diff_ov) %>% 
     ggplot(., aes(type, difference_to_true_effsize)) +
     geom_boxplot(alpha = .3) +
     facet_wrap(~dependent_variable, scales = "free_y", 
                 labeller = as_labeller(c("diff_am" = "Abstract metric",
-                                         "diff_ov_filtered" = "Overlap metric (filtered)",
-                                         "diff_u3_filtered" = "Cohen's U3 metric (filtered)"))) +
+                                         "diff_ov" = "Overlap metric (filtered)",
+                                         "diff_u3" = "Cohen's U3 metric (filtered)"))) +
     geom_jitter(aes(color = type)) +
     ylab("Difference to true effect size") +
     xlab("Accuracy item") +
@@ -732,23 +741,30 @@ We generally compare
 # Difference Variable 
 mod0_diff_u3 <- brm(diff_u3 ~ + (1|session), 
                           data = study1_w%>% 
-                              filter(rating_u3_missconcept == F),
+                              filter(rating_u3_misconcept == F,
+                                     !diff_u3 == "-Inf",
+                                     !diff_u3 == "Inf"),
                           iter = 10000,
                           save_pars = save_pars(all = TRUE),
                           cores = 4
                           )
 
-mod1_diff_u3 <- brm(diff_u3 ~ effsize_u3 + (1|session), 
+mod1_diff_u3 <- brm(diff_u3 ~ effsize + (1|session), 
                           data = study1_w%>% 
-                              filter(rating_u3_missconcept == F),
+                              filter(rating_u3_misconcept == F,
+                                     !diff_u3 == "-Inf",
+                                     !diff_u3 == "Inf"
+                                     ),
                           iter = 10000,
                           save_pars = save_pars(all = TRUE),
                           cores = 4
                           )
 
-mod2_diff_u3 <- brm(diff_u3 ~ type + effsize_u3 + (1|session), 
+mod2_diff_u3 <- brm(diff_u3 ~ type + effsize + (1|session), 
                        data = study1_w %>% 
-                           filter(rating_u3_missconcept == F),
+                           filter(rating_u3_misconcept == F,
+                                     !diff_u3 == "-Inf",
+                                     !diff_u3 == "Inf"),
                        iter = 10000,
                        save_pars = save_pars(all = TRUE),
                        cores = 4
@@ -776,23 +792,29 @@ We generally compare
 # Difference Variable
 mod0_diff_ov <- brm(diff_ov ~ + (1|session), 
                           data = study1_w%>% 
-                              filter(rating_ov_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           iter = 10000,
                           save_pars = save_pars(all = TRUE),
                           cores = 4
                           )
 
-mod1_diff_ov <- brm(diff_u3 ~ effsize_abs + (1|session), 
+mod1_diff_ov <- brm(diff_ov ~ effsize + (1|session), 
                           data = study1_w%>% 
-                              filter(rating_u3_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           iter = 10000,
                           save_pars = save_pars(all = TRUE),
                           cores = 4
                           )
 
-mod2_diff_ov <- brm(diff_ov ~ type + effsize_abs + (1|session), 
+mod2_diff_ov <- brm(diff_ov ~ type + effsize + (1|session), 
                           data = study1_w %>% 
-                              filter(rating_ov_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           iter = 10000,
                           save_pars = save_pars(all = TRUE),
                           cores = 4
@@ -1013,7 +1035,7 @@ ggplot(study1_w %>%
     geom_bar() +
     theme_modern_rc() +
     theme(strip.text = element_text(color = "white")) +
-    ggtitle("Sensitivity", "without missconceptualizers")
+    ggtitle("Sensitivity", "without misconceptualizers")
 
 ggplot(study1_w %>% 
            select(sensi_correct, type, session) %>%
@@ -1332,7 +1354,9 @@ bayes_factor(plot0306_mod2, plot0306_mod1)
 mod_plot_diffov <- brm (
     diff_ov ~ (1 | type),
     data = study1_w %>% 
-        filter(rating_ov_missconcept == F),
+        filter(rating_ov_misconcept == F,
+              !diff_ov == "-Inf",
+              !diff_ov == "Inf"),
     control = list(adapt_delta = .999),
     cores = 4,
     iter = 10000
@@ -1515,9 +1539,11 @@ gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
 #| results: hide
 
 mod_diffov_gardneraltman_halfeye_x <- 
-    brm(diff_ov ~ dummy_gardneraltman_halfeye_x +  effsize_abs + (1|session), 
+    brm(diff_ov ~ dummy_gardneraltman_halfeye_x +  effsize + (1|session), 
                           data = gardneraltman_vs_halfeye_x%>% 
-                              filter(rating_ov_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           save_pars = save_pars(all = TRUE),
     silent = 2,
     refresh = 0,
@@ -1626,9 +1652,11 @@ gardneraltman_vs_halfeye_y_effic <- study1_w_timestamp %>%
 #| results: hide
 
 mod_diffov_gardneraltman_halfeye_y <- 
-    brm(diff_ov ~ dummy_gardneraltman_halfeye_y + effsize_abs + (1|session), 
+    brm(diff_ov ~ dummy_gardneraltman_halfeye_y + effsize + (1|session), 
                           data = gardneraltman_vs_halfeye_y%>% 
-                              filter(rating_ov_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           save_pars = save_pars(all = TRUE),
     silent = 2,
     refresh = 0,
@@ -1734,9 +1762,11 @@ raincloud_vs_halfeye_x_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 mod_diffov_raincloud_halfeye_x <- 
-    brm(diff_ov ~ dummy_raincloud_halfeye_x + effsize_abs + (1|session), 
+    brm(diff_ov ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
                           data = raincloud_vs_halfeye_x %>% 
-                              filter(rating_ov_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           save_pars = save_pars(all = TRUE),
     silent = 2,
     refresh = 0,
@@ -1848,9 +1878,11 @@ raincloud_vs_halfeye_y_effic <- study1_w_timestamp %>%
 #| results: hide
 
 mod_diffov_raincloud_halfeye_y <- 
-    brm(diff_ov ~ dummy_raincloud_halfeye_y + effsize_abs + (1|session), 
+    brm(diff_ov ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
                           data = raincloud_vs_halfeye_y %>% 
-                              filter(rating_ov_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           save_pars = save_pars(all = TRUE),
     silent = 2,
     refresh = 0,
@@ -1984,9 +2016,11 @@ gardneraltman_vs_raincloud_effic <- study1_w_timestamp %>%
 #| results: hide
 
 mod_diffov_gardneraltman_raincloud <- 
-    brm(diff_ov ~ dummy_gardneraltman_raincloud + effsize_abs + (1|session), 
+    brm(diff_ov ~ dummy_gardneraltman_raincloud + effsize + (1|session), 
                           data = gardneraltman_vs_raincloud%>% 
-                              filter(rating_ov_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           save_pars = save_pars(all = TRUE),
     silent = 2,
     refresh = 0,
@@ -2098,9 +2132,11 @@ halfeye_x_vs_halfeye_y_effic <- study1_w_timestamp %>%
 #| results: hide
 
 mod_diffov_halfeye_x_halfeye_y <- 
-    brm(diff_ov ~ dummy_halfeye_x_halfeye_y + effsize_abs + (1|session), 
+    brm(diff_ov ~ dummy_halfeye_x_halfeye_y + effsize + (1|session), 
                           data = halfeye_x_vs_halfeye_y%>% 
-                              filter(rating_ov_missconcept == F),
+                              filter(rating_ov_misconcept == F,
+                                     !diff_ov == "-Inf",
+                                     !diff_ov == "Inf"),
                           save_pars = save_pars(all = TRUE),
         
     silent = 2,
