@@ -178,7 +178,7 @@ data_w <- full_join(plot_info,
            # transform the actual effect size Cohen's d to Cohen's U3
            effsize_ov = 2 * pnorm(-abs(effsize) / 2), 
            # actual difference of rating relative to depicted effectsize
-           rating_am_in_d = r_to_d(rating_am/100),
+           rating_am_in_d = r_to_d(rating_am),
            rating_u3_in_d = qnorm(rating_u3/100), 
            rating_ov_in_d = -2*qnorm(0.5*rating_ov/100),
            diff_am = ifelse(effsize < 0,
