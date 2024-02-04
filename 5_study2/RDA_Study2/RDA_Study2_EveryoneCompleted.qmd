@@ -239,16 +239,14 @@ Show descriptive results of accuracy variables, perceived difficulty, sensitivit
 ```{r}
 skim(
   data_w |>
-  select(diffi, infor, value, rating_u3, 
-         rating_ov, rating_am, diff_u3, diff_ov,
-         diff_am, sensi_binary, plot, session, group) |>
+  select(diff_u3, diff_ov, diff_am, plot, session, group) |>
     filter (!diff_u3 == "-Inf",
             !diff_u3 == "Inf",
             !diff_ov == "-Inf",
             !diff_ov == "Inf",
             !diff_am == "-Inf",
             !diff_am == "Inf") |>
-    gather(variable, value, 1:10) |>
+    gather(variable, value, 1:3) |>
     mutate(var = paste(variable, group, sep = "_")) |>
     select(-group, -variable) |>
     # group_by(session, plot) |>
@@ -256,6 +254,17 @@ skim(
     # ungroup()
     )
 
+skim(
+  data_w |>
+  select(diffi, infor, value, rating_u3, 
+         rating_ov, rating_am, sensi_binary, plot, session, group) |>
+    gather(variable, value, 1:7) |>
+    mutate(var = paste(variable, group, sep = "_")) |>
+    select(-group, -variable) |>
+    # group_by(session, plot) |>
+    spread(var, value) # |>
+    # ungroup()
+    )
 
 skim(
   data_w |>
