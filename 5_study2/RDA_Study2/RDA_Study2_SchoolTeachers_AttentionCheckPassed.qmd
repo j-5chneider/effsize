@@ -1897,7 +1897,8 @@ hyp7bu3_vinterceptonly <-
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct()|> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1911,7 +1912,8 @@ hyp7bu3_vintercept <-
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct()|> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 plot(hyp7bu3_vintercept)
@@ -1966,7 +1968,8 @@ hyp7bov_vinterceptonly <-
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct() |> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1980,7 +1983,8 @@ hyp7bov_vintercept <-
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct() |> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 plot(hyp7bov_vintercept)
