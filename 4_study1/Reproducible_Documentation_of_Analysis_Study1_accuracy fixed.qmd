@@ -293,8 +293,17 @@ N = 15 participants checked "other" when asked which school type they teach at. 
 #| code-summary: "Show the code"
 
 skim(study1_w %>%
-         select(diffi, infor, value, rating_u3, rating_ov, rating_am, diff_u3,
-                diff_ov, diff_am))
+         select(diffi, infor, value, rating_u3, rating_ov, rating_am,))
+
+skim(study1_w %>%
+         select(diff_am, diff_u3, diff_ov)%>%
+         filter(!diff_u3 == "-Inf",
+            !diff_u3 == "Inf",
+            !diff_ov == "-Inf",
+            !diff_ov == "Inf",
+            !diff_am == "-Inf",
+            !diff_am == "Inf")
+    )
 ```
 
 
@@ -304,8 +313,23 @@ skim(study1_w %>%
 #| code-summary: "Show the code"
 
 skim(study1_w %>%
-         select(diffi, infor,value,rating_u3, rating_ov, rating_am, diff_u3, diff_ov, diff_am,  session, type, plot) %>%
-    gather(var, value, diffi, infor,value,rating_u3, rating_ov, rating_am, diff_u3, diff_ov, diff_am)%>%
+         select(diffi, infor, value, sensi_binary_filtered, session, type, plot) %>%
+    gather(var, value, diffi, infor, value, sensi_binary_filtered)%>%
+    mutate(variable = paste(var, type, sep = "_"))%>%
+    select(-type, -var)%>%
+    group_by(session, plot) %>%
+    spread(variable, value) %>%
+    ungroup())
+
+skim(study1_w %>%
+         select(diff_u3, diff_ov, diff_am, session, type, plot) %>%
+         filter(!diff_u3 == "-Inf",
+            !diff_u3 == "Inf",
+            !diff_ov == "-Inf",
+            !diff_ov == "Inf",
+            !diff_am == "-Inf",
+            !diff_am == "Inf") %>%
+    gather(var, value, diff_u3, diff_ov, diff_am,)%>%
     mutate(variable = paste(var, type, sep = "_"))%>%
     select(-type, -var)%>%
     group_by(session, plot) %>%
@@ -703,17 +727,23 @@ We generally compare
 
 # Difference variable 
 mod0_diff_am <- brm(diff_am ~ + (1|session), 
-                          data = study1_w,
+                          data = study1_w %>%
+                          filter(!diff_am =="-Inf",
+                                 !diff_am == "Inf"),
                           iter = 20000,
                           save_pars = save_pars(all = TRUE),
                           cores = 4)
 mod1_diff_am <- brm(diff_am ~ effsize + (1|session), 
-                          data = study1_w,
+                          data = study1_w %>%
+                          filter(!diff_am =="-Inf",
+                                 !diff_am == "Inf"),
                           iter = 20000,
                           save_pars = save_pars(all = TRUE),
                           cores = 4)
 mod2_diff_am <- brm(diff_am ~ type + effsize + (1|session), 
-                          data = study1_w,
+                          data = study1_w %>%
+                          filter(!diff_am =="-Inf",
+                                 !diff_am == "Inf"),
                           iter = 10000,
                           save_pars = save_pars(all = TRUE),
                           cores = 4
@@ -1258,9 +1288,6 @@ pp_check(plot01_mod2) +
 
 
 ```{r}
-#| error: false
-#| warning: false
-#| results: hide
 
 sjPlot::tab_model(plot01_mod0, plot01_mod1, plot01_mod2)
 bayes_factor(plot01_mod1, plot01_mod0)
@@ -1351,40 +1378,40 @@ bayes_factor(plot0306_mod2, plot0306_mod1)
 # preparing multilevel model with brms for graphical overview
 
 # rating ov
-mod_plot_diffov <- brm (
-    diff_ov ~ (1 | type),
-    data = study1_w %>% 
-        filter(rating_ov_misconcept == F,
-              !diff_ov == "-Inf",
-              !diff_ov == "Inf"),
-    control = list(adapt_delta = .999),
-    cores = 4,
-    iter = 10000
-    
-)
-
-
-plot_diffov <- mod_plot_diffov %>%
-  spread_draws(b_Intercept, r_type[type,]) %>%
-  mutate(type_mean = b_Intercept + r_type) %>%
-  ggplot(aes(y = type, x = type_mean
-             )) +
-    stat_halfeye() + 
-    theme_ipsum_rc()+
-    theme(axis.title.x = element_blank(),
-          axis.text.y = element_text(hjust = 0)) +
-    ggtitle('Accuracy in Overlap Metric')
+#mod_plot_diffov <- brm (
+#    diff_ov ~ (1 | type),
+#    data = study1_w %>% 
+#        filter(rating_ov_misconcept == F,
+#              !diff_ov == "-Inf",
+#              !diff_ov == "Inf"),
+#    control = list(adapt_delta = .999),
+#    cores = 4,
+#    iter = 10000
+#    
+#)
+#
+#
+#plot_diffov <- mod_plot_diffov %>%
+#  spread_draws(b_Intercept, r_type[type,]) %>%
+#  mutate(type_mean = b_Intercept + r_type) %>%
+#  ggplot(aes(y = type, x = type_mean
+#             )) +
+#    stat_halfeye() + 
+#    theme_ipsum_rc()+
+#    theme(axis.title.x = element_blank(),
+#          axis.text.y = element_text(hjust = 0)) +
+#    ggtitle('Accuracy in Overlap Metric')
 ```
 
 ```{r}
 
-plot_diffov
-
-ggsave("4_study1/plot_diffov.png", 
-    plot_diffov,
-    width = 25*.55,
-    height = 16*.55)
-
+#plot_diffov
+#
+#ggsave("4_study1/plot_diffov.png", 
+#    plot_diffov,
+#    width = 25*.55,
+#    height = 16*.55)
+#
 ```
 
 
@@ -1538,17 +1565,17 @@ gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 
-mod_diffov_gardneraltman_halfeye_x <- 
-    brm(diff_ov ~ dummy_gardneraltman_halfeye_x +  effsize + (1|session), 
-                          data = gardneraltman_vs_halfeye_x%>% 
-                              filter(rating_ov_misconcept == F,
-                                     !diff_ov == "-Inf",
-                                     !diff_ov == "Inf"),
-                          save_pars = save_pars(all = TRUE),
-    silent = 2,
-    refresh = 0,
-    cores = 4,
-    iter = 10000)
+#mod_diffov_gardneraltman_halfeye_x <- 
+#    brm(diff_ov ~ dummy_gardneraltman_halfeye_x +  effsize + (1|session), 
+#                          data = gardneraltman_vs_halfeye_x%>% 
+#                              filter(rating_ov_misconcept == F,
+#                                     !diff_ov == "-Inf",
+#                                     !diff_ov == "Inf"),
+#                          save_pars = save_pars(all = TRUE),
+#    silent = 2,
+#    refresh = 0,
+#    cores = 4,
+#    iter = 10000)
 
 ```
 
@@ -1651,16 +1678,16 @@ gardneraltman_vs_halfeye_y_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 
-mod_diffov_gardneraltman_halfeye_y <- 
-    brm(diff_ov ~ dummy_gardneraltman_halfeye_y + effsize + (1|session), 
-                          data = gardneraltman_vs_halfeye_y%>% 
-                              filter(rating_ov_misconcept == F,
-                                     !diff_ov == "-Inf",
-                                     !diff_ov == "Inf"),
-                          save_pars = save_pars(all = TRUE),
-    silent = 2,
-    refresh = 0,
-    cores = 4)
+#mod_diffov_gardneraltman_halfeye_y <- 
+#    brm(diff_ov ~ dummy_gardneraltman_halfeye_y + effsize + (1|session), 
+#                          data = gardneraltman_vs_halfeye_y%>% 
+#                              filter(rating_ov_misconcept == F,
+#                                     !diff_ov == "-Inf",
+#                                     !diff_ov == "Inf"),
+#                          save_pars = save_pars(all = TRUE),
+#    silent = 2,
+#    refresh = 0,
+#    cores = 4)
 ```
 
 
@@ -1761,16 +1788,16 @@ raincloud_vs_halfeye_x_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-mod_diffov_raincloud_halfeye_x <- 
-    brm(diff_ov ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
-                          data = raincloud_vs_halfeye_x %>% 
-                              filter(rating_ov_misconcept == F,
-                                     !diff_ov == "-Inf",
-                                     !diff_ov == "Inf"),
-                          save_pars = save_pars(all = TRUE),
-    silent = 2,
-    refresh = 0,
-    cores = 4)
+# mod_diffov_raincloud_halfeye_x <- 
+#     brm(diff_ov ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
+#                           data = raincloud_vs_halfeye_x %>% 
+#                               filter(rating_ov_misconcept == F,
+#                                      !diff_ov == "-Inf",
+#                                      !diff_ov == "Inf"),
+#                           save_pars = save_pars(all = TRUE),
+#     silent = 2,
+#     refresh = 0,
+#     cores = 4)
 ```
 
 
@@ -1877,16 +1904,16 @@ raincloud_vs_halfeye_y_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 
-mod_diffov_raincloud_halfeye_y <- 
-    brm(diff_ov ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
-                          data = raincloud_vs_halfeye_y %>% 
-                              filter(rating_ov_misconcept == F,
-                                     !diff_ov == "-Inf",
-                                     !diff_ov == "Inf"),
-                          save_pars = save_pars(all = TRUE),
-    silent = 2,
-    refresh = 0,
-    cores = 4)
+#mod_diffov_raincloud_halfeye_y <- 
+#    brm(diff_ov ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
+#                          data = raincloud_vs_halfeye_y %>% 
+#                              filter(rating_ov_misconcept == F,
+#                                     !diff_ov == "-Inf",
+#                                     !diff_ov == "Inf"),
+#                          save_pars = save_pars(all = TRUE),
+#    silent = 2,
+#    refresh = 0,
+#    cores = 4)
 ```
 
 
@@ -1971,20 +1998,20 @@ mod_effic0306_raincloud_halfeye_y <-
 
 ```{r}
 sjPlot::tab_model(
-        mod_diffov_gardneraltman_halfeye_x, 
+        # mod_diffov_gardneraltman_halfeye_x, 
         mod_diffi_gardneraltman_halfeye_x, 
         mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
         mod_sensi_gardneraltman_halfeye_x,
         mod_effic01_gardneraltman_halfeye_x, mod_effic0306_gardneraltman_halfeye_x,
-        mod_diffov_gardneraltman_halfeye_y, 
+        # mod_diffov_gardneraltman_halfeye_y, 
         mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, 
         mod_value_gardneraltman_halfeye_y, mod_sensi_gardneraltman_halfeye_y,
         mod_effic01_gardneraltman_halfeye_y, mod_effic0306_gardneraltman_halfeye_y,
-        mod_diffov_raincloud_halfeye_x, mod_diffi_raincloud_halfeye_x, 
+        # mod_diffov_raincloud_halfeye_x, mod_diffi_raincloud_halfeye_x, 
         mod_infor_raincloud_halfeye_x, mod_value_raincloud_halfeye_x,
         mod_sensi_raincloud_halfeye_x,
         mod_effic01_raincloud_halfeye_x, mod_effic0306_raincloud_halfeye_x,
-        mod_diffov_raincloud_halfeye_y, 
+        # mod_diffov_raincloud_halfeye_y, 
         mod_diffi_raincloud_halfeye_y, mod_infor_raincloud_halfeye_y, 
         mod_value_raincloud_halfeye_y, mod_sensi_raincloud_halfeye_y,
         mod_effic01_raincloud_halfeye_y, mod_effic0306_raincloud_halfeye_y)
@@ -2015,16 +2042,16 @@ gardneraltman_vs_raincloud_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 
-mod_diffov_gardneraltman_raincloud <- 
-    brm(diff_ov ~ dummy_gardneraltman_raincloud + effsize + (1|session), 
-                          data = gardneraltman_vs_raincloud%>% 
-                              filter(rating_ov_misconcept == F,
-                                     !diff_ov == "-Inf",
-                                     !diff_ov == "Inf"),
-                          save_pars = save_pars(all = TRUE),
-    silent = 2,
-    refresh = 0,
-    cores = 4)
+# mod_diffov_gardneraltman_raincloud <- 
+#     brm(diff_ov ~ dummy_gardneraltman_raincloud + effsize + (1|session), 
+#                           data = gardneraltman_vs_raincloud%>% 
+#                               filter(rating_ov_misconcept == F,
+#                                      !diff_ov == "-Inf",
+#                                      !diff_ov == "Inf"),
+#                           save_pars = save_pars(all = TRUE),
+#     silent = 2,
+#     refresh = 0,
+#     cores = 4)
 ```
 
 
@@ -2131,18 +2158,18 @@ halfeye_x_vs_halfeye_y_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 
-mod_diffov_halfeye_x_halfeye_y <- 
-    brm(diff_ov ~ dummy_halfeye_x_halfeye_y + effsize + (1|session), 
-                          data = halfeye_x_vs_halfeye_y%>% 
-                              filter(rating_ov_misconcept == F,
-                                     !diff_ov == "-Inf",
-                                     !diff_ov == "Inf"),
-                          save_pars = save_pars(all = TRUE),
-        
-    silent = 2,
-    refresh = 0,
-    cores = 4,
-    iter = 20000)
+#mod_diffov_halfeye_x_halfeye_y <- 
+#    brm(diff_ov ~ dummy_halfeye_x_halfeye_y + effsize + (1|session), 
+#                          data = halfeye_x_vs_halfeye_y%>% 
+#                              filter(rating_ov_misconcept == F,
+#                                     !diff_ov == "-Inf",
+#                                     !diff_ov == "Inf"),
+#                          save_pars = save_pars(all = TRUE),
+#        
+#    silent = 2,
+#    refresh = 0,
+#    cores = 4,
+#    iter = 20000)
 ```
 
 
@@ -2220,7 +2247,7 @@ mod_effic0306_halfeye_x_halfeye_y <-
 ```
 
 ```{r}
-sjPlot::tab_model(mod_diffov_gardneraltman_raincloud, 
+sjPlot::tab_model(#mod_diffov_gardneraltman_raincloud, 
                   mod_diffi_gardneraltman_raincloud,
                   mod_infor_gardneraltman_raincloud, 
                   mod_value_gardneraltman_raincloud,
@@ -2231,7 +2258,7 @@ sjPlot::tab_model(mod_diffov_gardneraltman_raincloud,
 
 
 ```{r}
-sjPlot::tab_model(mod_diffov_halfeye_x_halfeye_y, 
+sjPlot::tab_model(#mod_diffov_halfeye_x_halfeye_y, 
                   mod_diffi_halfeye_x_halfeye_y, 
                   mod_infor_halfeye_x_halfeye_y, 
                   mod_value_halfeye_x_halfeye_y,

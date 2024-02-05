@@ -239,16 +239,14 @@ Show descriptive results of accuracy variables, perceived difficulty, sensitivit
 ```{r}
 skim(
   data_w |>
-  select(diffi, infor, value, rating_u3, 
-         rating_ov, rating_am, diff_u3, diff_ov,
-         diff_am, sensi_binary, plot, session, group) |>
+  select(diff_am, diff_u3, diff_ov, plot, session, group) |>
     filter (!diff_u3 == "-Inf",
             !diff_u3 == "Inf",
             !diff_ov == "-Inf",
             !diff_ov == "Inf",
             !diff_am == "-Inf",
             !diff_am == "Inf") |>
-    gather(variable, value, 1:10) |>
+    gather(variable, value, 1:3) |>
     mutate(var = paste(variable, group, sep = "_")) |>
     select(-group, -variable) |>
     # group_by(session, plot) |>
@@ -256,6 +254,17 @@ skim(
     # ungroup()
     )
 
+skim(
+  data_w |>
+  select(diffi, infor, value, rating_u3, 
+         rating_ov, rating_am, sensi_binary_filtered, plot, session, group) |>
+    gather(variable, value, 1:7) |>
+    mutate(var = paste(variable, group, sep = "_")) |>
+    select(-group, -variable) |>
+    # group_by(session, plot) |>
+    spread(var, value) # |>
+    # ungroup()
+    )
 
 skim(
   data_w |>
@@ -355,7 +364,7 @@ scale_this <- function(x){
   (x - mean(x, na.rm=TRUE)) / sd(x, na.rm=TRUE)
 }
 
-# compute z-scpres of dependet variables
+# compute z-scores of dependent variables
 data_w |> 
     select(value,
            infor,
@@ -668,6 +677,7 @@ cliffs_delta(diff_am ~ group, data = data_w |>
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_signaling_u3"
                   ))
+
 ```
 
 ### Overlap
@@ -923,6 +933,19 @@ hyp2a_bf <-
                  hyp2a_bernoulli_vinterceptonly)
 hyp2a_bf
 ```
+
+
+```{r}
+data_w_filtered_ha <- 
+    data_w |> 
+           filter(!group == "eg_signaling_overlap",
+                  !group == "eg_signaling_u3"
+                  )
+
+cramers_v(data_w_filtered_ha$sensi_binary_filtered,
+          data_w_filtered_ha$group)
+```
+
 
 ## Hypothesis H3a: Effects of benchmarks on perceived difficulty
 
@@ -1534,6 +1557,31 @@ hyp2b_bf <-
 hyp2b_bf
 ```
 
+
+
+```{r}
+data_w_filtered_hb_u3 <- 
+    data_w |> 
+           filter(!group == "eg_benchmark",
+                  !group == "eg_signaling_overlap"
+                  )
+
+data_w_filtered_hb_ov <- 
+    data_w |> 
+           filter(!group == "eg_benchmark",
+                  !group == "eg_signaling_u3"
+                  )
+
+
+cramers_v(data_w_filtered_hb_u3$sensi_binary_filtered,
+          data_w_filtered_hb_u3$group)
+
+cramers_v(data_w_filtered_hb_ov$sensi_binary_filtered,
+          data_w_filtered_hb_ov$group)
+
+```
+
+
 ## Hypothesis H3b: Effects of signaling on perceived difficulty
 
 ```{r}
@@ -1849,7 +1897,8 @@ hyp7bu3_vinterceptonly <-
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct()|> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1863,7 +1912,8 @@ hyp7bu3_vintercept <-
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct()|> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 plot(hyp7bu3_vintercept)
@@ -1884,6 +1934,15 @@ hyp7bu3_bf <-
 hyp7bu3_bf
 ```
 
+```{r}
+
+cramers_v(data_w_filtered_hb_u3$rating_u3_misconcept,
+          data_w_filtered_hb_u3$group)
+
+```
+
+
+          
 ## Hypothesis H7bov: Effects of signaling on misconcepts ov
 
 ```{r}
@@ -1909,7 +1968,8 @@ hyp7bov_vinterceptonly <-
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct() |> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1923,7 +1983,8 @@ hyp7bov_vintercept <-
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct() |> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 plot(hyp7bov_vintercept)
@@ -1942,6 +2003,14 @@ hyp7bov_bf <-
     bayes_factor(hyp7bov_vintercept, hyp7bov_vinterceptonly)
 hyp7bov_bf
 ```
+
+
+```{r}
+
+cramers_v(data_w_filtered_hb_ov$rating_ov_misconcept,
+          data_w_filtered_hb_ov$group)
+```
+
 
 ## Bayes factors
 
