@@ -257,7 +257,7 @@ skim(
 skim(
   data_w |>
   select(diffi, infor, value, rating_u3, 
-         rating_ov, rating_am, sensi_binary, plot, session, group) |>
+         rating_ov, rating_am, sensi_binary_filtered, plot, session, group) |>
     gather(variable, value, 1:7) |>
     mutate(var = paste(variable, group, sep = "_")) |>
     select(-group, -variable) |>
@@ -364,7 +364,7 @@ scale_this <- function(x){
   (x - mean(x, na.rm=TRUE)) / sd(x, na.rm=TRUE)
 }
 
-# compute z-scpres of dependet variables
+# compute z-scores of dependent variables
 data_w |> 
     select(value,
            infor,
@@ -384,7 +384,7 @@ data_w |>
 ```{r}
 #| label: demographics
 sociodemographics <- 
-    read_delim(here::here("data/teachers_study2_update00.csv")) %>%
+    read_delim(here::here("data/teachers_study2_update01.csv")) %>%
     select(session, mcstu, texpe, mcsub) %>% 
     mutate(reply = session %in% c(study2_data$session)) %>%
     filter(!reply == "FALSE") %>%
@@ -932,6 +932,19 @@ hyp2a_bf <-
                  hyp2a_bernoulli_vinterceptonly)
 hyp2a_bf
 ```
+
+
+```{r}
+data_w_filtered_ha <- 
+    data_w |> 
+           filter(!group == "eg_signaling_overlap",
+                  !group == "eg_signaling_u3"
+                  )
+
+cramers_v(data_w_filtered_ha$sensi_binary_filtered,
+          data_w_filtered_ha$group)
+```
+
 
 ## Hypothesis H3a: Effects of benchmarks on perceived difficulty
 
@@ -1543,6 +1556,31 @@ hyp2b_bf <-
 hyp2b_bf
 ```
 
+
+
+```{r}
+data_w_filtered_hb_u3 <- 
+    data_w |> 
+           filter(!group == "eg_benchmark",
+                  !group == "eg_signaling_overlap"
+                  )
+
+data_w_filtered_hb_ov <- 
+    data_w |> 
+           filter(!group == "eg_benchmark",
+                  !group == "eg_signaling_u3"
+                  )
+
+
+cramers_v(data_w_filtered_hb_u3$sensi_binary_filtered,
+          data_w_filtered_hb_u3$group)
+
+cramers_v(data_w_filtered_hb_ov$sensi_binary_filtered,
+          data_w_filtered_hb_ov$group)
+
+```
+
+
 ## Hypothesis H3b: Effects of signaling on perceived difficulty
 
 ```{r}
@@ -1893,6 +1931,15 @@ hyp7bu3_bf <-
 hyp7bu3_bf
 ```
 
+```{r}
+
+cramers_v(data_w_filtered_hb_u3$rating_u3_misconcept,
+          data_w_filtered_hb_u3$group)
+
+```
+
+
+          
 ## Hypothesis H7bov: Effects of signaling on misconcepts ov
 
 ```{r}
@@ -1951,6 +1998,14 @@ hyp7bov_bf <-
     bayes_factor(hyp7bov_vintercept, hyp7bov_vinterceptonly)
 hyp7bov_bf
 ```
+
+
+```{r}
+
+cramers_v(data_w_filtered_hb_ov$rating_ov_misconcept,
+          data_w_filtered_hb_ov$group)
+```
+
 
 ## Bayes factors
 

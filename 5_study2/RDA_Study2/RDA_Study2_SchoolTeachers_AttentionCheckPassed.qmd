@@ -239,7 +239,7 @@ Show descriptive results of accuracy variables, perceived difficulty, sensitivit
 ```{r}
 skim(
   data_w |>
-  select(diff_u3, diff_ov, diff_am, plot, session, group) |>
+  select(diff_am, diff_u3, diff_ov, plot, session, group) |>
     filter (!diff_u3 == "-Inf",
             !diff_u3 == "Inf",
             !diff_ov == "-Inf",
@@ -257,7 +257,7 @@ skim(
 skim(
   data_w |>
   select(diffi, infor, value, rating_u3, 
-         rating_ov, rating_am, sensi_binary, plot, session, group) |>
+         rating_ov, rating_am, sensi_binary_filtered, plot, session, group) |>
     gather(variable, value, 1:7) |>
     mutate(var = paste(variable, group, sep = "_")) |>
     select(-group, -variable) |>
@@ -364,7 +364,7 @@ scale_this <- function(x){
   (x - mean(x, na.rm=TRUE)) / sd(x, na.rm=TRUE)
 }
 
-# compute z-scpres of dependet variables
+# compute z-scores of dependent variables
 data_w |> 
     select(value,
            infor,
@@ -677,6 +677,7 @@ cliffs_delta(diff_am ~ group, data = data_w |>
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_signaling_u3"
                   ))
+
 ```
 
 ### Overlap
@@ -1936,8 +1937,6 @@ hyp7bu3_bf
 cramers_v(data_w_filtered_hb_u3$rating_u3_misconcept,
           data_w_filtered_hb_u3$group)
 
-cramers_v(data_w_filtered_hb_ov$rating_u3_misconcept,
-          data_w_filtered_hb_ov$group)
 ```
 
 
@@ -2003,9 +2002,6 @@ hyp7bov_bf
 
 
 ```{r}
-
-cramers_v(data_w_filtered_hb_u3$rating_ov_misconcept,
-          data_w_filtered_hb_u3$group)
 
 cramers_v(data_w_filtered_hb_ov$rating_ov_misconcept,
           data_w_filtered_hb_ov$group)
