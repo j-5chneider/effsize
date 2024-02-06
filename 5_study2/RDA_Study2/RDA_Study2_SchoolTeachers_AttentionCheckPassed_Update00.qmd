@@ -1,5 +1,5 @@
 ---
-title: "Reproducible_Report_Study_II - Update 0"
+title: "Reproducible_Report_Study_II - Update 00"
 subtitle: "Including Only School Teachers Who Passed the Attention Check"
 format: 
   html:
@@ -227,6 +227,11 @@ data_w <- full_join(plot_info,
                                              TRUE ~ NA_character_),
            effsize_abs = abs(effsize)) |> 
     # add the between-person conditions group and topic
+    left_join(study2_data |> select(session, group, topic)) |> 
+    # create binary variables for the presence of a benchmark or signaling
+    mutate(gr_benchmark = ifelse(grepl("benchmark", group), "benchmark", "nobenchmark"),
+           gr_signaling = ifelse(grepl("signaling", group), "signaling", "nosignaling")) |> 
+    # add the between-person conditions group and topic
     left_join(study2_data |> select(session, group, topic,
                                     umean_1x, umean_1y, umean_2x, 
                                     umean_2y, uvary_2x, uvary_2y)) |> 
@@ -263,7 +268,7 @@ Show descriptive results of accuracy variables, perceived difficulty, sensitivit
 ```{r}
 skim(
   data_w |>
-  select(diff_u3, diff_ov, diff_am, plot, session, group) |>
+  select(diff_am, diff_u3, diff_ov, plot, session, group) |>
     filter (!diff_u3 == "-Inf",
             !diff_u3 == "Inf",
             !diff_ov == "-Inf",
@@ -273,7 +278,9 @@ skim(
     gather(variable, value, 1:3) |>
     mutate(var = paste(variable, group, sep = "_")) |>
     select(-group, -variable) |>
-    spread(var, value) 
+    # group_by(session, plot) |>
+    spread(var, value) # |>
+    # ungroup()
     )
 
 skim(
@@ -406,7 +413,7 @@ data_w |>
 ```{r}
 #| label: demographics
 sociodemographics <- 
-    read_delim(here::here("data/teachers_study2_update01.csv")) %>%
+    read_delim(here::here("data/teachers_study2_update00.csv")) %>%
     select(session, mcstu, texpe, mcsub) %>% 
     mutate(reply = session %in% c(study2_data$session)) %>%
     filter(!reply == "FALSE") %>%
@@ -699,6 +706,7 @@ cliffs_delta(diff_am ~ group, data = data_w |>
            filter(!group == "eg_signaling_overlap",
                   !group == "eg_signaling_u3"
                   ))
+
 ```
 
 ### Overlap
@@ -1854,7 +1862,7 @@ hyp5b_bf
 data_w |> 
     ggplot(aes(group, value)) +
     geom_jitter(alpha = .2) + 
-    stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1)) +
+    stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1))+
     theme_minimal()
 
 hyp6b_vinterceptonly <-
@@ -1918,7 +1926,8 @@ hyp7bu3_vinterceptonly <-
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct()|> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1932,7 +1941,8 @@ hyp7bu3_vintercept <-
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct()|> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 plot(hyp7bu3_vintercept)
@@ -1987,7 +1997,8 @@ hyp7bov_vinterceptonly <-
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct() |> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 
@@ -2001,7 +2012,8 @@ hyp7bov_vintercept <-
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
-                 distinct(),
+                 distinct() |> 
+                filter(!group == "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
     )
 plot(hyp7bov_vintercept)
@@ -2021,7 +2033,13 @@ hyp7bov_bf <-
 hyp7bov_bf
 ```
 
-<<<<<<< HEAD
+
+```{r}
+
+cramers_v(data_w_filtered_hb_ov$rating_ov_misconcept,
+          data_w_filtered_hb_ov$group)
+```
+
 ## Statistical understanding and accuracy
 ```{r}
 #| cache: true
@@ -2047,31 +2065,6 @@ data_undestanding_acc |>
                  fun.args = list(mult = 1), 
                  color = "#8cd000") +
     theme_minimal()
-```
-
-
-```{r}
-#| results: asis
-data_undestanding_acc |> 
-  nest_by(diff_variable, understanding_variable) |> 
-  mutate(cliff = effsize::cliff.delta(diff ~ understanding, 
-                                      data = data)$estimate,
-         CI_lower = effsize::cliff.delta(diff ~ understanding, 
-                                      data = data)$conf.int["lower"],
-         CI_upper = effsize::cliff.delta(diff ~ understanding, 
-                                      data = data)$conf.int["upper"],
-         CI_sig = sign(CI_lower) == sign(CI_upper)) |>
-    select(-data) |> 
-    ungroup() |> 
-    mutate(across(3:6, round, 2)) |> 
-    knitr::kable()
-=======
-
-```{r}
-
-cramers_v(data_w_filtered_hb_ov$rating_ov_misconcept,
-          data_w_filtered_hb_ov$group)
->>>>>>> e2b7f4ee8040d6f0d0a6915e4fb59fb14e98af74
 ```
 
 
@@ -2134,4 +2127,3 @@ hyp7bu3_bf$bf
 # H7bov: when signaling ov, smaller number of ov misconceptualizer
 hyp7bov_bf$bf
 ```
-

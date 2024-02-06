@@ -230,7 +230,36 @@ data_w <- full_join(plot_info,
     left_join(study2_data |> select(session, group, topic)) |> 
     # create binary variables for the presence of a benchmark or signaling
     mutate(gr_benchmark = ifelse(grepl("benchmark", group), "benchmark", "nobenchmark"),
-           gr_signaling = ifelse(grepl("signaling", group), "signaling", "nosignaling"))
+           gr_signaling = ifelse(grepl("signaling", group), "signaling", "nosignaling")) |> 
+    # add the between-person conditions group and topic
+    left_join(study2_data |> select(session, group, topic,
+                                    umean_1x, umean_1y, umean_2x, 
+                                    umean_2y, uvary_2x, uvary_2y)) |> 
+    # create binary variables for the presence of a benchmark or signaling
+    mutate(gr_benchmark = ifelse(grepl("benchmark", group), "benchmark", "nobenchmark"),
+           gr_signaling = ifelse(grepl("signaling", group), "signaling", "nosignaling"),
+           umean_1x_cor = ifelse(umean_1x == 5, 1, 0),
+           umean_1y_cor = ifelse(umean_1y == 2, 1, 0),
+           umean_2x_cor = ifelse(umean_2x == 3, 1, 0),
+           umean_2y_cor = ifelse(umean_2y == 5, 1, 0),
+           uvary_2x_cor = ifelse(uvary_2x == 1, 1, 0),
+           uvary_2y_cor = ifelse(uvary_2y == 1, 1, 0)) |> 
+    left_join(readxl::read_excel(here::here("data/data_rating_kris.xlsx")) |> 
+                  select(session, contains("_kris"))) |> 
+    left_join(readxl::read_excel(here::here("data/data_rating_jue.xlsx")) |> 
+                  select(session, contains("_jue"))) |> 
+    mutate(uxaxs_1x_rating = ifelse(is.na(uxaxs_1x_rating_kris), 
+                                    uxaxs_1x_rating_jue,
+                                    uxaxs_1x_rating_kris),
+           uxaxs_1y_rating = ifelse(is.na(uxaxs_1y_rating_kris), 
+                                    uxaxs_1y_rating_jue,
+                                    uxaxs_1y_rating_kris),
+           uyaxs_1x_rating = ifelse(is.na(uyaxs_1x_rating_kris), 
+                                    uyaxs_1x_rating_jue,
+                                    uyaxs_1x_rating_kris),
+           uyaxs_1y_rating = ifelse(is.na(uyaxs_1y_rating_kris), 
+                                    uyaxs_1y_rating_jue,
+                                    uyaxs_1y_rating_kris))
 
 ```
 
@@ -2009,6 +2038,33 @@ hyp7bov_bf
 
 cramers_v(data_w_filtered_hb_ov$rating_ov_misconcept,
           data_w_filtered_hb_ov$group)
+```
+
+## Statistical understanding and accuracy
+```{r}
+#| cache: true
+data_undestanding_acc <- 
+    data_w |> 
+    select(contains("diff_"), uxaxs_1x_rating, uxaxs_1y_rating, 
+           uyaxs_1x_rating, uyaxs_1y_rating, session) |> 
+    pivot_longer(names_to = "diff_variable",
+                 values_to = "diff",
+                 cols = c(diff_am, diff_u3, diff_ov)) |> 
+    pivot_longer(names_to = "understanding_variable",
+                 values_to = "understanding",
+                 cols = c(uxaxs_1x_rating, uxaxs_1y_rating, 
+                          uyaxs_1x_rating, uyaxs_1y_rating)) |> 
+    na.omit() |> 
+    distinct()
+
+data_undestanding_acc |> 
+    ggplot(aes(as.factor(understanding), diff)) +
+    geom_sina(alpha = .1) +
+    facet_grid(diff_variable ~ understanding_variable) +
+    stat_summary(fun.data = mean_sdl, 
+                 fun.args = list(mult = 1), 
+                 color = "#8cd000") +
+    theme_minimal()
 ```
 
 
