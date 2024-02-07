@@ -1375,49 +1375,6 @@ bayes_factor(plot0306_mod2, plot0306_mod1)
 ```{r}
 #| results: hide
 
-# preparing multilevel model with brms for graphical overview
-
-# rating ov
-#mod_plot_diffov <- brm (
-#    diff_ov ~ (1 | type),
-#    data = study1_w %>% 
-#        filter(rating_ov_misconcept == F,
-#              !diff_ov == "-Inf",
-#              !diff_ov == "Inf"),
-#    control = list(adapt_delta = .999),
-#    cores = 4,
-#    iter = 10000
-#    
-#)
-#
-#
-#plot_diffov <- mod_plot_diffov %>%
-#  spread_draws(b_Intercept, r_type[type,]) %>%
-#  mutate(type_mean = b_Intercept + r_type) %>%
-#  ggplot(aes(y = type, x = type_mean
-#             )) +
-#    stat_halfeye() + 
-#    theme_ipsum_rc()+
-#    theme(axis.title.x = element_blank(),
-#          axis.text.y = element_text(hjust = 0)) +
-#    ggtitle('Accuracy in Overlap Metric')
-```
-
-```{r}
-
-#plot_diffov
-#
-#ggsave("4_study1/plot_diffov.png", 
-#    plot_diffov,
-#    width = 25*.55,
-#    height = 16*.55)
-#
-```
-
-
-```{r}
-#| results: hide
-
 # difficulty
 mod_plot_diffi <- brm (
     scale(diffi) ~ (1 | type),
@@ -1564,24 +1521,6 @@ gardneraltman_vs_halfeye_x_effic <- study1_w_timestamp %>%
 
 ```{r}
 #| results: hide
-
-#mod_diffov_gardneraltman_halfeye_x <- 
-#    brm(diff_ov ~ dummy_gardneraltman_halfeye_x +  effsize + (1|session), 
-#                          data = gardneraltman_vs_halfeye_x%>% 
-#                              filter(rating_ov_misconcept == F,
-#                                     !diff_ov == "-Inf",
-#                                     !diff_ov == "Inf"),
-#                          save_pars = save_pars(all = TRUE),
-#    silent = 2,
-#    refresh = 0,
-#    cores = 4,
-#    iter = 10000)
-
-```
-
-
-```{r}
-#| results: hide
 mod_diffi_gardneraltman_halfeye_x <- 
     brm(scale(diffi) ~ dummy_gardneraltman_halfeye_x + effsize 
         + (1|session), 
@@ -1673,21 +1612,6 @@ gardneraltman_vs_halfeye_y_effic <- study1_w_timestamp %>%
     filter(type == "gardneraltman_xaxis" | type == "halfeye_yaxis") %>%
     ungroup()  %>% 
     full_join(study1_w %>% select(session, effsize), by = "session")
-```
-
-```{r}
-#| results: hide
-
-#mod_diffov_gardneraltman_halfeye_y <- 
-#    brm(diff_ov ~ dummy_gardneraltman_halfeye_y + effsize + (1|session), 
-#                          data = gardneraltman_vs_halfeye_y%>% 
-#                              filter(rating_ov_misconcept == F,
-#                                     !diff_ov == "-Inf",
-#                                     !diff_ov == "Inf"),
-#                          save_pars = save_pars(all = TRUE),
-#    silent = 2,
-#    refresh = 0,
-#    cores = 4)
 ```
 
 
@@ -1783,21 +1707,6 @@ raincloud_vs_halfeye_x_effic <- study1_w_timestamp %>%
     filter(type == "raincloud_yaxis" | type == "halfeye_xaxis") %>%
     ungroup() %>% 
     full_join(study1_w %>% select(session, effsize), by = "session")
-```
-
-
-```{r}
-#| results: hide
-# mod_diffov_raincloud_halfeye_x <- 
-#     brm(diff_ov ~ dummy_raincloud_halfeye_x + effsize + (1|session), 
-#                           data = raincloud_vs_halfeye_x %>% 
-#                               filter(rating_ov_misconcept == F,
-#                                      !diff_ov == "-Inf",
-#                                      !diff_ov == "Inf"),
-#                           save_pars = save_pars(all = TRUE),
-#     silent = 2,
-#     refresh = 0,
-#     cores = 4)
 ```
 
 
@@ -1904,22 +1813,6 @@ raincloud_vs_halfeye_y_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 
-#mod_diffov_raincloud_halfeye_y <- 
-#    brm(diff_ov ~ dummy_raincloud_halfeye_y + effsize + (1|session), 
-#                          data = raincloud_vs_halfeye_y %>% 
-#                              filter(rating_ov_misconcept == F,
-#                                     !diff_ov == "-Inf",
-#                                     !diff_ov == "Inf"),
-#                          save_pars = save_pars(all = TRUE),
-#    silent = 2,
-#    refresh = 0,
-#    cores = 4)
-```
-
-
-```{r}
-#| results: hide
-
 mod_diffi_raincloud_halfeye_y <- 
     brm(scale(diffi) ~ dummy_raincloud_halfeye_y + 
             effsize + (1|session), 
@@ -1997,21 +1890,16 @@ mod_effic0306_raincloud_halfeye_y <-
 
 
 ```{r}
-sjPlot::tab_model(
-        # mod_diffov_gardneraltman_halfeye_x, 
-        mod_diffi_gardneraltman_halfeye_x, 
+sjPlot::tab_model(mod_diffi_gardneraltman_halfeye_x, 
         mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
         mod_sensi_gardneraltman_halfeye_x,
         mod_effic01_gardneraltman_halfeye_x, mod_effic0306_gardneraltman_halfeye_x,
-        # mod_diffov_gardneraltman_halfeye_y, 
         mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, 
         mod_value_gardneraltman_halfeye_y, mod_sensi_gardneraltman_halfeye_y,
         mod_effic01_gardneraltman_halfeye_y, mod_effic0306_gardneraltman_halfeye_y,
-        # mod_diffov_raincloud_halfeye_x, mod_diffi_raincloud_halfeye_x, 
         mod_infor_raincloud_halfeye_x, mod_value_raincloud_halfeye_x,
         mod_sensi_raincloud_halfeye_x,
         mod_effic01_raincloud_halfeye_x, mod_effic0306_raincloud_halfeye_x,
-        # mod_diffov_raincloud_halfeye_y, 
         mod_diffi_raincloud_halfeye_y, mod_infor_raincloud_halfeye_y, 
         mod_value_raincloud_halfeye_y, mod_sensi_raincloud_halfeye_y,
         mod_effic01_raincloud_halfeye_y, mod_effic0306_raincloud_halfeye_y)
@@ -2036,22 +1924,6 @@ gardneraltman_vs_raincloud_effic <- study1_w_timestamp %>%
     filter(type == "gardneraltman_xaxis" | type == "raincloud_yaxis") %>%
     ungroup() %>% 
     full_join(study1_w %>% select(session, effsize), by = "session")
-```
-
-
-```{r}
-#| results: hide
-
-# mod_diffov_gardneraltman_raincloud <- 
-#     brm(diff_ov ~ dummy_gardneraltman_raincloud + effsize + (1|session), 
-#                           data = gardneraltman_vs_raincloud%>% 
-#                               filter(rating_ov_misconcept == F,
-#                                      !diff_ov == "-Inf",
-#                                      !diff_ov == "Inf"),
-#                           save_pars = save_pars(all = TRUE),
-#     silent = 2,
-#     refresh = 0,
-#     cores = 4)
 ```
 
 
@@ -2158,24 +2030,6 @@ halfeye_x_vs_halfeye_y_effic <- study1_w_timestamp %>%
 ```{r}
 #| results: hide
 
-#mod_diffov_halfeye_x_halfeye_y <- 
-#    brm(diff_ov ~ dummy_halfeye_x_halfeye_y + effsize + (1|session), 
-#                          data = halfeye_x_vs_halfeye_y%>% 
-#                              filter(rating_ov_misconcept == F,
-#                                     !diff_ov == "-Inf",
-#                                     !diff_ov == "Inf"),
-#                          save_pars = save_pars(all = TRUE),
-#        
-#    silent = 2,
-#    refresh = 0,
-#    cores = 4,
-#    iter = 20000)
-```
-
-
-```{r}
-#| results: hide
-
 mod_diffi_halfeye_x_halfeye_y <- 
     brm(scale(diffi) ~ dummy_halfeye_x_halfeye_y +
             effsize + (1|session), 
@@ -2247,8 +2101,7 @@ mod_effic0306_halfeye_x_halfeye_y <-
 ```
 
 ```{r}
-sjPlot::tab_model(#mod_diffov_gardneraltman_raincloud, 
-                  mod_diffi_gardneraltman_raincloud,
+sjPlot::tab_model(mod_diffi_gardneraltman_raincloud,
                   mod_infor_gardneraltman_raincloud, 
                   mod_value_gardneraltman_raincloud,
                   mod_sensi_gardneraltman_raincloud,
@@ -2258,8 +2111,7 @@ sjPlot::tab_model(#mod_diffov_gardneraltman_raincloud,
 
 
 ```{r}
-sjPlot::tab_model(#mod_diffov_halfeye_x_halfeye_y, 
-                  mod_diffi_halfeye_x_halfeye_y, 
+sjPlot::tab_model(mod_diffi_halfeye_x_halfeye_y, 
                   mod_infor_halfeye_x_halfeye_y, 
                   mod_value_halfeye_x_halfeye_y,
                   mod_sensi_halfeye_x_halfeye_y,
