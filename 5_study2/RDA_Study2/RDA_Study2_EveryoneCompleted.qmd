@@ -931,8 +931,8 @@ data_w |>
 hyp2a_bernoulli_vinterceptonly <-
     brm(sensi_binary_filtered ~ type + effsize_f + (1| session),
         family = bernoulli(link = "logit"),
-        iter = 100000,
-        warmup = 10000,
+       # iter = 100000,
+      #  warmup = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE))
@@ -942,7 +942,7 @@ pp_check(hyp2a_bernoulli_vinterceptonly)
 hyp2a_bernoulli_vintercept <- 
  brm(sensi_binary_filtered ~ type + effsize_f + gr_benchmark + (1| session),
      family = bernoulli(link = "logit"),
-     iter = 100000, warmup = 10000,
+    # iter = 100000, warmup = 10000,
      data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
     save_pars = save_pars(all = TRUE)
@@ -1038,7 +1038,7 @@ hyp4a_vinterceptonly <-
             filter(group %in% c("cg", "eg_benchmark") &
                        plotNrWithin == 1 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1051,7 +1051,7 @@ hyp4a_vintercept <-
             filter(group %in% c("cg", "eg_benchmark") &
                        plotNrWithin == 1 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1092,7 +1092,7 @@ hyp4alast_vinterceptonly <-
             filter(group %in% c("cg", "eg_benchmark") &
                        plotNrWithin > 7 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1105,7 +1105,7 @@ hyp4alast_vintercept <-
             filter(group %in% c("cg", "eg_benchmark") &
                        plotNrWithin > 7 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1148,7 +1148,7 @@ data_w |>
 
 hyp5a_vinterceptonly <-
     brm(scale(infor) ~ type + effsize_f + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -1158,7 +1158,7 @@ pp_check(hyp5a_vinterceptonly)
 
 hyp5a_vintercept <-
     brm(scale(infor) ~ type + effsize_f + gr_benchmark + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -1194,7 +1194,7 @@ data_w |>
 
 hyp6a_vinterceptonly <-
     brm(scale(value) ~ type + effsize_f + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -1204,7 +1204,7 @@ pp_check(hyp6a_vinterceptonly)
 
 hyp6a_vintercept <-
     brm(scale(value) ~ type + effsize_f + gr_benchmark + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group %in% c("cg", "eg_benchmark")),
         save_pars = save_pars(all = TRUE)
@@ -1256,7 +1256,7 @@ data_w |>
 # fit gaussion varying intercept only model
 hyp1b_am_vinterceptonly_gaussian <- 
     brm(diff_am ~ type + effsize_f + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 10000, warmup = 1000,
         family = gaussian(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
@@ -1271,7 +1271,7 @@ pp_check(hyp1b_am_vinterceptonly_gaussian) + xlim(c(-1, 1))
 # fit student varying intercept only model
 hyp1b_am_vinterceptonly_student <- 
     brm(diff_am ~ type + effsize_f + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
@@ -1286,7 +1286,7 @@ pp_check(hyp1b_am_vinterceptonly_student) + xlim(c(-1, 1))
 # fit student varying intercept model
 hyp1b_am_vintercept_student <- 
     brm(diff_am ~ type + effsize_f + group + (1|session),
-        iter = 10000, warmup = 1000,
+        #iter = 10000, warmup = 1000,
         family = student(), 
         data = data_w |> 
             filter(group != "eg_benchmark",
@@ -1655,7 +1655,7 @@ hyp4b_vinterceptonly <-
             filter(group != "eg_benchmark" &
                        plotNrWithin == 1 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1668,7 +1668,7 @@ hyp4b_vintercept <-
             filter(group != "eg_benchmark" &
                        plotNrWithin == 1 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1722,7 +1722,7 @@ hyp4blast_vinterceptonly <-
             filter(group != "eg_benchmark" &
                        plotNrWithin > 7 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1735,7 +1735,7 @@ hyp4blast_vintercept <-
             filter(group != "eg_benchmark" &
                        plotNrWithin > 7 &
                    is.infinite(effic) == F),
-        iter = 20000,
+        #iter = 20000,
         save_pars = save_pars(all = TRUE)
     )
 
@@ -1790,7 +1790,7 @@ data_w |>
 
 hyp5b_vinterceptonly <-
     brm(scale(infor) ~ type + effsize_f + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1800,7 +1800,7 @@ pp_check(hyp5b_vinterceptonly)
 
 hyp5b_vintercept <-
     brm(scale(infor) ~ type + effsize_f + group + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1838,7 +1838,7 @@ data_w |>
 
 hyp6b_vinterceptonly <-
     brm(scale(value) ~ type + effsize_f + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1848,7 +1848,7 @@ pp_check(hyp6b_vinterceptonly)
 
 hyp6b_vintercept <-
     brm(scale(value) ~ type + effsize_f + group + (1 | session),
-        iter = 10000,
+        #iter = 10000,
         data = data_w |>
             filter(group != "eg_benchmark"),
         save_pars = save_pars(all = TRUE)
@@ -1893,7 +1893,7 @@ data_w |>
 hyp7bu3_vinterceptonly <-
     brm(rating_u3_misconcept ~ type + effsize_f,
         family = bernoulli(),
-        iter = 40000,
+        #iter = 40000,
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
@@ -1908,7 +1908,7 @@ pp_check(hyp7bu3_vinterceptonly)
 hyp7bu3_vintercept <-
     brm(rating_u3_misconcept ~ type + effsize_f + group,
         family = bernoulli(),
-        iter = 40000,
+        #iter = 40000,
         data = data_w |> 
                  select(group, rating_u3_misconcept, session,
                         type, effsize_f) |> 
@@ -1960,7 +1960,7 @@ data_w |>
 hyp7bov_vinterceptonly <-
     brm(rating_ov_misconcept ~ type + effsize_f,
         family = bernoulli(),
-        iter = 40000,
+        #iter = 40000,
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
@@ -1975,7 +1975,7 @@ pp_check(hyp7bov_vinterceptonly)
 hyp7bov_vintercept <-
     brm(rating_ov_misconcept ~ type + effsize_f + group,
         family = bernoulli(),
-        iter = 40000,
+        #iter = 40000,
         data = data_w |> 
                  select(group, rating_ov_misconcept, session,
                         type, effsize_f) |> 
