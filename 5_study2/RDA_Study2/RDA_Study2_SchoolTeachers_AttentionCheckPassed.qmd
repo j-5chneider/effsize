@@ -459,8 +459,35 @@ study2_data_ended |>
         facet_wrap(~understanding_variable) +
         geom_bar(position = "fill") +
         theme_minimal() +
-    ggtitle("Answers to Treatmentchecks", "Per Result of Attention Check")
+    ggtitle("Answers to Understanding Items", "Per Result of Attention Check")
 ```
+
+## Treatment check
+
+### Bechmark
+
+```{r}
+study2_data |> 
+    filter(group == "eg_benchmark") |>
+    ggplot(aes(check_02)) +
+        geom_bar() +
+        theme_minimal() +
+    labs(x="treatment check") +
+    ggtitle("Treatment Check", "Benchmark Condition")
+```
+
+### Signaling
+
+```{r}
+study2_data |> 
+    filter(!group == "eg_benchmark") |>
+    ggplot(aes(check_01)) +
+        geom_bar() +
+        theme_minimal() +
+    labs(x="treatment check") +
+    ggtitle("Treatment Check", "Signaling Conditions")
+```
+
 
 ## Always plot your raw data
 
@@ -2008,6 +2035,67 @@ hyp7bov_bf
 ```
 
 
+## Bayes factors
+
+```{r}
+#| code-fold: false
+
+# H1a: increase in accuracy (am, u3, ov)
+
+hyp1a_am_bias_bf$bf
+
+hyp1a_ov_bias_bf$bf
+
+hyp1a_u3_bias_bf$bf
+
+# H2a: increase in sensitivity
+hyp2a_bf$bf
+
+# H3a: increase in task difficulty
+hyp3a_bf$bf
+
+# H4a: increase in dwell time (efficiency)
+hyp4a_bf$bf
+
+hyp4alast_bf$bf
+
+# H5a: increase in perceived informativity
+hyp5a_bf$bf
+
+# H6a: increase in perceived value for practice
+hyp6a_bf$bf
+
+# H1b: increase in accuracy (am, u3, ov;) for teachers without misconception
+hyp1b_am_bias_bf$bf
+
+hyp1b_ov_bias_bf$bf
+
+hyp1b_u3_bias_bf$bf
+
+# H2b: increase in sensitivity
+hyp2b_bf$bf
+
+# H3b: decrease (improving) in task difficulty
+hyp3b_bf$bf
+
+# H4b: decrease (improving) in dwell time (efficiency)
+hyp4b_bf$bf
+hyp4blast_bf$bf
+
+# H5b: increase in perceived informativity
+hyp5b_bf$bf
+
+# H6b: increase in perceived value for practice
+hyp6b_bf$bf
+
+# H7bu3: when signaling u3, smaller number of u3 misconceptualizer
+hyp7bu3_bf$bf
+
+# H7bov: when signaling ov, smaller number of ov misconceptualizer
+hyp7bov_bf$bf
+```
+
+
 ## Statistical understanding and accuracy
 
 ### Comprehension of axes
@@ -2091,65 +2179,4 @@ data_undestanding_variance_acc |>
                  fun.args = list(mult = 1), 
                  color = "#8cd000") +
     theme_minimal()
-```
-
-
-## Bayes factors
-
-```{r}
-#| code-fold: false
-
-# H1a: increase in accuracy (am, u3, ov)
-
-hyp1a_am_bias_bf$bf
-
-hyp1a_ov_bias_bf$bf
-
-hyp1a_u3_bias_bf$bf
-
-# H2a: increase in sensitivity
-hyp2a_bf$bf
-
-# H3a: increase in task difficulty
-hyp3a_bf$bf
-
-# H4a: increase in dwell time (efficiency)
-hyp4a_bf$bf
-
-hyp4alast_bf$bf
-
-# H5a: increase in perceived informativity
-hyp5a_bf$bf
-
-# H6a: increase in perceived value for practice
-hyp6a_bf$bf
-
-# H1b: increase in accuracy (am, u3, ov;) for teachers without misconception
-hyp1b_am_bias_bf$bf
-
-hyp1b_ov_bias_bf$bf
-
-hyp1b_u3_bias_bf$bf
-
-# H2b: increase in sensitivity
-hyp2b_bf$bf
-
-# H3b: decrease (improving) in task difficulty
-hyp3b_bf$bf
-
-# H4b: decrease (improving) in dwell time (efficiency)
-hyp4b_bf$bf
-hyp4blast_bf$bf
-
-# H5b: increase in perceived informativity
-hyp5b_bf$bf
-
-# H6b: increase in perceived value for practice
-hyp6b_bf$bf
-
-# H7bu3: when signaling u3, smaller number of u3 misconceptualizer
-hyp7bu3_bf$bf
-
-# H7bov: when signaling ov, smaller number of ov misconceptualizer
-hyp7bov_bf$bf
 ```
