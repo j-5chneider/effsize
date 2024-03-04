@@ -480,11 +480,13 @@ study2_data |>
 
 ```{r}
 study2_data |> 
-    filter(!group == "eg_benchmark") |>
+    filter(!group == "eg_benchmark", 
+           !group == "cg") |>
     ggplot(aes(check_01)) +
         geom_bar() +
         theme_minimal() +
     labs(x="treatment check") +
+    facet_wrap(~group)+
     ggtitle("Treatment Check", "Signaling Conditions")
 ```
 
