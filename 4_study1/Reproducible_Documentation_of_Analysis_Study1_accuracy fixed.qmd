@@ -1891,18 +1891,29 @@ mod_effic0306_raincloud_halfeye_y <-
 
 ```{r}
 sjPlot::tab_model(mod_diffi_gardneraltman_halfeye_x, 
-        mod_infor_gardneraltman_halfeye_x, mod_value_gardneraltman_halfeye_x,
+        mod_infor_gardneraltman_halfeye_x, 
+        mod_value_gardneraltman_halfeye_x,
         mod_sensi_gardneraltman_halfeye_x,
-        mod_effic01_gardneraltman_halfeye_x, mod_effic0306_gardneraltman_halfeye_x,
-        mod_diffi_gardneraltman_halfeye_y, mod_infor_gardneraltman_halfeye_y, 
-        mod_value_gardneraltman_halfeye_y, mod_sensi_gardneraltman_halfeye_y,
-        mod_effic01_gardneraltman_halfeye_y, mod_effic0306_gardneraltman_halfeye_y,
-        mod_infor_raincloud_halfeye_x, mod_value_raincloud_halfeye_x,
+        mod_effic01_gardneraltman_halfeye_x, 
+        mod_effic0306_gardneraltman_halfeye_x,
+        mod_diffi_gardneraltman_halfeye_y, 
+        mod_infor_gardneraltman_halfeye_y, 
+        mod_value_gardneraltman_halfeye_y, 
+        mod_sensi_gardneraltman_halfeye_y,
+        mod_effic01_gardneraltman_halfeye_y, 
+        mod_effic0306_gardneraltman_halfeye_y,
+        mod_diffi_raincloud_halfeye_x,
+        mod_infor_raincloud_halfeye_x,
+        mod_value_raincloud_halfeye_x,
         mod_sensi_raincloud_halfeye_x,
-        mod_effic01_raincloud_halfeye_x, mod_effic0306_raincloud_halfeye_x,
-        mod_diffi_raincloud_halfeye_y, mod_infor_raincloud_halfeye_y, 
-        mod_value_raincloud_halfeye_y, mod_sensi_raincloud_halfeye_y,
-        mod_effic01_raincloud_halfeye_y, mod_effic0306_raincloud_halfeye_y)
+        mod_effic01_raincloud_halfeye_x, 
+        mod_effic0306_raincloud_halfeye_x,
+        mod_diffi_raincloud_halfeye_y, 
+        mod_infor_raincloud_halfeye_y, 
+        mod_value_raincloud_halfeye_y, 
+        mod_sensi_raincloud_halfeye_y,
+        mod_effic01_raincloud_halfeye_y, 
+        mod_effic0306_raincloud_halfeye_y)
 ```
 
 

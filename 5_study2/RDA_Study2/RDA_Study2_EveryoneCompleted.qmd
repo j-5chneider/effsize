@@ -266,6 +266,8 @@ data_w <- full_join(plot_info,
 Show descriptive results of accuracy variables, perceived difficulty, sensitivity, perceived informativity, perceived value, and misconceptualizers per experimental condition
 
 ```{r}
+table(study2_data$group)
+
 skim(
   data_w |>
   select(diff_am, diff_u3, diff_ov, plot, session, group) |>
