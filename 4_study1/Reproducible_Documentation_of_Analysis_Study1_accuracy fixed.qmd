@@ -54,6 +54,7 @@ library(here)
 library(skimr)
 library(effectsize)
 load(here("data/teachers_study1_N40.RData"))
+study1 <- haven::zap_label(study1)
 
 skim(study1)
 
